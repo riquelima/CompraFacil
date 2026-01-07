@@ -182,6 +182,14 @@
     </div>
 
     <script>
+            // Check for existing session
+            (async () => {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (session) {
+                    navigate('usuario.html');
+                }
+            })();
+
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 

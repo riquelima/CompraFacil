@@ -124,6 +124,15 @@
             </div>
         </div>
     </div>
+    <script>
+            // Check for existing session on load
+            (async () => {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (session) {
+                    window.location.href = 'usuario.html';
+                }
+            })();
+    </script>
 </body>
 
 </html>
