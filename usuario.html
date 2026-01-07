@@ -157,11 +157,35 @@
             </div>
         </div>
 
-        <div class="fixed bottom-6 right-6 z-50">
-            <button onclick="navigate('novalista.html')"
-                class="flex items-center justify-center size-16 rounded-full bg-nb-black text-nb-yellow border-2 border-white shadow-hard-lg hover:scale-105 active:scale-95 active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-200">
-                <span class="material-symbols-outlined text-[36px] font-bold">add</span>
-            </button>
+        <!-- Bottom Navigation Bar -->
+        <div class="fixed bottom-0 left-0 w-full z-40 pointer-events-none flex flex-col items-center">
+            <div
+                class="w-full max-w-2xl bg-white dark:bg-card-dark border-t-2 border-black pointer-events-auto h-20 px-6 flex items-center justify-between shadow-[0_-4px_0_0_rgba(0,0,0,1)] relative">
+
+                <!-- Left: Lists (Active) -->
+                <button onclick="navigate('usuario.html')" class="flex flex-col items-center gap-1 opacity-100 w-16">
+                    <span class="material-symbols-outlined text-3xl font-black text-primary">list_alt</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wide">Listas</span>
+                </button>
+
+                <!-- Center: FAB (Floating) -->
+                <div class="absolute left-1/2 -top-8 -translate-x-1/2">
+                    <button onclick="navigate('novalista.html')"
+                        class="size-16 bg-nb-yellow rounded-full border-2 border-black shadow-neo flex items-center justify-center hover:scale-110 active:scale-95 transition-all group">
+                        <span
+                            class="material-symbols-outlined text-4xl text-black font-black group-hover:rotate-90 transition-transform">add</span>
+                    </button>
+                </div>
+
+                <!-- Right: Inventory (Inactive) -->
+                <button onclick="navigate('inventario.html')"
+                    class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity w-16">
+                    <span
+                        class="material-symbols-outlined text-3xl font-bold text-black dark:text-white">inventory_2</span>
+                    <span
+                        class="text-[10px] font-bold uppercase tracking-wide text-black dark:text-white">Estoque</span>
+                </button>
+            </div>
         </div>
     </div>
 

@@ -289,29 +289,97 @@
             }
         }
 
+        let touchStartX = 0;
+        let touchCurrentX = 0;
+
         function createItemElement(item) {
             const isChecked = item.is_checked;
+
+            // Outer Wrapper (Background with Delete Button)
+            const wrapper = document.createElement('div');
+            wrapper.className = "relative w-full mb-4 rounded-xl overflow-hidden select-none";
+
+            // Background (Delete Action)
+            const bg = document.createElement('div');
+            bg.className = "absolute inset-y-0 right-0 w-full bg-red-500 flex items-center justify-end px-6 rounded-xl -z-0";
+            bg.innerHTML = `<span class="material-symbols-outlined text-white text-3xl font-bold">delete</span>`;
+
+            // Foreground (Content Card)
             const div = document.createElement('div');
 
             // Apply different styles based on state
             if (isChecked) {
-                div.className = "group flex items-center gap-4 bg-slate-100 dark:bg-card-dark/40 p-4 rounded-xl border-2 border-slate-400 dark:border-white/10 transition-all opacity-80 hover:opacity-100 mb-4";
+                div.className = "relative z-10 w-full flex items-center gap-4 bg-slate-100 dark:bg-card-dark/40 p-4 rounded-xl border-2 border-slate-400 dark:border-white/10 transition-transform duration-200 ease-out";
             } else {
-                div.className = "group flex items-center gap-4 bg-white dark:bg-card-dark p-4 rounded-xl shadow-neo border-2 border-black transition-all mb-4";
+                div.className = "relative z-10 w-full flex items-center gap-4 bg-white dark:bg-card-dark p-4 rounded-xl shadow-neo border-2 border-black transition-transform duration-200 ease-out";
             }
+
+            // Touch Events
+            div.addEventListener('touchstart', (e) => handleTouchStart(e, div, item.id));
+            div.addEventListener('touchmove', (e) => handleTouchMove(e, div));
+            div.addEventListener('touchend', (e) => handleTouchEnd(e, div, item.id));
 
             div.innerHTML = `
                 <input class="neo-checkbox shrink-0 ${isChecked ? 'grayscale opacity-60' : ''}" type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleItem('${item.id}', ${!isChecked})" />
                 <div class="flex-1 min-w-0 flex flex-col">
                     <p class="text-slate-900 dark:text-white text-lg font-bold truncate leading-tight ${isChecked ? 'line-through decoration-2 decoration-slate-400 text-slate-500' : ''}">${item.name}</p>
                 </div>
-                <div class="shrink-0 px-3 py-1.5 rounded-lg border-2 border-transparent hover:border-black transition-all cursor-pointer ${isChecked ? 'opacity-60' : 'bg-white'}" onclick="promptPrice('${item.id}', ${item.price})">
+                <div class="shrink-0 px-3 py-1.5 rounded-lg border-2 border-transparent hover:border-black transition-all cursor-pointer ${isChecked ? 'opacity-60' : 'bg-white'}" onclick="event.stopPropagation(); promptPrice('${item.id}', ${item.price})">
                     <p class="text-sm font-bold ${isChecked ? 'text-slate-500 line-through decoration-2' : 'text-primary-dark'}">
                         ${item.price ? `R$ ${formatCurrency(item.price)}` : 'R$ --,--'}
                     </p>
                 </div>
             `;
-            return div;
+
+            wrapper.appendChild(bg);
+            wrapper.appendChild(div);
+            return wrapper;
+        }
+
+        function handleTouchStart(e, el, id) {
+            touchStartX = e.touches[0].clientX;
+            el.style.transition = 'none'; // Disable transition for direct 1:1 movement
+        }
+
+        function handleTouchMove(e, el) {
+            touchCurrentX = e.touches[0].clientX;
+            const diff = touchCurrentX - touchStartX;
+
+            // Only allow swiping left
+            if (diff < 0) {
+                // Resistance effect? No, just linear for now.
+                // Limit how far it can go? maybe -100px is enough to show icon, but user wants to swipe to delete.
+                el.style.transform = `translateX(${diff}px)`;
+            }
+        }
+
+        function handleTouchEnd(e, el, id) {
+            el.style.transition = 'transform 0.3s ease-out';
+            const diff = touchCurrentX - touchStartX;
+            const threshold = -120; // px to trigger delete
+
+            if (diff < threshold) {
+                // Complete swipe
+                el.style.transform = `translateX(-100%)`;
+                setTimeout(() => deleteItem(id), 300);
+            } else {
+                // Reset
+                el.style.transform = `translateX(0)`;
+            }
+        }
+
+        async function deleteItem(id) {
+            const { error } = await window.supabaseClient
+                .from('list_items')
+                .delete()
+                .eq('id', id);
+
+            if (!error) {
+                fetchListItems();
+            } else {
+                alert("Erro ao excluir item");
+                fetchListItems(); // Reset state on error
+            }
         }
 
         async function toggleItem(itemId, newStatus) {
@@ -322,9 +390,13 @@
                 .eq('id', itemId);
 
             if (!error) {
-                // If checking the item (marking as done), add to inventory
+                // If checking (done) -> Add to inventory
                 if (newStatus === true) {
                     await addToInventory(itemId);
+                }
+                // If unchecking (undo) -> Remove from inventory
+                else {
+                    await removeFromInventory(itemId);
                 }
 
                 fetchListItems(); // Reload UI
@@ -373,6 +445,44 @@
                         quantity: qtyToAdd,
                         unit: 'unid.'
                     });
+            }
+        }
+
+        async function removeFromInventory(itemId) {
+            // 1. Get the item details
+            const { data: item, error: fetchError } = await window.supabaseClient
+                .from('list_items')
+                .select('*')
+                .eq('id', itemId)
+                .single();
+
+            if (fetchError || !item) return;
+
+            // 2. Check if item exists in inventory
+            const { data: inventoryItem, error: invError } = await window.supabaseClient
+                .from('inventory_items')
+                .select('*')
+                .eq('user_id', currentUserId)
+                .ilike('name', item.name)
+                .maybeSingle();
+
+            if (!inventoryItem) return; // Nothing to remove
+
+            const qtyToRemove = item.quantity || 1;
+            const newQty = (inventoryItem.quantity || 0) - qtyToRemove;
+
+            if (newQty <= 0) {
+                // Remove entirely
+                await window.supabaseClient
+                    .from('inventory_items')
+                    .delete()
+                    .eq('id', inventoryItem.id);
+            } else {
+                // Decrease quantity
+                await window.supabaseClient
+                    .from('inventory_items')
+                    .update({ quantity: newQty })
+                    .eq('id', inventoryItem.id);
             }
         }
 
