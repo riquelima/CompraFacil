@@ -277,7 +277,7 @@
                 const label = document.createElement('div');
                 label.className = "flex items-center gap-2 mt-6 mb-2";
                 label.innerHTML = `
-                    <div class="h-8 px-3 bg-slate-200 border-2 border-black rounded-md flex items-center shadow-neo-sm">
+                    <div class="h-8 px-3 bg-green-300 border-2 border-black rounded-md flex items-center shadow-neo-sm">
                         <span class="text-xs font-bold uppercase tracking-wider text-black">Concluídos</span>
                     </div>
                  `;
@@ -315,19 +315,64 @@
         }
 
         async function toggleItem(itemId, newStatus) {
-            // Optimistic update? For now, simple await reload to ensure sync
-            // A better UX would be to move it immediately in DOM, then sync.
-            // Let's stick to reload for simplicity and ensuring sort correctness
-
+            // Update item status first
             const { error } = await window.supabaseClient
                 .from('list_items')
                 .update({ is_checked: newStatus })
                 .eq('id', itemId);
 
             if (!error) {
-                fetchListItems(); // Reload
+                // If checking the item (marking as done), add to inventory
+                if (newStatus === true) {
+                    await addToInventory(itemId);
+                }
+
+                fetchListItems(); // Reload UI
             } else {
                 alert('Erro ao atualizar item');
+            }
+        }
+
+        async function addToInventory(itemId) {
+            // 1. Get the item details from list_items
+            const { data: item, error: fetchError } = await window.supabaseClient
+                .from('list_items')
+                .select('*')
+                .eq('id', itemId)
+                .single();
+
+            if (fetchError || !item) return;
+
+            // 2. Check if item exists in inventory (by name and user_id)
+            const { data: inventoryItem, error: invError } = await window.supabaseClient
+                .from('inventory_items')
+                .select('*')
+                .eq('user_id', currentUserId)
+                .ilike('name', item.name) // Use ilike for case-insensitive match
+                .maybeSingle();
+
+            const qtyToAdd = item.quantity || 1; // Default to 1 if not specified
+
+            if (inventoryItem) {
+                // 3a. Update existing inventory item
+                const newQty = (inventoryItem.quantity || 0) + qtyToAdd;
+                await window.supabaseClient
+                    .from('inventory_items')
+                    .update({ quantity: newQty })
+                    .eq('id', inventoryItem.id);
+
+                // Optional: Show a toast/notification? For now, silent.
+            } else {
+                // 3b. Create new inventory item
+                await window.supabaseClient
+                    .from('inventory_items')
+                    .insert({
+                        user_id: currentUserId,
+                        name: item.name,
+                        category: item.category || 'Outros',
+                        quantity: qtyToAdd,
+                        unit: 'unid.'
+                    });
             }
         }
 
