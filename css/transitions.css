@@ -1,0 +1,19 @@
+/* Page Transition Styles */
+
+/* Simple fade-in animation for page loads */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+body {
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* Responsive Container Utilities via class modifications in HTML, 
+   but we can add some global overrides if needed here */
+
+/* Active link/button feedback */
+button:active {
+    transform: scale(0.98);
+}

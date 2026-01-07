@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Criar Nova Lista</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="css/transitions.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "nb-yellow": "#FFD23F",
+                        "nb-purple": "#C596F8",
+                        "nb-pink": "#FF85B3",
+                        "nb-blue": "#5EBCF7",
+                        "nb-green": "#85E0A3",
+                        "nb-orange": "#FF9F45",
+                        "nb-white": "#FFFFFF",
+                        "nb-black": "#000000",
+                        "nb-bg": "#F3F0E9",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    boxShadow: {
+                        "hard": "4px 4px 0px 0px #000000",
+                        "hard-sm": "2px 2px 0px 0px #000000",
+                        "hard-lg": "6px 6px 0px 0px #000000",
+                    },
+                    borderRadius: {
+                        "nb": "12px",
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            background-color: #F3F0E9;
+            background-image: radial-gradient(#000 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .color-radio:checked+div {
+            transform: scale(1.1);
+            border-width: 3px;
+            box-shadow: 0 0 0 2px #F3F0E9, 0 0 0 4px #000;
+        }
+
+        .icon-radio:checked+div {
+            background-color: #000;
+            color: #fff;
+            box-shadow: 2px 2px 0px 0px #000000;
+            transform: translate(-1px, -1px);
+        }
+
+        body {
+            min-height: max(800px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-nb-bg font-display text-nb-black overflow-x-hidden">
+    <div
+        class="relative flex h-full min-h-screen w-full flex-col max-w-full md:max-w-2xl mx-auto bg-nb-bg border-x-2 border-nb-black shadow-hard-lg">
+        <header
+            class="flex items-center p-6 pb-4 justify-between sticky top-0 bg-nb-bg z-10 border-b-2 border-nb-black">
+            <button onclick="navigate('usuario.html')"
+                class="flex items-center justify-center size-12 rounded-full bg-nb-white border-2 border-nb-black shadow-hard-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all active:bg-gray-100 group">
+                <span
+                    class="material-symbols-outlined text-[28px] font-bold group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+            </button>
+            <h1 class="text-xl font-black uppercase tracking-tight">Nova Lista</h1>
+            <div class="size-12"></div>
+        </header>
+
+        <form id="createListForm" class="flex-1 flex flex-col p-6 gap-6">
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-extrabold uppercase tracking-wider ml-1" for="listName">Nome da Lista</label>
+                <div class="relative">
+                    <input
+                        class="w-full bg-nb-white border-2 border-nb-black rounded-nb py-5 px-5 text-xl font-bold text-nb-black placeholder:text-gray-400 shadow-hard focus:outline-none focus:ring-0 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none transition-all"
+                        id="listName" name="title" placeholder="Ex: Churrasco de Domingo" type="text" required />
+                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-nb-black opacity-30">
+                        <span class="material-symbols-outlined">edit</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-5">
+                <div
+                    class="col-span-2 bg-nb-white border-2 border-nb-black rounded-nb p-5 shadow-hard flex flex-col gap-4">
+                    <label class="text-sm font-extrabold uppercase tracking-wider flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">mood</span>
+                        Ícone
+                    </label>
+                    <div class="grid grid-cols-4 gap-3">
+                        <label class="cursor-pointer group">
+                            <input checked="" class="hidden icon-radio" name="icon" type="radio"
+                                value="shopping_cart" />
+                            <div
+                                class="aspect-square flex items-center justify-center rounded-lg border-2 border-nb-black hover:bg-nb-bg transition-all">
+                                <span class="material-symbols-outlined text-2xl">shopping_cart</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer group">
+                            <input class="hidden icon-radio" name="icon" type="radio" value="outdoor_grill" />
+                            <div
+                                class="aspect-square flex items-center justify-center rounded-lg border-2 border-nb-black hover:bg-nb-bg transition-all">
+                                <span class="material-symbols-outlined text-2xl">outdoor_grill</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer group">
+                            <input class="hidden icon-radio" name="icon" type="radio" value="bakery_dining" />
+                            <div
+                                class="aspect-square flex items-center justify-center rounded-lg border-2 border-nb-black hover:bg-nb-bg transition-all">
+                                <span class="material-symbols-outlined text-2xl">bakery_dining</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer group">
+                            <input class="hidden icon-radio" name="icon" type="radio" value="medication" />
+                            <div
+                                class="aspect-square flex items-center justify-center rounded-lg border-2 border-nb-black hover:bg-nb-bg transition-all">
+                                <span class="material-symbols-outlined text-2xl">medication</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer group">
+                            <input class="hidden icon-radio" name="icon" type="radio" value="desk" />
+                            <div
+                                class="aspect-square flex items-center justify-center rounded-lg border-2 border-nb-black hover:bg-nb-bg transition-all">
+                                <span class="material-symbols-outlined text-2xl">desk</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer group">
+                            <input class="hidden icon-radio" name="icon" type="radio" value="fitness_center" />
+                            <div
+                                class="aspect-square flex items-center justify-center rounded-lg border-2 border-nb-black hover:bg-nb-bg transition-all">
+                                <span class="material-symbols-outlined text-2xl">fitness_center</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer group">
+                            <input class="hidden icon-radio" name="icon" type="radio" value="pets" />
+                            <div
+                                class="aspect-square flex items-center justify-center rounded-lg border-2 border-nb-black hover:bg-nb-bg transition-all">
+                                <span class="material-symbols-outlined text-2xl">pets</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer group">
+                            <input class="hidden icon-radio" name="icon" type="radio" value="celebration" />
+                            <div
+                                class="aspect-square flex items-center justify-center rounded-lg border-2 border-nb-black hover:bg-nb-bg transition-all">
+                                <span class="material-symbols-outlined text-2xl">celebration</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div
+                    class="col-span-2 bg-nb-white border-2 border-nb-black rounded-nb p-5 shadow-hard flex flex-col gap-4">
+                    <label class="text-sm font-extrabold uppercase tracking-wider flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">palette</span>
+                        Cor
+                    </label>
+                    <div class="flex flex-wrap gap-3 justify-center">
+                        <label class="cursor-pointer">
+                            <input checked="" class="hidden color-radio" name="color" type="radio" value="nb-yellow" />
+                            <div
+                                class="size-10 rounded-full bg-nb-yellow border-2 border-nb-black transition-transform">
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input class="hidden color-radio" name="color" type="radio" value="nb-purple" />
+                            <div
+                                class="size-10 rounded-full bg-nb-purple border-2 border-nb-black transition-transform">
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input class="hidden color-radio" name="color" type="radio" value="nb-pink" />
+                            <div class="size-10 rounded-full bg-nb-pink border-2 border-nb-black transition-transform">
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input class="hidden color-radio" name="color" type="radio" value="nb-blue" />
+                            <div class="size-10 rounded-full bg-nb-blue border-2 border-nb-black transition-transform">
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input class="hidden color-radio" name="color" type="radio" value="nb-green" />
+                            <div class="size-10 rounded-full bg-nb-green border-2 border-nb-black transition-transform">
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input class="hidden color-radio" name="color" type="radio" value="nb-orange" />
+                            <div
+                                class="size-10 rounded-full bg-nb-orange border-2 border-nb-black transition-transform">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-auto pt-6 pb-2">
+                <button class="w-full relative group" type="submit" id="createBtn">
+                    <div class="absolute inset-0 bg-nb-black rounded-nb translate-x-1 translate-y-1"></div>
+                    <div
+                        class="relative bg-nb-green border-2 border-nb-black rounded-nb p-4 flex items-center justify-center gap-3 transition-transform group-active:translate-x-1 group-active:translate-y-1 group-active:shadow-none group-hover:-translate-y-0.5 group-hover:-translate-x-0.5">
+                        <span class="text-nb-black text-xl font-black uppercase tracking-wider">Criar Lista</span>
+                        <span class="material-symbols-outlined text-3xl font-bold">add_circle</span>
+                    </div>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('createListForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const btn = document.getElementById('createBtn');
+            const originalContent = btn.innerHTML;
+
+            // Loading state
+            btn.querySelector('.relative').classList.add('opacity-80');
+            btn.querySelector('span').innerText = 'Criando...';
+
+            try {
+                // Get form data
+                const formData = new FormData(e.target);
+                const title = formData.get('title');
+                const icon = formData.get('icon');
+                const color = formData.get('color');
+
+                // Get current user
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+
+                if (!user) {
+                    alert('Você precisa estar logado para criar uma lista!');
+                    navigate('login.html');
+                    return;
+                }
+
+                // Construct the insert object. Note: keys must match your Supabase schema exactly.
+                const newList = {
+                    title: title,
+                    icon: icon,
+                    color: color,
+                    user_id: user.id,
+                    status: 'pending',
+                    total_amount: 0,
+                    item_count: 0
+                };
+
+                console.log('Inserting list:', newList);
+
+                // Insert into Supabase
+                const { data, error } = await window.supabaseClient
+                    .from('shopping_lists')
+                    .insert([newList])
+                    .select();
+
+                if (error) {
+                    throw error;
+                }
+
+                console.log('List created:', data);
+
+                // Success feedback
+                // Show a quick success toast or just navigate
+
+                navigate('usuario.html');
+
+            } catch (error) {
+                console.error('Error creating list:', error);
+                alert('Erro ao criar lista: ' + error.message);
+
+                // Reset button state
+                btn.querySelector('span').innerText = 'Criar Lista';
+                btn.querySelector('.relative').classList.remove('opacity-80');
+            }
+        });
+    </script>
+</body>
+
+</html>

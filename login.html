@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Entrar no Compra Fácil</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="css/transitions.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6366F1",
+                        "accent-blue": "#BAE6FD",
+                        "accent-pink": "#FBCFE8",
+                        "accent-green": "#BBF7D0",
+                        "accent-yellow": "#FEF08A",
+                        "dark-border": "#000000",
+                        "background-light": "#F0F0F0",
+                        "background-dark": "#121212",
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#1E1E1E",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "none": "0",
+                        "sm": "0.125rem",
+                        "md": "0.375rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                        "full": "9999px",
+                        "brutal": "12px",
+                    },
+                    boxShadow: {
+                        "neo": "4px 4px 0px 0px #000000",
+                        "neo-sm": "2px 2px 0px 0px #000000",
+                        "neo-hover": "1px 1px 0px 0px #000000",
+                    },
+                    borderWidth: {
+                        "3": "3px",
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        input:focus {
+            outline: none;
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px #000000 !important;
+        }
+
+        button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px #000000 !important;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(600px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-black dark:text-white transition-colors duration-200 flex items-center justify-center p-4">
+    <div
+        class="relative w-full max-w-full md:max-w-md mx-auto bg-surface-light dark:bg-surface-dark border-3 border-dark-border dark:border-white rounded-brutal shadow-neo p-6 md:p-8 flex flex-col gap-6">
+        <div class="flex flex-col items-center text-center gap-4">
+            <div
+                class="size-20 bg-accent-yellow dark:bg-yellow-600 border-3 border-dark-border dark:border-white rounded-brutal flex items-center justify-center shadow-neo">
+                <span class="material-symbols-outlined text-[40px] text-black dark:text-white">shopping_bag</span>
+            </div>
+            <div>
+                <h1 class="text-3xl font-extrabold text-black dark:text-white leading-tight uppercase tracking-tight">
+                    Compra Fácil</h1>
+                <p
+                    class="text-black dark:text-gray-300 font-bold mt-1 text-sm bg-accent-green dark:bg-green-900/50 inline-block px-2 py-1 border-2 border-dark-border dark:border-white rounded-md shadow-neo-sm transform -rotate-1">
+                    Acesse sua lista
+                </p>
+            </div>
+        </div>
+        <form class="flex flex-col gap-5 w-full mt-2" onsubmit="event.preventDefault(); navigate('usuario.html')">
+            <div class="group">
+                <label class="block text-sm font-black text-black dark:text-white uppercase mb-1 ml-1">Usuário</label>
+                <div class="relative">
+                    <div
+                        class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-black dark:text-white z-10">
+                        <span class="material-symbols-outlined text-[24px]">person</span>
+                    </div>
+                    <input
+                        class="w-full bg-accent-blue dark:bg-sky-900 border-3 border-dark-border dark:border-white rounded-brutal py-4 pl-12 pr-4 text-lg font-bold text-black dark:text-white placeholder:text-black/50 dark:placeholder:text-white/50 shadow-neo transition-all"
+                        placeholder="seu@email.com" type="text" />
+                </div>
+            </div>
+            <div class="group">
+                <label class="block text-sm font-black text-black dark:text-white uppercase mb-1 ml-1">Senha</label>
+                <div class="relative">
+                    <div
+                        class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-black dark:text-white z-10">
+                        <span class="material-symbols-outlined text-[24px]">key</span>
+                    </div>
+                    <input
+                        class="w-full bg-accent-pink dark:bg-pink-900 border-3 border-dark-border dark:border-white rounded-brutal py-4 pl-12 pr-12 text-lg font-bold text-black dark:text-white placeholder:text-black/50 dark:placeholder:text-white/50 shadow-neo transition-all"
+                        placeholder="••••••••" type="password" />
+                    <button
+                        class="absolute inset-y-0 right-0 pr-4 flex items-center text-black dark:text-white hover:text-gray-700 transition-colors"
+                        type="button">
+                        <span class="material-symbols-outlined text-[24px]">visibility_off</span>
+                    </button>
+                </div>
+                <div class="flex justify-end pt-2">
+                    <button
+                        class="text-sm font-bold text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black px-2 py-0.5 transition-all border border-transparent hover:border-black dark:hover:border-white rounded"
+                        type="button">
+                        Esqueceu a senha?
+                    </button>
+                </div>
+            </div>
+            <button type="submit"
+                class="mt-2 w-full bg-black dark:bg-white text-white dark:text-black border-3 border-black dark:border-white font-black text-xl py-4 rounded-brutal shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-neo-sm active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all flex items-center justify-center gap-3 uppercase tracking-wide">
+                <span>Entrar</span>
+                <span class="material-symbols-outlined text-[24px] font-bold">arrow_forward</span>
+            </button>
+        </form>
+        <div class="relative flex py-2 items-center">
+            <div class="flex-grow border-t-3 border-dark-border dark:border-white"></div>
+            <span
+                class="flex-shrink-0 mx-4 text-black dark:text-white text-xs font-black uppercase bg-white dark:bg-surface-dark border-2 border-black dark:border-white px-2 py-1 rounded shadow-neo-sm">Ou</span>
+            <div class="flex-grow border-t-3 border-dark-border dark:border-white"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="navigate('usuario.html')"
+                class="flex items-center justify-center gap-2 bg-white dark:bg-surface-dark h-14 rounded-brutal border-3 border-dark-border dark:border-white shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-neo-sm transition-all group">
+                <span class="font-black text-2xl text-black dark:text-white">G</span>
+                <span class="font-bold text-black dark:text-white text-sm">Google</span>
+            </button>
+            <button onclick="navigate('usuario.html')"
+                class="flex items-center justify-center gap-2 bg-white dark:bg-surface-dark h-14 rounded-brutal border-3 border-dark-border dark:border-white shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-neo-sm transition-all group">
+                <span class="material-symbols-outlined text-[24px] text-black dark:text-white">smartphone</span>
+                <span class="font-bold text-black dark:text-white text-sm">Apple</span>
+            </button>
+        </div>
+        <div class="mt-4 text-center">
+            <p class="text-sm font-bold text-black dark:text-white">
+                Não tem conta?
+                <a href="#" onclick="navigate('cadastro.html'); return false;"
+                    class="text-primary dark:text-accent-blue underline decoration-2 decoration-black dark:decoration-white underline-offset-2 ml-1 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors px-1">Crie
+                    agora</a>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

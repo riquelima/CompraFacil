@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Cadastre-se ou Entre</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="css/transitions.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8B5CF6", // Bright Purple
+                        "accent": "#FACC15",  // Brutalist Yellow
+                        "surface": "#FFFFFF",
+                        "dark": "#121212",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    boxShadow: {
+                        "neo": "4px 4px 0px 0px #000000",
+                        "neo-lg": "8px 8px 0px 0px #000000",
+                        "neo-sm": "2px 2px 0px 0px #000000",
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            background-color: #F3F4F6;
+            background-image: radial-gradient(#CBD5E1 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(600px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="font-display text-dark min-h-screen flex items-center justify-center p-5">
+    <div
+        class="w-full max-w-full md:max-w-md bg-surface border-4 border-black rounded-3xl shadow-neo-lg overflow-hidden flex flex-col">
+        <div class="bg-accent border-b-4 border-black p-8 relative flex flex-col items-center text-center">
+            <div
+                class="absolute top-4 right-4 bg-white border-2 border-black px-2 py-0.5 rounded text-xs font-black uppercase rotate-3 shadow-neo-sm">
+                Beta
+            </div>
+            <div
+                class="bg-white border-2 border-black p-4 rounded-xl shadow-neo mb-4 rotate-[-2deg] hover:rotate-0 transition-transform duration-300">
+                <span class="material-symbols-outlined text-4xl text-black">shopping_cart_checkout</span>
+            </div>
+            <h1 class="text-3xl font-extrabold text-black uppercase tracking-tight leading-none mb-2">Vamos<br />Começar
+            </h1>
+            <p class="text-black font-bold text-sm max-w-[240px] opacity-80">Organize suas compras com brutal
+                eficiência.</p>
+        </div>
+        <form class="p-6 space-y-5 bg-white flex-1" onsubmit="event.preventDefault(); navigate('usuario.html')">
+            <div class="group">
+                <label class="block text-xs font-black uppercase tracking-wider mb-2 ml-1">Nome de usuário</label>
+                <div class="relative transition-all duration-200 focus-within:-translate-y-1">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <span class="material-symbols-outlined text-black">person</span>
+                    </div>
+                    <input
+                        class="w-full bg-white border-2 border-black rounded-xl py-4 pl-12 pr-4 text-base font-bold text-black placeholder:text-gray-400 focus:outline-none focus:ring-0 focus:bg-purple-50 focus:shadow-neo transition-all"
+                        placeholder="Seu nome" type="text" />
+                </div>
+            </div>
+            <div class="group">
+                <label class="block text-xs font-black uppercase tracking-wider mb-2 ml-1">E-mail</label>
+                <div class="relative transition-all duration-200 focus-within:-translate-y-1">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <span class="material-symbols-outlined text-black">mail</span>
+                    </div>
+                    <input
+                        class="w-full bg-white border-2 border-black rounded-xl py-4 pl-12 pr-4 text-base font-bold text-black placeholder:text-gray-400 focus:outline-none focus:ring-0 focus:bg-purple-50 focus:shadow-neo transition-all"
+                        placeholder="exemplo@email.com" type="email" />
+                </div>
+            </div>
+            <div class="group">
+                <label class="block text-xs font-black uppercase tracking-wider mb-2 ml-1">Senha</label>
+                <div class="relative transition-all duration-200 focus-within:-translate-y-1">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <span class="material-symbols-outlined text-black">lock</span>
+                    </div>
+                    <input
+                        class="w-full bg-white border-2 border-black rounded-xl py-4 pl-12 pr-12 text-base font-bold text-black placeholder:text-gray-400 focus:outline-none focus:ring-0 focus:bg-purple-50 focus:shadow-neo transition-all"
+                        placeholder="••••••••" type="password" />
+                    <button
+                        class="absolute inset-y-0 right-0 pr-4 flex items-center text-black hover:opacity-60 transition-opacity"
+                        type="button">
+                        <span class="material-symbols-outlined">visibility_off</span>
+                    </button>
+                </div>
+            </div>
+            <button
+                class="mt-4 w-full bg-primary border-2 border-black text-white font-black text-lg py-4 rounded-xl shadow-neo active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-150 flex items-center justify-center gap-2 group hover:bg-violet-600">
+                <span>CADASTRAR</span>
+                <span
+                    class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </button>
+        </form>
+        <div class="relative bg-gray-50 border-t-4 border-black py-6 flex items-center justify-center">
+            <div class="absolute inset-x-0 h-1 bg-transparent top-1/2 -translate-y-1/2"></div>
+            <span
+                class="relative z-10 bg-white border-2 border-black px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider shadow-neo-sm">
+                Ou continue com
+            </span>
+        </div>
+        <div class="grid grid-cols-2 border-t-4 border-black divide-x-4 divide-black">
+            <button onclick="navigate('usuario.html')"
+                class="flex items-center justify-center gap-2 py-5 bg-white hover:bg-gray-100 transition-colors group">
+                <span class="font-extrabold text-xl text-blue-600 group-hover:scale-110 transition-transform">G</span>
+                <span class="font-bold text-sm uppercase">Google</span>
+            </button>
+            <button onclick="navigate('usuario.html')"
+                class="flex items-center justify-center gap-2 py-5 bg-white hover:bg-gray-100 transition-colors group">
+                <span class="text-black group-hover:scale-110 transition-transform flex items-center"><span
+                        class="material-symbols-outlined">smartphone</span></span>
+                <span class="font-bold text-sm uppercase">Apple</span>
+            </button>
+        </div>
+        <div class="bg-black text-white p-6 text-center">
+            <p class="text-sm font-bold">
+                Já tem uma conta?
+                <a href="#" onclick="navigate('login.html'); return false;"
+                    class="text-accent ml-1 hover:underline decoration-2 underline-offset-4 decoration-accent">Entrar</a>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>
