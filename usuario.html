@@ -163,7 +163,8 @@
                 class="w-full max-w-2xl bg-white dark:bg-card-dark border-t-2 border-black pointer-events-auto h-20 px-6 flex items-center justify-between shadow-[0_-4px_0_0_rgba(0,0,0,1)] relative">
 
                 <!-- Left: Lists (Active) -->
-                <button onclick="navigate('usuario.html')" class="flex flex-col items-center gap-1 opacity-100 w-16">
+                <button onclick="navigate('usuario.html', true)"
+                    class="flex flex-col items-center gap-1 opacity-100 w-16">
                     <span class="material-symbols-outlined text-3xl font-black text-primary">list_alt</span>
                     <span class="text-[10px] font-bold uppercase tracking-wide">Listas</span>
                 </button>
@@ -178,7 +179,7 @@
                 </div>
 
                 <!-- Right: Inventory (Inactive) -->
-                <button onclick="navigate('inventario.html')"
+                <button onclick="navigate('inventario.html', true)"
                     class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity w-16">
                     <span
                         class="material-symbols-outlined text-3xl font-bold text-black dark:text-white">inventory_2</span>
