@@ -328,6 +328,7 @@
 
         function handleTouchStart(e, el, id) {
             touchStartX = e.touches[0].clientX;
+            touchCurrentX = touchStartX; // Initialize currentX to startX
             el.style.transition = 'none'; // Disable transition for direct 1:1 movement
         }
 
@@ -337,8 +338,6 @@
 
             // Only allow swiping left
             if (diff < 0) {
-                // Resistance effect? No, just linear for now.
-                // Limit how far it can go? maybe -100px is enough to show icon, but user wants to swipe to delete.
                 el.style.transform = `translateX(${diff}px)`;
             }
         }
@@ -348,6 +347,7 @@
             const diff = touchCurrentX - touchStartX;
             const threshold = -120; // px to trigger delete
 
+            // Only trigger delete if we actually moved significantly
             if (diff < threshold) {
                 // Complete swipe
                 el.style.transform = `translateX(-100%)`;
