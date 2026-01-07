@@ -69,8 +69,7 @@
             transform: translate(2px, 2px);
             box-shadow: 2px 2px 0px 0px #000000;
         }
-    </style>
-    <style>
+
         body {
             min-height: max(600px, 100dvh);
         }
@@ -84,9 +83,9 @@
             class="flex items-center p-6 pb-4 justify-between sticky top-0 bg-nb-bg z-10 border-b-2 border-nb-black">
             <div class="flex items-center gap-3">
                 <div class="relative group cursor-pointer">
-                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 border-2 border-nb-black shadow-hard-sm"
-                        data-alt="User profile picture showing a smiling person"
-                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDJcFAF9T90cvhyaJBgAscLqAPgzw_tNuOH-RGeHnrLMUnD0o40tSZOzm_mVg02b0x5VQfLWCMIqk4CgHvO7PbB493mJ-I2X6NJPGSgu3Tyvu2Zw_h2OducI9_U1kY1YrJkV6TEWmldtd8veBc4e6qhJYFFU8mXAOe69WujyX_SrgEjDfTAAFrsYGI-LNJOuQvtovqiybefw8N3hSbiX0fvX4pNHsO6x5gNM01OK0QUVvdpt_M33-inJ0YlnKcmFenkVAYLcwDf1zyl");'>
+                    <div id="userAvatar"
+                        class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 border-2 border-nb-black shadow-hard-sm bg-gray-200 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-gray-400">person</span>
                     </div>
                     <div class="absolute bottom-0 right-0 size-4 bg-nb-green rounded-full border-2 border-nb-black">
                     </div>
@@ -104,135 +103,58 @@
                 </button>
             </div>
         </header>
-        <div class="px-6 py-6 bg-nb-white border-b-2 border-nb-black">
-            <div class="mb-6">
-                <h2 class="text-nb-black text-sm font-bold uppercase tracking-widest mb-1">Bem-vindo de volta</h2>
-                <h1 class="text-nb-black text-4xl font-extrabold leading-tight tracking-tight uppercase">Olá, Pedro!
-                    <span class="inline-block hover:animate-spin">👋</span>
-                </h1>
-            </div>
-            <label class="flex flex-col w-full group">
-                <div class="relative flex w-full items-center">
-                    <div class="absolute left-4 text-nb-black z-10">
-                        <span class="material-symbols-outlined text-[28px]">search</span>
-                    </div>
-                    <input
-                        class="w-full bg-nb-bg border-2 border-nb-black rounded-nb py-4 pl-14 pr-4 text-lg font-bold text-nb-black placeholder:text-gray-500 shadow-hard focus:outline-none focus:ring-0 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none transition-all"
-                        placeholder="BUSCAR LISTAS..." value="" />
-                </div>
-            </label>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="flex-1 flex flex-col items-center justify-center p-10 gap-4">
+            <div class="size-12 border-4 border-nb-black border-t-transparent rounded-full animate-spin"></div>
+            <p class="font-bold text-lg animate-pulse">Carregando...</p>
         </div>
-        <div class="flex-1 px-6 py-8 pb-32">
-            <div class="flex justify-between items-end mb-6">
-                <h3 class="text-2xl font-black text-nb-black uppercase tracking-tight">Minhas Listas</h3>
-                <button
-                    class="text-nb-black text-sm font-bold border-b-2 border-nb-black hover:bg-nb-yellow hover:border-transparent transition-colors px-1">VER
-                    TODAS</button>
+
+        <!-- content (Initially hidden) -->
+        <div id="mainContent" class="hidden flex-col flex-1">
+            <div class="px-6 py-6 bg-nb-white border-b-2 border-nb-black">
+                <div class="mb-6">
+                    <h2 class="text-nb-black text-sm font-bold uppercase tracking-widest mb-1">Bem-vindo de volta</h2>
+                    <h1 class="text-nb-black text-4xl font-extrabold leading-tight tracking-tight uppercase">Olá, <span
+                            id="userName">Usuário</span>!
+                        <span class="inline-block hover:animate-spin">👋</span>
+                    </h1>
+                </div>
+                <label class="flex flex-col w-full group">
+                    <div class="relative flex w-full items-center">
+                        <div class="absolute left-4 text-nb-black z-10">
+                            <span class="material-symbols-outlined text-[28px]">search</span>
+                        </div>
+                        <input
+                            class="w-full bg-nb-bg border-2 border-nb-black rounded-nb py-4 pl-14 pr-4 text-lg font-bold text-nb-black placeholder:text-gray-500 shadow-hard focus:outline-none focus:ring-0 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none transition-all"
+                            placeholder="BUSCAR LISTAS..." value="" />
+                    </div>
+                </label>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div onclick="navigate('lista.html')"
-                    class="group flex flex-col justify-between h-56 rounded-nb bg-nb-purple border-2 border-nb-black p-4 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm transition-all duration-200 cursor-pointer">
-                    <div class="flex justify-between items-start">
-                        <div
-                            class="flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black shadow-sm">
-                            <span class="material-symbols-outlined text-[28px]">shopping_cart</span>
-                        </div>
-                        <span
-                            class="bg-nb-black text-white text-xs font-bold px-2 py-1 rounded-md border border-nb-black uppercase tracking-wider">High</span>
-                    </div>
-                    <div class="flex flex-col gap-1 mt-3">
-                        <h4 class="text-nb-black text-lg font-extrabold leading-tight line-clamp-2">COMPRA DO MÊS</h4>
-                        <p class="text-nb-black font-semibold text-xs opacity-80">24 itens • Pendente</p>
-                    </div>
-                    <div
-                        class="pt-3 border-t-2 border-nb-black mt-auto flex justify-between items-center bg-white/30 -mx-4 -mb-4 p-4 rounded-b-[10px]">
-                        <span class="text-xs font-bold uppercase">Total</span>
-                        <p class="text-nb-black text-xl font-black">R$ 450,20</p>
-                    </div>
+            <div class="flex-1 px-6 py-8 pb-32">
+                <div class="flex justify-between items-end mb-6">
+                    <h3 class="text-2xl font-black text-nb-black uppercase tracking-tight">Minhas Listas</h3>
+                    <button
+                        class="text-nb-black text-sm font-bold border-b-2 border-nb-black hover:bg-nb-yellow hover:border-transparent transition-colors px-1">VER
+                        TODAS</button>
                 </div>
-                <div onclick="navigate('lista.html')"
-                    class="group flex flex-col justify-between h-56 rounded-nb bg-nb-orange border-2 border-nb-black p-4 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm transition-all duration-200 cursor-pointer">
-                    <div class="flex justify-between items-start">
+
+                <div id="listsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <!-- Dynamic lists will act here -->
+
+                    <!-- New List Card (Always at the end) -->
+                    <div onclick="navigate('novalista.html')"
+                        class="group flex flex-col items-center justify-center h-56 rounded-nb border-2 border-dashed border-nb-black bg-white p-4 hover:bg-nb-green transition-all duration-200 cursor-pointer shadow-hard-sm hover:shadow-hard hover:border-solid">
                         <div
-                            class="flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black shadow-sm">
-                            <span class="material-symbols-outlined text-[28px]">outdoor_grill</span>
+                            class="flex items-center justify-center size-16 rounded-full bg-nb-black text-white mb-4 group-hover:scale-110 transition-transform duration-200 border-2 border-transparent group-hover:border-black group-hover:bg-white group-hover:text-black">
+                            <span class="material-symbols-outlined text-[32px]">add</span>
                         </div>
+                        <h4 class="text-nb-black text-base font-black text-center uppercase">NOVA LISTA</h4>
                     </div>
-                    <div class="flex flex-col gap-1 mt-3">
-                        <h4 class="text-nb-black text-lg font-extrabold leading-tight line-clamp-2">CHURRASCO SÁBADO
-                        </h4>
-                        <p class="text-nb-black font-semibold text-xs opacity-80">12 itens • 2 ok</p>
-                    </div>
-                    <div
-                        class="pt-3 border-t-2 border-nb-black mt-auto flex justify-between items-center bg-white/30 -mx-4 -mb-4 p-4 rounded-b-[10px]">
-                        <span class="text-xs font-bold uppercase">Total</span>
-                        <p class="text-nb-black text-xl font-black">R$ 180,00</p>
-                    </div>
-                </div>
-                <div onclick="navigate('lista.html')"
-                    class="group flex flex-col justify-between h-56 rounded-nb bg-nb-yellow border-2 border-nb-black p-4 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm transition-all duration-200 cursor-pointer">
-                    <div class="flex justify-between items-start">
-                        <div
-                            class="flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black shadow-sm">
-                            <span class="material-symbols-outlined text-[28px]">bakery_dining</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-1 mt-3">
-                        <h4 class="text-nb-black text-lg font-extrabold leading-tight line-clamp-2">PADARIA</h4>
-                        <p class="text-nb-black font-semibold text-xs opacity-80">5 itens</p>
-                    </div>
-                    <div
-                        class="pt-3 border-t-2 border-nb-black mt-auto flex justify-between items-center bg-white/30 -mx-4 -mb-4 p-4 rounded-b-[10px]">
-                        <span class="text-xs font-bold uppercase">Total</span>
-                        <p class="text-nb-black text-xl font-black">R$ 32,50</p>
-                    </div>
-                </div>
-                <div onclick="navigate('lista.html')"
-                    class="group flex flex-col justify-between h-56 rounded-nb bg-nb-blue border-2 border-nb-black p-4 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm transition-all duration-200 cursor-pointer">
-                    <div class="flex justify-between items-start">
-                        <div
-                            class="flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black shadow-sm">
-                            <span class="material-symbols-outlined text-[28px]">medication</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-1 mt-3">
-                        <h4 class="text-nb-black text-lg font-extrabold leading-tight line-clamp-2">FARMÁCIA</h4>
-                        <p class="text-nb-black font-semibold text-xs opacity-80">3 itens</p>
-                    </div>
-                    <div
-                        class="pt-3 border-t-2 border-nb-black mt-auto flex justify-between items-center bg-white/30 -mx-4 -mb-4 p-4 rounded-b-[10px]">
-                        <span class="text-xs font-bold uppercase">Total</span>
-                        <p class="text-nb-black text-xl font-black">R$ 85,90</p>
-                    </div>
-                </div>
-                <div onclick="navigate('lista.html')"
-                    class="group flex flex-col justify-between h-56 rounded-nb bg-nb-pink border-2 border-nb-black p-4 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm transition-all duration-200 cursor-pointer">
-                    <div class="flex justify-between items-start">
-                        <div
-                            class="flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black shadow-sm">
-                            <span class="material-symbols-outlined text-[28px]">desk</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-1 mt-3">
-                        <h4 class="text-nb-black text-lg font-extrabold leading-tight line-clamp-2">ESCRITÓRIO</h4>
-                        <p class="text-nb-black font-semibold text-xs opacity-80">8 itens</p>
-                    </div>
-                    <div
-                        class="pt-3 border-t-2 border-nb-black mt-auto flex justify-between items-center bg-white/30 -mx-4 -mb-4 p-4 rounded-b-[10px]">
-                        <span class="text-xs font-bold uppercase">Total</span>
-                        <p class="text-nb-black text-xl font-black">R$ 120,00</p>
-                    </div>
-                </div>
-                <div onclick="navigate('novalista.html')"
-                    class="group flex flex-col items-center justify-center h-56 rounded-nb border-2 border-dashed border-nb-black bg-white p-4 hover:bg-nb-green transition-all duration-200 cursor-pointer shadow-hard-sm hover:shadow-hard hover:border-solid">
-                    <div
-                        class="flex items-center justify-center size-16 rounded-full bg-nb-black text-white mb-4 group-hover:scale-110 transition-transform duration-200 border-2 border-transparent group-hover:border-black group-hover:bg-white group-hover:text-black">
-                        <span class="material-symbols-outlined text-[32px]">add</span>
-                    </div>
-                    <h4 class="text-nb-black text-base font-black text-center uppercase">NOVA LISTA</h4>
                 </div>
             </div>
         </div>
+
         <div class="fixed bottom-6 right-6 z-50">
             <button onclick="navigate('novalista.html')"
                 class="flex items-center justify-center size-16 rounded-full bg-nb-black text-nb-yellow border-2 border-white shadow-hard-lg hover:scale-105 active:scale-95 active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-200">
@@ -240,6 +162,112 @@
             </button>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const loadingState = document.getElementById('loadingState');
+            const mainContent = document.getElementById('mainContent');
+            const listsGrid = document.getElementById('listsGrid');
+            const userNameEl = document.getElementById('userName');
+            const userAvatarEl = document.getElementById('userAvatar');
+            const newListCard = listsGrid.lastElementChild; // Keep reference to the 'New List' card
+
+            try {
+                // Check Session
+                const { data: { session }, error: sessionError } = await window.supabaseClient.auth.getSession();
+
+                if (!session) {
+                    navigate('login.html');
+                    return;
+                }
+
+                // Load User Profile (Name/Avatar)
+                const userMeta = session.user.user_metadata;
+                if (userMeta && userMeta.full_name) {
+                    userNameEl.textContent = userMeta.full_name.split(' ')[0]; // First name
+                } else {
+                    userNameEl.textContent = session.user.email.split('@')[0];
+                }
+
+                if (userMeta && userMeta.avatar_url) {
+                    userAvatarEl.style.backgroundImage = `url("${userMeta.avatar_url}")`;
+                    userAvatarEl.innerHTML = '';
+                }
+
+                // Load Lists
+                const { data: lists, error: listsError } = await window.supabaseClient
+                    .from('shopping_lists')
+                    .select('*')
+                    .eq('user_id', session.user.id)
+                    .order('created_at', { ascending: false });
+
+                if (listsError) throw listsError;
+
+                // Render Lists
+                // Remove everything except the last element (New List Card)
+                while (listsGrid.children.length > 1) {
+                    listsGrid.removeChild(listsGrid.firstChild);
+                }
+
+                // Create HTML string for each list
+                lists.forEach(list => {
+                    const card = document.createElement('div');
+
+                    // Format currency
+                    const total = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(list.total_amount || 0);
+
+                    // Determine styling based on color (simplified, mapping nb-colors to tailwind classes if needed, 
+                    // or using inline styles if custom mapped. For now assuming classes exist or fallback)
+                    // Using inline style for bg to match custom colors exactly if classes aren't enough, 
+                    // but we have tailwind classes like bg-nb-yellow.
+
+                    // Helper map for colors to tailwind classes
+                    const colorMap = {
+                        'nb-yellow': 'bg-nb-yellow',
+                        'nb-purple': 'bg-nb-purple',
+                        'nb-pink': 'bg-nb-pink',
+                        'nb-blue': 'bg-nb-blue',
+                        'nb-green': 'bg-nb-green',
+                        'nb-orange': 'bg-nb-orange',
+                    };
+                    const bgClass = colorMap[list.color] || 'bg-white';
+
+                    card.className = `group flex flex-col justify-between h-56 rounded-nb ${bgClass} border-2 border-nb-black p-4 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm transition-all duration-200 cursor-pointer`;
+                    card.onclick = () => navigate(`lista.html?id=${list.id}`); // Pass ID to list page
+
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black shadow-sm">
+                                <span class="material-symbols-outlined text-[28px]">${list.icon || 'shopping_cart'}</span>
+                            </div>
+                            ${list.item_count > 10 ?
+                            `<span class="bg-nb-black text-white text-xs font-bold px-2 py-1 rounded-md border border-nb-black uppercase tracking-wider">Cheia</span>`
+                            : ''}
+                        </div>
+                        <div class="flex flex-col gap-1 mt-3">
+                            <h4 class="text-nb-black text-lg font-extrabold leading-tight line-clamp-2 uppercase">${list.title}</h4>
+                            <p class="text-nb-black font-semibold text-xs opacity-80">${list.item_count || 0} itens</p>
+                        </div>
+                        <div class="pt-3 border-t-2 border-nb-black mt-auto flex justify-between items-center bg-white/30 -mx-4 -mb-4 p-4 rounded-b-[10px]">
+                            <span class="text-xs font-bold uppercase">Total</span>
+                            <p class="text-nb-black text-xl font-black">${total}</p>
+                        </div>
+                     `;
+
+                    // Insert before the "New List" card
+                    listsGrid.insertBefore(card, newListCard);
+                });
+
+            } catch (err) {
+                console.error('Error loading dashboard:', err);
+                alert('Erro ao carregar dados. Verifique o console.');
+            } finally {
+                loadingState.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                mainContent.classList.add('flex');
+            }
+        });
+    </script>
 </body>
 
 </html>

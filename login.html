@@ -111,47 +111,44 @@
                 </p>
             </div>
         </div>
-        <form class="flex flex-col gap-5 w-full mt-2" onsubmit="event.preventDefault(); navigate('usuario.html')">
+        <form id="loginForm" class="flex flex-col gap-5 w-full mt-2">
             <div class="group">
-                <label class="block text-sm font-black text-black dark:text-white uppercase mb-1 ml-1">Usuário</label>
+                <label class="block text-sm font-black text-black dark:text-white uppercase mb-1 ml-1"
+                    for="email">E-mail</label>
                 <div class="relative">
                     <div
                         class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-black dark:text-white z-10">
                         <span class="material-symbols-outlined text-[24px]">person</span>
                     </div>
-                    <input
+                    <input id="email" name="email"
                         class="w-full bg-accent-blue dark:bg-sky-900 border-3 border-dark-border dark:border-white rounded-brutal py-4 pl-12 pr-4 text-lg font-bold text-black dark:text-white placeholder:text-black/50 dark:placeholder:text-white/50 shadow-neo transition-all"
-                        placeholder="seu@email.com" type="text" />
+                        placeholder="seu@email.com" type="email" required />
                 </div>
             </div>
             <div class="group">
-                <label class="block text-sm font-black text-black dark:text-white uppercase mb-1 ml-1">Senha</label>
+                <label class="block text-sm font-black text-black dark:text-white uppercase mb-1 ml-1"
+                    for="password">Senha</label>
                 <div class="relative">
                     <div
                         class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-black dark:text-white z-10">
                         <span class="material-symbols-outlined text-[24px]">key</span>
                     </div>
-                    <input
+                    <input id="password" name="password"
                         class="w-full bg-accent-pink dark:bg-pink-900 border-3 border-dark-border dark:border-white rounded-brutal py-4 pl-12 pr-12 text-lg font-bold text-black dark:text-white placeholder:text-black/50 dark:placeholder:text-white/50 shadow-neo transition-all"
-                        placeholder="••••••••" type="password" />
+                        placeholder="••••••••" type="password" required />
                     <button
                         class="absolute inset-y-0 right-0 pr-4 flex items-center text-black dark:text-white hover:text-gray-700 transition-colors"
-                        type="button">
-                        <span class="material-symbols-outlined text-[24px]">visibility_off</span>
+                        type="button"
+                        onclick="const input = document.getElementById('password'); input.type = input.type === 'password' ? 'text' : 'password'">
+                        <span class="material-symbols-outlined text-[24px]">visibility</span>
                     </button>
                 </div>
-                <div class="flex justify-end pt-2">
-                    <button
-                        class="text-sm font-bold text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black px-2 py-0.5 transition-all border border-transparent hover:border-black dark:hover:border-white rounded"
-                        type="button">
-                        Esqueceu a senha?
-                    </button>
-                </div>
+                <!-- Forgot password placeholder -->
             </div>
-            <button type="submit"
-                class="mt-2 w-full bg-black dark:bg-white text-white dark:text-black border-3 border-black dark:border-white font-black text-xl py-4 rounded-brutal shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-neo-sm active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all flex items-center justify-center gap-3 uppercase tracking-wide">
-                <span>Entrar</span>
-                <span class="material-symbols-outlined text-[24px] font-bold">arrow_forward</span>
+            <button id="loginBtn" type="submit"
+                class="mt-2 w-full bg-black dark:bg-white text-white dark:text-black border-3 border-black dark:border-white font-black text-xl py-4 rounded-brutal shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-neo-sm active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all flex items-center justify-center gap-3 uppercase tracking-wide disabled:opacity-50 disabled:pointer-events-none">
+                <span id="btnText">Entrar</span>
+                <span id="btnIcon" class="material-symbols-outlined text-[24px] font-bold">arrow_forward</span>
             </button>
         </form>
         <div class="relative flex py-2 items-center">
@@ -161,12 +158,12 @@
             <div class="flex-grow border-t-3 border-dark-border dark:border-white"></div>
         </div>
         <div class="grid grid-cols-2 gap-4">
-            <button onclick="navigate('usuario.html')"
+            <button onclick="alert('Social login not configured for this demo')"
                 class="flex items-center justify-center gap-2 bg-white dark:bg-surface-dark h-14 rounded-brutal border-3 border-dark-border dark:border-white shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-neo-sm transition-all group">
                 <span class="font-black text-2xl text-black dark:text-white">G</span>
                 <span class="font-bold text-black dark:text-white text-sm">Google</span>
             </button>
-            <button onclick="navigate('usuario.html')"
+            <button onclick="alert('Social login not configured for this demo')"
                 class="flex items-center justify-center gap-2 bg-white dark:bg-surface-dark h-14 rounded-brutal border-3 border-dark-border dark:border-white shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-neo-sm transition-all group">
                 <span class="material-symbols-outlined text-[24px] text-black dark:text-white">smartphone</span>
                 <span class="font-bold text-black dark:text-white text-sm">Apple</span>
@@ -181,6 +178,45 @@
             </p>
         </div>
     </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const btn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const originalText = btnText.innerText;
+
+            // Loading UI
+            btn.disabled = true;
+            btnText.innerText = 'ENTRANDO...';
+
+            try {
+                const formData = new FormData(e.target);
+                const email = formData.get('email');
+                const password = formData.get('password');
+
+                // Supabase Sign In
+                const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) throw error;
+
+                // Success
+                navigate('usuario.html');
+
+            } catch (err) {
+                console.error('Login error:', err);
+                alert('Erro ao entrar: ' + err.message);
+
+                // Reset UI
+                btn.disabled = false;
+                btnText.innerText = originalText;
+            }
+        });
+    </script>
 </body>
 
 </html>
