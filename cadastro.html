@@ -194,13 +194,25 @@
 
                 console.log('User created:', data);
 
-                // Check if session is established (Auto confirm OFF in Supabase usually returns session immediately for local/dev, 
-                // but if Email Confirm is ON, session is null)
+                // Check session
                 if (data.session) {
                     navigate('usuario.html');
                 } else if (data.user && !data.session) {
-                    alert('Cadastro realizado! Por favor, verifique seu e-mail para confirmar a conta antes de entrar.');
-                    navigate('login.html');
+                    // Fallback: Try to sign in immediately. 
+                    // This handles cases where Supabase might not return the session in signUp 
+                    // but the user is actually confirmed (or confirmation is off).
+                    const { data: loginData, error: loginError } = await window.supabaseClient.auth.signInWithPassword({
+                        email: email,
+                        password: password,
+                    });
+
+                    if (loginData.session) {
+                        navigate('usuario.html');
+                    } else {
+                        // If login also fails, then email confirmation is truly required or there is another issue.
+                        alert('Cadastro realizado! Se o login não for automático, verifique se a confirmação de e-mail está desativada no Supabase ou confirme seu e-mail.');
+                        navigate('login.html');
+                    }
                 }
 
             } catch (err) {
