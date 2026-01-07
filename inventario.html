@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <link rel="manifest" href="manifest.json" />
     <link rel="apple-touch-icon" href="icon.png" />
-    <title>Inventário - Neo Brutalism</title>
+    <title>Inventário</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
@@ -70,6 +70,13 @@
         body {
             min-height: max(600px, 100dvh);
         }
+
+        /* Filter Button Active State */
+        .filter-btn.active {
+            background-color: #FDE047 !important;
+            /* yellow-300 */
+            color: #000000 !important;
+        }
     </style>
 </head>
 
@@ -86,115 +93,238 @@
             <h1
                 class="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex-1 text-center uppercase">
                 Inventário</h1>
-            <button
-                class="flex size-10 items-center justify-center rounded-lg bg-white dark:bg-card-dark shadow-neo text-slate-900 dark:text-white hover:bg-slate-50 transition-all active:shadow-none active:translate-x-1 active:translate-y-1 border-2 border-black">
-                <span class="material-symbols-outlined font-bold">tune</span>
-            </button>
+            <div class="size-10"></div> <!-- Spacer for center alignment -->
         </header>
+
         <main class="flex-1 overflow-y-auto px-5 pb-32 pt-6 no-scrollbar space-y-6">
             <section class="space-y-4">
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
                         <span class="material-symbols-outlined text-black font-bold">search</span>
                     </div>
-                    <input
+                    <input id="searchInput"
                         class="block w-full pl-10 pr-3 py-4 border-2 border-black rounded-xl text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-black shadow-neo font-bold bg-white dark:bg-card-dark text-lg"
                         placeholder="Buscar no estoque..." type="text" />
                 </div>
-                <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
-                    <button
-                        class="flex-none px-5 py-2.5 bg-black text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase">
+                <div id="filterContainer" class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+                    <button data-cat="all" onclick="filterItems('all')"
+                        class="filter-btn active flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
                         Tudo
                     </button>
-                    <button
-                        class="flex-none px-5 py-2.5 bg-yellow-300 text-black border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-yellow-400">
+                    <button data-cat="Comida" onclick="filterItems('Comida')"
+                        class="filter-btn flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
                         Comida
                     </button>
-                    <button
-                        class="flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
+                    <button data-cat="Limpeza" onclick="filterItems('Limpeza')"
+                        class="filter-btn flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
                         Limpeza
                     </button>
-                    <button
-                        class="flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
+                    <button data-cat="Higiene" onclick="filterItems('Higiene')"
+                        class="filter-btn flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
                         Higiene
                     </button>
                 </div>
             </section>
-            <section class="flex flex-col gap-4">
+
+            <section id="statsSection" class="flex flex-col gap-4">
                 <div
                     class="w-full bg-primary-light dark:bg-primary-dark/20 p-5 rounded-xl border-2 border-black shadow-neo flex items-center justify-between">
                     <div>
                         <p
                             class="text-xs font-black uppercase tracking-widest text-primary-dark dark:text-primary-light mb-1">
                             Itens em casa</p>
-                        <h2 class="text-4xl font-extrabold text-black dark:text-white">84</h2>
+                        <h2 id="totalCount" class="text-4xl font-extrabold text-black dark:text-white">--</h2>
                     </div>
                     <div
                         class="size-14 bg-white dark:bg-card-dark rounded-full border-2 border-black flex items-center justify-center rotate-3 hover:rotate-0 transition-transform">
                         <span class="material-symbols-outlined text-3xl font-black text-primary">inventory_2</span>
                     </div>
                 </div>
-                <div
-                    class="bg-white dark:bg-card-dark p-4 rounded-xl border-2 border-black shadow-neo flex items-center justify-between group hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all relative overflow-hidden">
-                    <div class="flex items-center gap-4 z-10 relative flex-1 min-w-0">
-                        <div
-                            class="size-14 bg-yellow-300 rounded-lg border-2 border-black flex items-center justify-center shrink-0 shadow-sm">
-                            <span class="material-symbols-outlined text-2xl text-black">bakery_dining</span>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h3 class="font-extrabold text-lg leading-tight text-slate-900 dark:text-white truncate">Pão
-                                de Forma</h3>
-                            <div class="flex items-center gap-2 mt-1 flex-wrap">
-                                <span
-                                    class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-200 border border-black px-1.5 py-0.5 rounded text-[10px] font-bold uppercase">Padaria</span>
-                                <span class="text-xs font-bold text-slate-500 uppercase">Val: 15/10</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="flex flex-col items-end pl-4 border-l-2 border-dashed border-slate-200 dark:border-slate-700 ml-2">
-                        <span class="text-xl font-black text-slate-900 dark:text-white">2</span>
-                        <span class="text-[10px] font-bold text-slate-500 uppercase">unid.</span>
-                    </div>
+
+                <div id="loading" class="flex justify-center p-8">
+                    <div class="size-10 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
                 </div>
-                <!-- More items... -->
-                <div
-                    class="bg-white dark:bg-card-dark p-4 rounded-xl border-2 border-black shadow-neo flex items-center justify-between group hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all relative overflow-hidden">
-                    <div class="flex items-center gap-4 z-10 relative flex-1 min-w-0">
-                        <div
-                            class="size-14 bg-blue-300 rounded-lg border-2 border-black flex items-center justify-center shrink-0 shadow-sm">
-                            <span class="material-symbols-outlined text-2xl text-black">cleaning_services</span>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h3 class="font-extrabold text-lg leading-tight text-slate-900 dark:text-white truncate">
-                                Sabão Líquido</h3>
-                            <div class="flex items-center gap-2 mt-1 flex-wrap">
-                                <span
-                                    class="bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 border border-black px-1.5 py-0.5 rounded text-[10px] font-bold uppercase">Limpeza</span>
-                                <span class="text-xs font-bold text-slate-500 uppercase">Lista #02</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="flex flex-col items-end pl-4 border-l-2 border-dashed border-slate-200 dark:border-slate-700 ml-2">
-                        <span class="text-xl font-black text-slate-900 dark:text-white">1</span>
-                        <div class="flex items-center gap-1">
-                            <span class="text-[10px] font-bold text-slate-500 uppercase">unid.</span>
-                            <span class="size-2 bg-red-500 rounded-full border border-black"
-                                title="Estoque baixo"></span>
-                        </div>
-                    </div>
+
+                <div id="itemsList" class="flex flex-col gap-4">
+                    <!-- Items will be injected here -->
                 </div>
             </section>
         </main>
+
         <div class="fixed bottom-6 right-6 z-30">
-            <button
+            <button onclick="addNewItem()"
                 class="size-16 bg-primary hover:bg-primary-dark text-white rounded-full flex items-center justify-center border-2 border-black shadow-neo active:shadow-none active:translate-x-1 active:translate-y-1 transition-all group">
-                <span
-                    class="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform">qr_code_scanner</span>
+                <span class="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform">add</span>
             </button>
         </div>
     </div>
+
+    <script>
+        let allItems = [];
+        let currentUserId = null;
+        let currentFilter = 'all';
+
+        const itemsListEl = document.getElementById('itemsList');
+        const loadingEl = document.getElementById('loading');
+        const totalCountEl = document.getElementById('totalCount');
+        const searchInput = document.getElementById('searchInput');
+
+        async function init() {
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (!session) {
+                navigate('login.html');
+                return;
+            }
+            currentUserId = session.user.id;
+
+            await fetchInventory();
+
+            // Setup Search
+            searchInput.addEventListener('input', (e) => {
+                renderItems(e.target.value);
+            });
+        }
+
+        async function fetchInventory() {
+            loadingEl.classList.remove('hidden');
+            itemsListEl.innerHTML = '';
+
+            const { data, error } = await window.supabaseClient
+                .from('inventory_items')
+                .select('*')
+                .order('name', { ascending: true });
+
+            loadingEl.classList.add('hidden');
+
+            if (error) {
+                console.error(error);
+                alert("Erro ao carregar inventário.");
+                return;
+            }
+
+            allItems = data || [];
+            renderItems();
+        }
+
+        function filterItems(category) {
+            currentFilter = category;
+
+            // Update UI buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.cat === category) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            renderItems(searchInput.value);
+        }
+
+        function renderItems(searchTerm = '') {
+            itemsListEl.innerHTML = '';
+
+            const term = searchTerm.toLowerCase();
+
+            const filtered = allItems.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(term);
+                const matchesCategory = currentFilter === 'all' || item.category === currentFilter;
+                return matchesSearch && matchesCategory;
+            });
+
+            totalCountEl.innerText = allItems.length;
+
+            if (filtered.length === 0) {
+                itemsListEl.innerHTML = `
+                    <div class="p-8 text-center opacity-50">
+                        <p class="font-bold">Nenhum item encontrado.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "bg-white dark:bg-card-dark p-4 rounded-xl border-2 border-black shadow-neo flex items-center justify-between group hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all relative overflow-hidden";
+
+                // Icon based on category (simple mapping)
+                let icon = 'inventory_2';
+                let colorClass = 'bg-gray-200';
+
+                if (item.category === 'Comida') { icon = 'bakery_dining'; colorClass = 'bg-yellow-300'; }
+                else if (item.category === 'Limpeza') { icon = 'cleaning_services'; colorClass = 'bg-blue-300'; }
+                else if (item.category === 'Higiene') { icon = 'soap'; colorClass = 'bg-green-300'; }
+
+                div.innerHTML = `
+                    <div class="flex items-center gap-4 z-10 relative flex-1 min-w-0" onclick="editItem('${item.id}')">
+                        <div class="size-14 ${colorClass} rounded-lg border-2 border-black flex items-center justify-center shrink-0 shadow-sm">
+                            <span class="material-symbols-outlined text-2xl text-black">${icon}</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-extrabold text-lg leading-tight text-slate-900 dark:text-white truncate">${item.name}</h3>
+                            <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                <span class="bg-white/50 border border-black px-1.5 py-0.5 rounded text-[10px] font-bold uppercase">${item.category || 'Geral'}</span>
+                                ${item.expiry_date ? `<span class="text-xs font-bold text-slate-500 uppercase">Val: ${new Date(item.expiry_date).toLocaleDateString()}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end pl-4 border-l-2 border-dashed border-slate-200 dark:border-slate-700 ml-2">
+                        <div class="flex items-center gap-2">
+                             <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})" class="size-6 bg-slate-200 rounded border border-black flex items-center justify-center hover:bg-slate-300 font-bold">-</button>
+                             <span class="text-xl font-black text-slate-900 dark:text-white w-6 text-center">${item.quantity}</span>
+                             <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})" class="size-6 bg-slate-200 rounded border border-black flex items-center justify-center hover:bg-slate-300 font-bold">+</button>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-500 uppercase mt-1">${item.unit || 'unid.'}</span>
+                    </div>
+                `;
+                itemsListEl.appendChild(div);
+            });
+        }
+
+        async function updateQuantity(id, newQty) {
+            if (newQty < 0) return;
+
+            // Optimistic update logic could go here, but for safety:
+            if (newQty === 0) {
+                if (!confirm("Remover este item do inventário?")) return;
+
+                await window.supabaseClient.from('inventory_items').delete().eq('id', id);
+            } else {
+                await window.supabaseClient.from('inventory_items').update({ quantity: newQty }).eq('id', id);
+            }
+            fetchInventory();
+        }
+
+        async function addNewItem() {
+            // MVP: Simple Prompts
+            const name = prompt("Nome do item:");
+            if (!name) return;
+
+            const category = prompt("Categoria (Comida, Limpeza, Higiene, Outros):", "Comida");
+
+            const { error } = await window.supabaseClient.from('inventory_items').insert({
+                user_id: currentUserId,
+                name: name,
+                category: category || 'Outros',
+                quantity: 1,
+                unit: 'unid.'
+            });
+
+            if (error) {
+                alert("Erro ao adicionar item");
+                console.error(error);
+            } else {
+                fetchInventory();
+            }
+        }
+
+        async function editItem(id) {
+            // Placeholder for edit functionality
+            console.log("Editing " + id);
+        }
+
+        init();
+    </script>
 </body>
 
 </html>
