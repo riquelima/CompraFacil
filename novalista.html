@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <link rel="manifest" href="manifest.json" />
     <link rel="apple-touch-icon" href="icon.png" />
     <title>Criar Nova Lista</title>
@@ -34,6 +34,8 @@
                         "nb-white": "#FFFFFF",
                         "nb-black": "#000000",
                         "nb-bg": "#F3F0E9",
+                        // Legacy support
+                        "primary": "#6366F1",
                     },
                     fontFamily: {
                         "display": ["Plus Jakarta Sans", "sans-serif"]
@@ -42,6 +44,8 @@
                         "hard": "4px 4px 0px 0px #000000",
                         "hard-sm": "2px 2px 0px 0px #000000",
                         "hard-lg": "6px 6px 0px 0px #000000",
+                        "neo": "4px 4px 0px 0px #000000",
+                        "neo-sm": "2px 2px 0px 0px #000000",
                     },
                     borderRadius: {
                         "nb": "12px",
@@ -86,11 +90,11 @@
     </style>
 </head>
 
-<body class="bg-nb-bg font-display text-nb-black overflow-x-hidden">
+<body class="bg-nb-bg font-display text-nb-black overflow-hidden h-screen w-full flex flex-col">
     <div
-        class="relative flex h-full min-h-screen w-full flex-col max-w-full md:max-w-2xl mx-auto bg-nb-bg border-x-2 border-nb-black shadow-hard-lg">
+        class="relative flex h-full w-full flex-col max-w-full md:max-w-2xl mx-auto bg-nb-bg border-x-2 border-nb-black shadow-hard-lg">
         <header
-            class="flex items-center p-6 pb-4 justify-between sticky top-0 bg-nb-bg z-10 border-b-2 border-nb-black">
+            class="flex-none flex items-center p-6 pb-4 justify-between bg-nb-bg z-10 border-b-2 border-nb-black relative">
             <button onclick="navigate('usuario.html')"
                 class="flex items-center justify-center size-12 rounded-full bg-nb-white border-2 border-nb-black shadow-hard-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all active:bg-gray-100 group">
                 <span
@@ -100,7 +104,7 @@
             <div class="size-12"></div>
         </header>
 
-        <form id="createListForm" class="flex-1 flex flex-col p-6 gap-6">
+        <form id="createListForm" class="flex-1 flex flex-col p-6 gap-6 overflow-y-auto no-scrollbar pb-32">
             <div class="flex flex-col gap-2">
                 <label class="text-sm font-extrabold uppercase tracking-wider ml-1" for="listName">Nome da Lista</label>
                 <div class="relative">
@@ -236,6 +240,38 @@
                 </button>
             </div>
         </form>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="fixed bottom-0 left-0 w-full z-40 pointer-events-none flex flex-col items-center">
+            <div
+                class="w-full max-w-2xl bg-white dark:bg-card-dark border-t-2 border-black pointer-events-auto h-20 px-6 flex items-center justify-between shadow-[0_-4px_0_0_rgba(0,0,0,1)] relative">
+
+                <!-- Left: Lists (Inactive) -->
+                <button onclick="navigate('usuario.html', true)"
+                    class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity w-16">
+                    <span
+                        class="material-symbols-outlined text-3xl font-bold text-black dark:text-white">list_alt</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wide text-black dark:text-white">Listas</span>
+                </button>
+
+                <!-- Center: FAB (Active/Disabled - Current Page) -->
+                <div class="absolute left-1/2 -top-8 -translate-x-1/2">
+                    <button disabled
+                        class="size-16 bg-nb-yellow rounded-full border-2 border-black shadow-neo flex items-center justify-center transition-all cursor-default">
+                        <span class="material-symbols-outlined text-4xl text-black font-black">add</span>
+                    </button>
+                </div>
+
+                <!-- Right: Inventory (Inactive) -->
+                <button onclick="navigate('inventario.html', true)"
+                    class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity w-16">
+                    <span
+                        class="material-symbols-outlined text-3xl font-bold text-black dark:text-white">inventory_2</span>
+                    <span
+                        class="text-[10px] font-bold uppercase tracking-wide text-black dark:text-white">Estoque</span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>

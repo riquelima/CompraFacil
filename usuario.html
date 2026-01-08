@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <link rel="manifest" href="manifest.json" />
     <link rel="apple-touch-icon" href="icon.png" />
     <title>Listas de Compras</title>
@@ -78,11 +78,11 @@
     </style>
 </head>
 
-<body class="bg-nb-bg font-display text-nb-black overflow-x-hidden">
+<body class="bg-nb-bg font-display text-nb-black h-screen overflow-hidden">
     <div
-        class="relative flex h-full min-h-screen w-full flex-col max-w-full md:max-w-2xl mx-auto bg-nb-bg border-x-2 border-nb-black shadow-hard-lg">
+        class="relative flex h-full w-full flex-col max-w-full md:max-w-2xl mx-auto bg-nb-bg border-x-2 border-nb-black shadow-hard-lg">
         <header
-            class="flex items-center p-6 pb-4 justify-between sticky top-0 bg-nb-bg z-10 border-b-2 border-nb-black">
+            class="flex-none flex items-center p-6 pb-4 justify-between bg-nb-bg z-10 border-b-2 border-nb-black relative">
             <div class="flex items-center gap-3">
                 <div class="relative group cursor-pointer">
                     <div id="userAvatar"
@@ -94,12 +94,8 @@
                 </div>
             </div>
             <div class="flex gap-2">
-                <button onclick="navigate('inventario.html')"
-                    class="flex items-center justify-center size-12 rounded-full bg-nb-blue border-2 border-nb-black shadow-hard-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all active:bg-blue-300"
-                    title="Inventário">
-                    <span class="material-symbols-outlined text-[24px] font-bold">inventory_2</span>
-                </button>
-                <button
+
+                <button onclick="navigate('configuracoes.html')"
                     class="flex items-center justify-center size-12 rounded-full bg-nb-white border-2 border-nb-black shadow-hard-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all active:bg-gray-100">
                     <span class="material-symbols-outlined text-[24px] font-bold">settings</span>
                 </button>
@@ -113,7 +109,7 @@
         </div>
 
         <!-- content (Initially hidden) -->
-        <div id="mainContent" class="hidden flex-col flex-1">
+        <div id="mainContent" class="hidden flex-col flex-1 overflow-y-auto no-scrollbar">
             <div class="px-6 py-6 bg-nb-white border-b-2 border-nb-black">
                 <div class="mb-6">
                     <h2 class="text-nb-black text-sm font-bold uppercase tracking-widest mb-1">Bem-vindo de volta</h2>

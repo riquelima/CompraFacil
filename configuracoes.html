@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <title>Configurações</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/app.js"></script>
+    <link href="css/transitions.css" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "nb-yellow": "#FFD23F",
+                        "nb-purple": "#C596F8",
+                        "nb-pink": "#FF85B3",
+                        "nb-blue": "#5EBCF7",
+                        "nb-green": "#85E0A3",
+                        "nb-orange": "#FF9F45",
+                        "nb-white": "#FFFFFF",
+                        "nb-black": "#000000",
+                        "nb-bg": "#F3F0E9",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    boxShadow: {
+                        "hard": "4px 4px 0px 0px #000000",
+                        "hard-sm": "2px 2px 0px 0px #000000",
+                        "hard-lg": "6px 6px 0px 0px #000000",
+                    },
+                    borderRadius: {
+                        "nb": "12px",
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            background-color: #F3F0E9;
+            background-image: radial-gradient(#000 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .toggle-checkbox:checked {
+            right: 4px;
+            left: auto;
+            border-color: #000;
+        }
+
+        .toggle-checkbox {
+            right: auto;
+            left: 4px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .toggle-bg {
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-nb-bg font-display text-nb-black overflow-x-hidden">
+    <div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-nb-bg border-x-2 border-nb-black">
+        <header
+            class="flex items-center p-6 pb-4 justify-between sticky top-0 bg-nb-bg z-10 border-b-2 border-nb-black">
+            <button onclick="navigate('usuario.html')"
+                class="flex items-center justify-center size-12 rounded-full bg-nb-white border-2 border-nb-black shadow-hard-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all active:bg-gray-100 group">
+                <span
+                    class="material-symbols-outlined text-[24px] font-bold group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            </button>
+            <h1 class="text-xl font-black uppercase tracking-tight">Configurações</h1>
+            <div class="size-12"></div>
+        </header>
+        <div class="flex-1 px-6 py-8 pb-32">
+            <div class="grid grid-cols-2 gap-5">
+                <div
+                    class="col-span-2 group flex items-center gap-4 rounded-nb bg-nb-white border-2 border-nb-black p-5 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm transition-all duration-200 cursor-pointer">
+                    <div class="relative">
+                        <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-16 border-2 border-nb-black"
+                            data-alt="User profile picture"
+                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDJcFAF9T90cvhyaJBgAscLqAPgzw_tNuOH-RGeHnrLMUnD0o40tSZOzm_mVg02b0x5VQfLWCMIqk4CgHvO7PbB493mJ-I2X6NJPGSgu3Tyvu2Zw_h2OducI9_U1kY1YrJkV6TEWmldtd8veBc4e6qhJYFFU8mXAOe69WujyX_SrgEjDfTAAFrsYGI-LNJOuQvtovqiybefw8N3hSbiX0fvX4pNHsO6x5gNM01OK0QUVvdpt_M33-inJ0YlnKcmFenkVAYLcwDf1zyl");'>
+                        </div>
+                        <div class="absolute bottom-0 right-0 size-5 bg-nb-green rounded-full border-2 border-nb-black">
+                        </div>
+                    </div>
+                    <div class="flex flex-col flex-1">
+                        <h2 class="text-xl font-black uppercase leading-none mb-1">Pedro Silva</h2>
+                        <p class="text-sm font-bold opacity-60">pedro@exemplo.com</p>
+                    </div>
+                    <div
+                        class="flex items-center justify-center size-10 rounded-full border-2 border-nb-black bg-nb-yellow group-hover:bg-nb-orange transition-colors">
+                        <span class="material-symbols-outlined text-xl">edit</span>
+                    </div>
+                </div>
+                <div
+                    class="col-span-2 flex items-center justify-between rounded-nb bg-nb-purple border-2 border-nb-black p-5 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm transition-all duration-200">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black">
+                            <span class="material-symbols-outlined text-[28px]">dark_mode</span>
+                        </div>
+                        <span class="text-lg font-black uppercase">Modo Escuro</span>
+                    </div>
+                    <label class="flex items-center cursor-pointer relative" for="dark-mode-toggle">
+                        <input class="sr-only peer" id="dark-mode-toggle" type="checkbox" />
+                        <div
+                            class="w-16 h-9 bg-nb-white border-2 border-nb-black rounded-full peer-checked:bg-nb-black peer-checked:border-nb-white toggle-bg shadow-sm">
+                        </div>
+                        <div
+                            class="toggle-checkbox absolute w-6 h-6 bg-nb-black border-2 border-nb-black rounded-full peer-checked:bg-nb-yellow peer-checked:border-nb-black top-1.5">
+                        </div>
+                    </label>
+                </div>
+                <div
+                    class="col-span-1 flex flex-col justify-between h-44 rounded-nb bg-nb-blue border-2 border-nb-black p-4 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm transition-all duration-200 cursor-pointer group relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div
+                            class="flex items-center justify-center size-10 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black z-10">
+                            <span class="material-symbols-outlined text-[24px]">lock_reset</span>
+                        </div>
+                        <span
+                            class="material-symbols-outlined text-[24px] opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 duration-200">arrow_forward</span>
+                    </div>
+                    <div class="z-10 mt-auto">
+                        <h3 class="text-lg font-black leading-tight uppercase">Trocar<br />Senha</h3>
+                    </div>
+                    <span
+                        class="absolute -bottom-4 -right-4 material-symbols-outlined text-[100px] opacity-10 rotate-12 pointer-events-none">lock</span>
+                </div>
+                <div
+                    class="col-span-1 flex flex-col justify-between h-44 rounded-nb bg-nb-green border-2 border-nb-black p-4 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm transition-all duration-200 cursor-pointer group relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div
+                            class="flex items-center justify-center size-10 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black z-10">
+                            <span class="material-symbols-outlined text-[24px]">notifications</span>
+                        </div>
+                    </div>
+                    <div class="z-10 mt-auto">
+                        <h3 class="text-lg font-black leading-tight uppercase">Notifica-<br />ções</h3>
+                    </div>
+                    <span
+                        class="absolute -bottom-4 -right-4 material-symbols-outlined text-[100px] opacity-10 rotate-12 pointer-events-none">notifications_active</span>
+                </div>
+                <div
+                    class="col-span-2 rounded-nb bg-nb-yellow border-2 border-nb-black p-4 shadow-hard flex items-center justify-between cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm transition-all">
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold uppercase opacity-70">Versão do App</span>
+                        <span class="text-base font-black uppercase">v1.2.0 (PWA)</span>
+                    </div>
+                    <span class="material-symbols-outlined text-2xl">info</span>
+                </div>
+                <button onclick="handleLogout()"
+                    class="col-span-2 mt-4 flex items-center justify-center gap-3 w-full rounded-nb bg-nb-pink border-2 border-nb-black p-5 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm hover:bg-red-400 transition-all duration-200 group">
+                    <span
+                        class="material-symbols-outlined text-[28px] font-bold group-hover:rotate-180 transition-transform duration-300">logout</span>
+                    <span class="text-xl font-black uppercase tracking-wide">Sair da Conta</span>
+                </button>
+            </div>
+            <div class="mt-10 text-center opacity-40">
+                <p class="text-xs font-bold uppercase tracking-widest">Neo-Brutalism App © 2024</p>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="fixed bottom-0 left-0 w-full z-40 pointer-events-none flex flex-col items-center">
+            <div
+                class="w-full max-w-2xl bg-white dark:bg-card-dark border-t-2 border-black pointer-events-auto h-20 px-6 flex items-center justify-between shadow-[0_-4px_0_0_rgba(0,0,0,1)] relative">
+
+                <!-- Left: Lists (Inactive) -->
+                <button onclick="navigate('usuario.html', true)"
+                    class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity w-16">
+                    <span
+                        class="material-symbols-outlined text-3xl font-bold text-black dark:text-white">list_alt</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wide text-black dark:text-white">Listas</span>
+                </button>
+
+                <!-- Center: FAB (Floating) -->
+                <div class="absolute left-1/2 -top-8 -translate-x-1/2">
+                    <button onclick="navigate('novalista.html')"
+                        class="size-16 bg-nb-yellow rounded-full border-2 border-black shadow-neo flex items-center justify-center hover:scale-110 active:scale-95 transition-all group">
+                        <span
+                            class="material-symbols-outlined text-4xl text-black font-black group-hover:rotate-90 transition-transform">add</span>
+                    </button>
+                </div>
+
+                <!-- Right: Inventory (Inactive) -->
+                <button onclick="navigate('inventario.html', true)"
+                    class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity w-16">
+                    <span
+                        class="material-symbols-outlined text-3xl font-bold text-black dark:text-white">inventory_2</span>
+                    <span
+                        class="text-[10px] font-bold uppercase tracking-wide text-black dark:text-white">Estoque</span>
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function init() {
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (!session) {
+                navigate('login.html');
+                return;
+            }
+
+            // Fetch Profile
+            const { data: profile } = await window.supabaseClient
+                .from('profiles')
+                .select('*')
+                .eq('id', session.user.id)
+                .single();
+
+            if (profile) {
+                // Determine display name: profile name -> metadata name -> email
+                const displayName = profile.full_name || session.user.user_metadata.full_name || session.user.email.split('@')[0];
+                const displayEmail = session.user.email;
+                const avatar = profile.avatar_url;
+
+                // Update UI
+                // We need to find elements. Since the HTML uses static text, let's target them by structure or add IDs if needed.
+                // For now, I'll use simple DOM navigation or querySelectors assuming uniqueness.
+
+                // Name
+                const nameEl = document.querySelector('h2.text-xl.font-black');
+                if (nameEl) nameEl.innerText = displayName;
+
+                // Email
+                const emailEl = document.querySelector('p.text-sm.font-bold.opacity-60');
+                if (emailEl) emailEl.innerText = displayEmail;
+
+                // Avatar (optional, might need default)
+                // const avatarEl = document.querySelector('[data-alt="User profile picture"]');
+                // if (avatarEl && avatar) avatarEl.style.backgroundImage = `url("${avatar}")`;
+            }
+        }
+
+        async function handleLogout() {
+            if (confirm("Tem certeza que deseja sair?")) {
+                await window.supabaseClient.auth.signOut();
+                navigate('login.html');
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</body>
+
+</html>
