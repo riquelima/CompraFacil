@@ -7,10 +7,14 @@
 const SUPABASE_URL = 'https://wzejeaxkozhfxhiukiui.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6ZWplYXhrb3poZnhoaXVraXVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3ODY2NDQsImV4cCI6MjA4MzM2MjY0NH0.GEnwKh_WFZuJlCj7Q4DKlgwFaZ_CCDMPgpq2ZOvK6-U';
 
+const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+
 // Check if supabase-js is loaded (it should be via CDN in HTML)
 if (typeof supabase !== 'undefined') {
     window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log('Supabase initialized');
+    if (!isProduction) {
+        console.log('Supabase initialized (Dev Mode)');
+    }
 } else {
     console.error('Supabase SDK not loaded. Please include the CDN script tag.');
 }

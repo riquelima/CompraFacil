@@ -103,6 +103,16 @@ function setActive(btn, isActive) {
 
 async function loadPageContent(url) {
     const appContent = document.getElementById('app-content');
+    
+    // Ensure global loader exists
+    let globalLoader = document.getElementById('global-loading');
+    if (!globalLoader) {
+        globalLoader = document.createElement('div');
+        globalLoader.id = 'global-loading';
+        globalLoader.className = 'fixed inset-0 bg-black/50 z-[100] flex items-center justify-center hidden backdrop-blur-sm transition-opacity duration-300';
+        globalLoader.innerHTML = '<div class="size-12 rounded-full border-4 border-white border-t-transparent animate-spin"></div>';
+        document.body.appendChild(globalLoader);
+    }
 
     // Fallback: If current page has no app-content, reload full page
     if (!appContent) {
@@ -110,6 +120,9 @@ async function loadPageContent(url) {
         window.location.href = url;
         return;
     }
+
+    // Show Loader
+    globalLoader.classList.remove('hidden');
 
     // Animation Out
     appContent.style.opacity = '0';
@@ -138,6 +151,9 @@ async function loadPageContent(url) {
             // Restore Styles
             appContent.style.opacity = '1';
             appContent.style.transform = 'translateY(0)';
+            
+            // Hide Loader
+            globalLoader.classList.add('hidden');
 
             // Initialize Logic based on URL
             const path = new URL(url).pathname.split('/').pop();
@@ -151,13 +167,18 @@ async function loadPageContent(url) {
     }
 }
 
-function initPageLogic(path, searchParams) {
+function initPageLogic(path, searchParams, attempt = 0) {
     console.log('Initializing page logic for:', path); // DEBUG
 
     // Wait for Supabase to be ready if needed
     if (!window.supabaseClient && !path.includes('login.html')) {
-        console.warn('Supabase client not ready, waiting...');
-        setTimeout(() => initPageLogic(path, searchParams), 100);
+        if (attempt > 50) { // 5 seconds max
+             console.error('Supabase initialization timeout.');
+             // Optional: Force reload or show error
+             return;
+        }
+        console.warn(`Supabase client not ready, waiting... (${attempt})`);
+        setTimeout(() => initPageLogic(path, searchParams, attempt + 1), 100);
         return;
     }
 
@@ -864,7 +885,10 @@ window.initSettings = async function () {
     // Bind Logout Logic Programmatically
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
-        logoutBtn.onclick = handleLogout; // Direct binding to ensure it works
+        console.log('Binding logout button event');
+        logoutBtn.onclick = handleLogout; 
+    } else {
+        console.error('Logout button not found in DOM');
     }
 
     // Bind "Keep Session" Toggle
@@ -885,6 +909,10 @@ window.initSettings = async function () {
 window.handleLogout = async function () {
     if (confirm("Tem certeza que deseja sair?")) {
         try {
+            console.log('Logging out...');
+            // Attempt to clear Supabase local storage token explicitly if known
+            // Note: The key depends on the project ID.
+            
             const { error } = await window.supabaseClient.auth.signOut();
             if (error) {
                 console.error('Logout error:', error);
@@ -893,6 +921,7 @@ window.handleLogout = async function () {
             console.error('Logout exception:', err);
         } finally {
             // Always redirect to index.html
+            console.log('Redirecting to index.html');
             window.location.href = 'index.html';
         }
     }
