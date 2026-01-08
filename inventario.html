@@ -287,6 +287,8 @@
         let allItems = [];
         let currentUserId = null;
         let currentFilter = 'all';
+        let touchStartX = 0;
+        let touchCurrentX = 0;
 
         const itemsListEl = document.getElementById('itemsList');
         const loadingEl = document.getElementById('loading');
@@ -345,8 +347,7 @@
             renderItems(searchInput.value);
         }
 
-        let touchStartX = 0;
-        let touchCurrentX = 0;
+
 
         function renderItems(searchTerm = '') {
             itemsListEl.innerHTML = '';

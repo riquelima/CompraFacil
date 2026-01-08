@@ -233,18 +233,23 @@
                 }
 
                 // Create HTML string for each list
+                // Create HTML string for each list
                 lists.forEach(list => {
+                    // Outer Wrapper (Relative)
+                    const wrapper = document.createElement('div');
+                    wrapper.className = "relative w-full h-56 rounded-nb mb-0 select-none overflow-hidden group/wrapper";
+
+                    // Background (Delete Action)
+                    const bg = document.createElement('div');
+                    bg.className = "absolute inset-0 bg-red-500 flex items-center justify-end px-8 rounded-nb z-0";
+                    bg.innerHTML = `<span class="material-symbols-outlined text-white text-4xl font-bold">delete</span>`;
+
+                    // Foreground (Card)
                     const card = document.createElement('div');
 
                     // Format currency
                     const total = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(list.total_amount || 0);
 
-                    // Determine styling based on color (simplified, mapping nb-colors to tailwind classes if needed, 
-                    // or using inline styles if custom mapped. For now assuming classes exist or fallback)
-                    // Using inline style for bg to match custom colors exactly if classes aren't enough, 
-                    // but we have tailwind classes like bg-nb-yellow.
-
-                    // Helper map for colors to tailwind classes
                     const colorMap = {
                         'nb-yellow': 'bg-nb-yellow',
                         'nb-purple': 'bg-nb-purple',
@@ -255,11 +260,63 @@
                     };
                     const bgClass = colorMap[list.color] || 'bg-white';
 
-                    card.className = `group flex flex-col justify-between h-56 rounded-nb ${bgClass} border-2 border-nb-black p-4 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm transition-all duration-200 cursor-pointer`;
-                    card.onclick = () => navigate(`lista.html?id=${list.id}`); // Pass ID to list page
+                    // Note: We move the onclick to separate logic to prevent click on swipe
+                    card.className = `relative z-10 w-full h-full flex flex-col justify-between rounded-nb ${bgClass} border-2 border-nb-black p-4 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] transition-transform duration-200 cursor-pointer`;
+
+                    // Touch Events
+                    let startX = 0;
+                    let currentX = 0;
+                    let isSwiping = false;
+
+                    card.addEventListener('touchstart', (e) => {
+                        startX = e.touches[0].clientX;
+                        currentX = startX;
+                        card.style.transition = 'none';
+                        isSwiping = false;
+                    });
+
+                    card.addEventListener('touchmove', (e) => {
+                        currentX = e.touches[0].clientX;
+                        const diff = currentX - startX;
+                        // Only allow left swipe
+                        if (diff < 0) {
+                            card.style.transform = `translateX(${diff}px)`;
+                            isSwiping = true;
+                            // Prevent scroll if horizontal swipe is dominant
+                            if (Math.abs(diff) > 10) e.preventDefault();
+                        }
+                    });
+
+                    card.addEventListener('touchend', (e) => {
+                        card.style.transition = 'transform 0.3s ease-out';
+                        const diff = currentX - startX;
+                        if (diff < -120) {
+                            // Swipe Threshold Met -> Delete
+                            card.style.transform = `translateX(-100%)`;
+                            setTimeout(() => deleteList(list.id), 300);
+                        } else {
+                            // Revert
+                            card.style.transform = `translateX(0)`;
+                            // If it was a tap (little movement), navigate
+                            if (Math.abs(diff) < 10 && !isSwiping) {
+                                navigate(`lista.html?id=${list.id}`);
+                            }
+                        }
+                    });
+
+                    // For desktop clicks (fallback)
+                    card.onclick = (e) => {
+                        // Only trigger if not touchend (hybrid devices) - relying on touch logic mostly for mobile
+                        // But simple onclick might fire on tap. 
+                        // To avoid double firing with the touch tap detection above, we can check pointer type?
+                        // Simplest: only use onclick for desktop, touch devices use touchend logic.
+                        // But for simplicity, we let touchend handle navigation on touch.
+                        if (e.pointerType === 'mouse') navigate(`lista.html?id=${list.id}`);
+                    };
+
 
                     card.innerHTML = `
-                        <div class="flex justify-between items-start">
+                        <div class="flex justify-between items-start pointer-events-none">
                             <div class="flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black shadow-sm">
                                 <span class="material-symbols-outlined text-[28px]">${list.icon || 'shopping_cart'}</span>
                             </div>
@@ -267,18 +324,20 @@
                             `<span class="bg-nb-black text-white text-xs font-bold px-2 py-1 rounded-md border border-nb-black uppercase tracking-wider">Cheia</span>`
                             : ''}
                         </div>
-                        <div class="flex flex-col gap-1 mt-3">
+                        <div class="flex flex-col gap-1 mt-3 pointer-events-none">
                             <h4 class="text-nb-black text-lg font-extrabold leading-tight line-clamp-2 uppercase">${list.title}</h4>
                             <p class="text-nb-black font-semibold text-xs opacity-80">${list.item_count || 0} itens</p>
                         </div>
-                        <div class="pt-3 border-t-2 border-nb-black mt-auto flex justify-between items-center bg-white/30 -mx-4 -mb-4 p-4 rounded-b-[10px]">
+                        <div class="pt-3 border-t-2 border-nb-black mt-auto flex justify-between items-center bg-white/30 -mx-4 -mb-4 p-4 rounded-b-[10px] pointer-events-none">
                             <span class="text-xs font-bold uppercase">Total</span>
                             <p class="text-nb-black text-xl font-black">${total}</p>
                         </div>
                      `;
 
+                    wrapper.appendChild(bg);
+                    wrapper.appendChild(card);
                     // Insert before the "New List" card
-                    listsGrid.insertBefore(card, newListCard);
+                    listsGrid.insertBefore(wrapper, newListCard);
                 });
 
             } catch (err) {
@@ -290,6 +349,28 @@
                 mainContent.classList.add('flex');
             }
         });
+
+        async function deleteList(id) {
+            if (!confirm("Tem certeza que deseja excluir esta lista? Será irreversível.")) {
+                window.location.reload(); // Reset UI
+                return;
+            }
+
+            try {
+                const { error } = await window.supabaseClient
+                    .from('shopping_lists')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+                // Success - reload to refresh
+                window.location.reload();
+            } catch (err) {
+                console.error("Error deleting list:", err);
+                alert("Erro ao excluir lista.");
+                window.location.reload();
+            }
+        }
     </script>
 </body>
 
