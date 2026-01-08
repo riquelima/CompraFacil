@@ -17,7 +17,8 @@ window.navigate = async function (url, skipAnimation = false) {
     // SESSION PERSISTENCE CHECK (Fixed)
     // Runs on every navigation but strictly guarded
     if (!sessionStorage.getItem('app_session_initialized')) {
-        const keepSession = localStorage.getItem('keep_session_active') === 'true';
+        // Default to TRUE (keep session) if not set. Only log out if explicitly 'false'.
+        const keepSession = localStorage.getItem('keep_session_active') !== 'false';
         const currentPath = targetUrl.pathname;
         const isPublicPage = currentPath.endsWith('index.html') || currentPath.endsWith('login.html') || currentPath === '/';
 
@@ -870,7 +871,8 @@ window.initSettings = async function () {
     const sessionToggle = document.getElementById('keep-session-toggle');
     if (sessionToggle) {
         // Init state
-        sessionToggle.checked = localStorage.getItem('keep_session_active') === 'true';
+        // Init state (Default to true if null)
+        sessionToggle.checked = localStorage.getItem('keep_session_active') !== 'false';
 
         // Change listener
         sessionToggle.addEventListener('change', (e) => {
