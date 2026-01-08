@@ -149,9 +149,9 @@ async function loadPageContent(url) {
             // Swap
             appContent.innerHTML = newContent.innerHTML;
 
-            // Restore Styles
-            appContent.style.opacity = '1';
-            appContent.style.transform = 'translateY(0)';
+            // Restore Styles - Clear transform to avoid stacking context issues with fixed children
+            appContent.style.opacity = '';
+            appContent.style.transform = '';
 
             // Hide Loader
             globalLoader.classList.add('hidden');
