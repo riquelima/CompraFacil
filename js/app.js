@@ -22,6 +22,8 @@ window.navigate = async function (url, skipAnimation = false) {
         if (!keepSession && window.supabaseClient) {
             console.log('Session persistence is OFF. Clearing session on startup...');
             await window.supabaseClient.auth.signOut();
+            window.location.href = 'index.html'; // Force redirect to login
+            return; // Stop navigation
         }
         sessionStorage.setItem('app_session_initialized', 'true');
     }
