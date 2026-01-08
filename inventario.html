@@ -360,6 +360,8 @@
                 return matchesSearch && matchesCategory;
             });
 
+            filtered.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+
             totalCountEl.innerText = allItems.length;
 
             if (filtered.length === 0) {

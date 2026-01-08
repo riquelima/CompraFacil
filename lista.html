@@ -279,7 +279,7 @@
                     .from('list_items')
                     .select('*')
                     .eq('list_id', listId)
-                    .order('created_at', { ascending: true }); // Newest at bottom usually better for shopping lists? Or alphabetical? Defaulting to creation time.
+                    .order('name', { ascending: true });
 
                 if (error) {
                     console.error(error);
