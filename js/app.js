@@ -339,7 +339,7 @@ const recipes = {
         protein: "32g",
         difficulty: "Fácil",
         icon: "skillet",
-        color: "bg-accent-green",
+        color: "bg-accent-blue",
         ingredients: ["Filé de Frango", "Batata", "Cebola", "Azeite", "Temperos"],
         steps: [
             { title: "Temperar", desc: "Tempere o frango com sal, alho e pimenta." },
@@ -452,7 +452,7 @@ const recipes = {
         protein: "3g",
         difficulty: "Fácil",
         icon: "fastfood",
-        color: "bg-accent-yellow",
+        color: "bg-accent-pink",
         ingredients: ["Batata", "Azeite", "Sal"],
         steps: [
             { title: "Cortar", desc: "Corte as batatas em palitos." },
@@ -469,7 +469,7 @@ const recipes = {
         protein: "8g",
         difficulty: "Fácil",
         icon: "soup_kitchen",
-        color: "bg-accent-pink",
+        color: "bg-accent-yellow",
         ingredients: ["Aveia", "Leite", "Manteiga", "Açúcar"],
         steps: [
             { title: "Misturar", desc: "Misture a aveia com leite em uma panela." },
@@ -532,7 +532,7 @@ const recipes = {
         protein: "2g",
         difficulty: "Fácil",
         icon: "eco",
-        color: "bg-accent-green",
+        color: "bg-accent-blue",
         ingredients: ["Alface", "Tomate", "Cenoura", "Azeite"],
         steps: [
             { title: "Lavar", desc: "Lave bem as folhas e legumes." },
@@ -688,7 +688,7 @@ const recipes = {
         protein: "24g",
         difficulty: "Fácil",
         icon: "lunch_dining",
-        color: "bg-accent-green",
+        color: "bg-accent-blue",
         ingredients: ["Tortilha", "Frango Desfiado", "Alface", "Tomate", "Molho"],
         steps: [
             { title: "Preparar", desc: "Prepare o frango temperado." },
