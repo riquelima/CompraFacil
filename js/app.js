@@ -17,22 +17,23 @@ window.navigate = async function (url, skipAnimation = false) {
     // SESSION PERSISTENCE CHECK (Fixed)
     // Runs on every navigation but strictly guarded
     if (!sessionStorage.getItem('app_session_initialized')) {
-        // Default to TRUE (keep session) if not set. Only log out if explicitly 'false'.
-        const keepSession = localStorage.getItem('keep_session_active') !== 'false';
+        // Default to FALSE (do NOT keep session) if not set.
+        const keepSession = localStorage.getItem('keep_session_active') === 'true';
         const currentPath = targetUrl.pathname;
-        const isPublicPage = currentPath.endsWith('index.html') || currentPath.endsWith('login.html') || currentPath === '/';
+        const isPublicPage = currentPath.endsWith('index.html') || currentPath.endsWith('login.html') || currentPath === '/' || currentPath === '';
 
         // Mark as initialized so we don't loop
         sessionStorage.setItem('app_session_initialized', 'true');
 
         if (!keepSession && window.supabaseClient) {
-            console.log('Session persistence is OFF. Checking session...');
+            console.log('Session persistence is strict OFF. Checking session...');
             // Check if there is an active session
             const { data: { session } } = await window.supabaseClient.auth.getSession();
 
             if (session) {
                 console.log('Active session found but persistence is OFF. Signing out...');
                 await window.supabaseClient.auth.signOut();
+                // If we are on internal page, go to index. Public pages are fine (we just logged out).
                 if (!isPublicPage) {
                     window.location.href = 'index.html';
                     return;
@@ -103,7 +104,7 @@ function setActive(btn, isActive) {
 
 async function loadPageContent(url) {
     const appContent = document.getElementById('app-content');
-    
+
     // Ensure global loader exists
     let globalLoader = document.getElementById('global-loading');
     if (!globalLoader) {
@@ -151,7 +152,7 @@ async function loadPageContent(url) {
             // Restore Styles
             appContent.style.opacity = '1';
             appContent.style.transform = 'translateY(0)';
-            
+
             // Hide Loader
             globalLoader.classList.add('hidden');
 
@@ -173,9 +174,9 @@ function initPageLogic(path, searchParams, attempt = 0) {
     // Wait for Supabase to be ready if needed
     if (!window.supabaseClient && !path.includes('login')) {
         if (attempt > 50) { // 5 seconds max
-             console.error('Supabase initialization timeout. Force reloading...');
-             window.location.reload();
-             return;
+            console.error('Supabase initialization timeout. Force reloading...');
+            window.location.reload();
+            return;
         }
         console.warn(`Supabase client not ready, waiting... (${attempt})`);
         setTimeout(() => initPageLogic(path, searchParams, attempt + 1), 100);
@@ -192,9 +193,9 @@ function initPageLogic(path, searchParams, attempt = 0) {
         }
     } else if (path.includes('lista') && !path.includes('novalista') && !path.includes('lista.html')) {
         // Clean URL 'lista' or 'lista?id=...'
-         initListDetail(searchParams.get('id'));
+        initListDetail(searchParams.get('id'));
     } else if (path.includes('lista.html')) {
-         initListDetail(searchParams.get('id'));
+        initListDetail(searchParams.get('id'));
     } else if (path.includes('inventario')) {
         initInventory();
     } else if (path.includes('novalista')) {
@@ -354,19 +355,19 @@ window.initHome = async function () {
             // Identify the static "Create New" card first.
             // Use a more robust selector or fallback
             let staticAddCard = Array.from(listsGrid.children).find(c => c.innerHTML.includes('novalista.html'));
-            
+
             // Re-create static card if missing (fallback)
             if (!staticAddCard) {
-                 const div = document.createElement('div');
-                 div.onclick = () => navigate('novalista.html');
-                 div.className = "group flex flex-col items-center justify-center h-56 rounded-nb border-2 border-dashed border-nb-black bg-white p-4 hover:bg-nb-green transition-all duration-200 cursor-pointer shadow-hard-sm hover:shadow-hard hover:border-solid";
-                 div.innerHTML = `
+                const div = document.createElement('div');
+                div.onclick = () => navigate('novalista.html');
+                div.className = "group flex flex-col items-center justify-center h-56 rounded-nb border-2 border-dashed border-nb-black bg-white p-4 hover:bg-nb-green transition-all duration-200 cursor-pointer shadow-hard-sm hover:shadow-hard hover:border-solid";
+                div.innerHTML = `
                     <div class="flex items-center justify-center size-16 rounded-full bg-nb-black text-white mb-4 group-hover:scale-110 transition-transform duration-200 border-2 border-transparent group-hover:border-black group-hover:bg-white group-hover:text-black">
                         <span class="material-symbols-outlined text-[32px]">add</span>
                     </div>
                     <h4 class="text-nb-black text-base font-black text-center uppercase">NOVA LISTA</h4>
                  `;
-                 staticAddCard = div;
+                staticAddCard = div;
             }
 
             listsGrid.innerHTML = ''; // Clear all
@@ -377,14 +378,14 @@ window.initHome = async function () {
                     // ... (existing list rendering logic) ...
                     const wrapper = document.createElement('div');
                     wrapper.className = "relative w-full h-56 rounded-nb mb-0 select-none overflow-hidden group/wrapper";
-    
+
                     const bg = document.createElement('div');
                     bg.className = "absolute inset-0 bg-red-500 flex items-center justify-end px-8 rounded-nb z-0";
                     bg.innerHTML = `<span class="material-symbols-outlined text-white text-4xl font-bold">delete</span>`;
-    
+
                     const card = document.createElement('div');
                     const total = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(list.total_amount || 0);
-    
+
                     const colorMap = {
                         'nb-yellow': 'bg-nb-yellow',
                         'nb-purple': 'bg-nb-purple',
@@ -394,18 +395,18 @@ window.initHome = async function () {
                         'nb-orange': 'bg-nb-orange',
                     };
                     const bgClass = colorMap[list.color] || 'bg-white';
-    
+
                     card.className = `relative z-10 w-full h-full flex flex-col justify-between rounded-nb ${bgClass} border-2 border-nb-black p-4 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] transition-transform duration-200 cursor-pointer`;
-    
+
                     let startX = 0, currentX = 0, isSwiping = false;
-    
+
                     card.addEventListener('touchstart', (e) => {
                         startX = e.touches[0].clientX;
                         currentX = startX;
                         card.style.transition = 'none';
                         isSwiping = false;
                     });
-    
+
                     card.addEventListener('touchmove', (e) => {
                         currentX = e.touches[0].clientX;
                         const diff = currentX - startX;
@@ -415,7 +416,7 @@ window.initHome = async function () {
                             if (Math.abs(diff) > 10) e.preventDefault();
                         }
                     });
-    
+
                     card.addEventListener('touchend', (e) => {
                         card.style.transition = 'transform 0.3s ease-out';
                         const diff = currentX - startX;
@@ -429,15 +430,15 @@ window.initHome = async function () {
                             }
                         }
                     });
-    
+
                     card.onclick = (e) => {
                         if (e.pointerType === 'mouse') navigate(`lista.html?id=${list.id}`);
                     };
-    
+
                     const iconContent = list.icon && list.icon.startsWith('http')
                         ? `<img src="${list.icon}" class="size-8 object-contain" alt="icon">`
                         : `<span class="material-symbols-outlined text-[28px]">${list.icon || 'shopping_cart'}</span>`;
-    
+
                     card.innerHTML = `
                         <div class="flex justify-between items-start pointer-events-none">
                             <div class="flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black shadow-sm">
@@ -453,7 +454,7 @@ window.initHome = async function () {
                             <p class="text-nb-black text-xl font-black">${total}</p>
                         </div>
                     `;
-    
+
                     wrapper.appendChild(bg);
                     wrapper.appendChild(card);
                     // Insert before the static add card
@@ -935,7 +936,7 @@ window.initSettings = async function () {
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         console.log('Binding logout button event');
-        logoutBtn.onclick = handleLogout; 
+        logoutBtn.onclick = handleLogout;
     } else {
         console.error('Logout button not found in DOM');
     }
@@ -944,8 +945,8 @@ window.initSettings = async function () {
     const sessionToggle = document.getElementById('keep-session-toggle');
     if (sessionToggle) {
         // Init state
-        // Init state (Default to true if null)
-        sessionToggle.checked = localStorage.getItem('keep_session_active') !== 'false';
+        // Init state (Default to false if null)
+        sessionToggle.checked = localStorage.getItem('keep_session_active') === 'true';
 
         // Change listener
         sessionToggle.addEventListener('change', (e) => {
@@ -961,7 +962,7 @@ window.handleLogout = async function () {
             console.log('Logging out...');
             // Attempt to clear Supabase local storage token explicitly if known
             // Note: The key depends on the project ID.
-            
+
             const { error } = await window.supabaseClient.auth.signOut();
             if (error) {
                 console.error('Logout error:', error);
@@ -1256,7 +1257,21 @@ window.toggleFavorite = function () {
 }
 
 // Initial Load
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Strict Session Check on Load
+    const keepSession = localStorage.getItem('keep_session_active') === 'true';
+    if (!keepSession && window.supabaseClient) {
+        const { data: { session } } = await window.supabaseClient.auth.getSession();
+        if (session) {
+            console.log('Startup: Persistence OFF, clearing session.');
+            await window.supabaseClient.auth.signOut();
+            if (!window.location.pathname.includes('index.html') && !window.location.pathname.includes('login.html') && window.location.pathname !== '/' && window.location.pathname !== '') {
+                window.location.href = 'index.html';
+                return;
+            }
+        }
+    }
+
     // Determine current page and init
     const path = window.location.pathname.split('/').pop();
     const params = new URLSearchParams(window.location.search);
