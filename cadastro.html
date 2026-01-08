@@ -196,6 +196,7 @@
 
                 // Check session
                 if (data.session) {
+                    sessionStorage.setItem('app_session_initialized', 'true'); // Prevent auto-logout on navigate
                     navigate('usuario.html');
                 } else if (data.user && !data.session) {
                     // Fallback: Try to sign in immediately. 
@@ -207,6 +208,7 @@
                     });
 
                     if (loginData.session) {
+                        sessionStorage.setItem('app_session_initialized', 'true'); // Prevent auto-logout on navigate
                         navigate('usuario.html');
                     } else {
                         // If login also fails, then email confirmation is truly required or there is another issue.

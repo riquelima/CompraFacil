@@ -199,6 +199,7 @@
                 if (error) throw error;
 
                 // Success
+                sessionStorage.setItem('app_session_initialized', 'true'); // Prevent auto-logout on navigate
                 navigate('usuario.html');
 
             } catch (err) {
