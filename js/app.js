@@ -964,6 +964,8 @@ window.handleLogout = async function () {
             // Note: The key depends on the project ID.
 
             const { error } = await window.supabaseClient.auth.signOut();
+            // Explicitly clear checking flag
+            sessionStorage.removeItem('app_session_initialized');
             if (error) {
                 console.error('Logout error:', error);
             }
