@@ -1401,7 +1401,9 @@ window.toggleFavorite = function () {
 document.addEventListener('DOMContentLoaded', async () => {
     // Strict Session Check on Load
     const keepSession = localStorage.getItem('keep_session_active') === 'true';
-    if (!keepSession && window.supabaseClient) {
+    const sessionInitialized = sessionStorage.getItem('app_session_initialized');
+
+    if (!keepSession && !sessionInitialized && window.supabaseClient) {
         const { data: { session } } = await window.supabaseClient.auth.getSession();
         if (session) {
             console.log('Startup: Persistence OFF, clearing session.');
