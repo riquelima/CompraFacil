@@ -332,7 +332,7 @@ window.initHome = async function () {
 
             if (listsError) throw listsError;
 
-            console.log('Lists fetched:', lists.length); // DEBUG
+            console.log('Lists fetched:', lists ? lists.length : 0); // DEBUG
 
             // Identify the static "Create New" card first.
             const staticAddCard = Array.from(listsGrid.children).find(c => c.innerHTML.includes('novalista.html'));
@@ -340,105 +340,113 @@ window.initHome = async function () {
             listsGrid.innerHTML = ''; // Clear all
             if (staticAddCard) listsGrid.appendChild(staticAddCard); // Add back static card
 
-            lists.forEach(list => {
-                const wrapper = document.createElement('div');
-                wrapper.className = "relative w-full h-56 rounded-nb mb-0 select-none overflow-hidden group/wrapper";
-
-                const bg = document.createElement('div');
-                bg.className = "absolute inset-0 bg-red-500 flex items-center justify-end px-8 rounded-nb z-0";
-                bg.innerHTML = `<span class="material-symbols-outlined text-white text-4xl font-bold">delete</span>`;
-
-                const card = document.createElement('div');
-                const total = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(list.total_amount || 0);
-
-                const colorMap = {
-                    'nb-yellow': 'bg-nb-yellow',
-                    'nb-purple': 'bg-nb-purple',
-                    'nb-pink': 'bg-nb-pink',
-                    'nb-blue': 'bg-nb-blue',
-                    'nb-green': 'bg-nb-green',
-                    'nb-orange': 'bg-nb-orange',
-                };
-                const bgClass = colorMap[list.color] || 'bg-white';
-
-                card.className = `relative z-10 w-full h-full flex flex-col justify-between rounded-nb ${bgClass} border-2 border-nb-black p-4 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] transition-transform duration-200 cursor-pointer`;
-
-                let startX = 0, currentX = 0, isSwiping = false;
-
-                card.addEventListener('touchstart', (e) => {
-                    startX = e.touches[0].clientX;
-                    currentX = startX;
-                    card.style.transition = 'none';
-                    isSwiping = false;
-                });
-
-                card.addEventListener('touchmove', (e) => {
-                    currentX = e.touches[0].clientX;
-                    const diff = currentX - startX;
-                    if (diff < 0) {
-                        card.style.transform = `translateX(${diff}px)`;
-                        isSwiping = true;
-                        if (Math.abs(diff) > 10) e.preventDefault();
-                    }
-                });
-
-                card.addEventListener('touchend', (e) => {
-                    card.style.transition = 'transform 0.3s ease-out';
-                    const diff = currentX - startX;
-                    if (diff < -120) {
-                        card.style.transform = `translateX(-100%)`;
-                        setTimeout(() => deleteList(list.id), 300);
-                    } else {
-                        card.style.transform = `translateX(0)`;
-                        if (Math.abs(diff) < 10 && !isSwiping) {
-                            navigate(`lista.html?id=${list.id}`);
+            if (lists && lists.length > 0) {
+                lists.forEach(list => {
+                    // ... (existing list rendering logic) ...
+                    const wrapper = document.createElement('div');
+                    wrapper.className = "relative w-full h-56 rounded-nb mb-0 select-none overflow-hidden group/wrapper";
+    
+                    const bg = document.createElement('div');
+                    bg.className = "absolute inset-0 bg-red-500 flex items-center justify-end px-8 rounded-nb z-0";
+                    bg.innerHTML = `<span class="material-symbols-outlined text-white text-4xl font-bold">delete</span>`;
+    
+                    const card = document.createElement('div');
+                    const total = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(list.total_amount || 0);
+    
+                    const colorMap = {
+                        'nb-yellow': 'bg-nb-yellow',
+                        'nb-purple': 'bg-nb-purple',
+                        'nb-pink': 'bg-nb-pink',
+                        'nb-blue': 'bg-nb-blue',
+                        'nb-green': 'bg-nb-green',
+                        'nb-orange': 'bg-nb-orange',
+                    };
+                    const bgClass = colorMap[list.color] || 'bg-white';
+    
+                    card.className = `relative z-10 w-full h-full flex flex-col justify-between rounded-nb ${bgClass} border-2 border-nb-black p-4 shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] transition-transform duration-200 cursor-pointer`;
+    
+                    let startX = 0, currentX = 0, isSwiping = false;
+    
+                    card.addEventListener('touchstart', (e) => {
+                        startX = e.touches[0].clientX;
+                        currentX = startX;
+                        card.style.transition = 'none';
+                        isSwiping = false;
+                    });
+    
+                    card.addEventListener('touchmove', (e) => {
+                        currentX = e.touches[0].clientX;
+                        const diff = currentX - startX;
+                        if (diff < 0) {
+                            card.style.transform = `translateX(${diff}px)`;
+                            isSwiping = true;
+                            if (Math.abs(diff) > 10) e.preventDefault();
                         }
+                    });
+    
+                    card.addEventListener('touchend', (e) => {
+                        card.style.transition = 'transform 0.3s ease-out';
+                        const diff = currentX - startX;
+                        if (diff < -120) {
+                            card.style.transform = `translateX(-100%)`;
+                            setTimeout(() => deleteList(list.id), 300);
+                        } else {
+                            card.style.transform = `translateX(0)`;
+                            if (Math.abs(diff) < 10 && !isSwiping) {
+                                navigate(`lista.html?id=${list.id}`);
+                            }
+                        }
+                    });
+    
+                    card.onclick = (e) => {
+                        if (e.pointerType === 'mouse') navigate(`lista.html?id=${list.id}`);
+                    };
+    
+                    const iconContent = list.icon && list.icon.startsWith('http')
+                        ? `<img src="${list.icon}" class="size-8 object-contain" alt="icon">`
+                        : `<span class="material-symbols-outlined text-[28px]">${list.icon || 'shopping_cart'}</span>`;
+    
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start pointer-events-none">
+                            <div class="flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black shadow-sm">
+                                ${iconContent}
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-1 mt-3 pointer-events-none">
+                            <h4 class="text-nb-black text-lg font-extrabold leading-tight line-clamp-2 uppercase">${list.title}</h4>
+                            <p class="text-nb-black font-semibold text-xs opacity-80">${list.item_count || 0} itens</p>
+                        </div>
+                        <div class="pt-3 border-t-2 border-nb-black mt-auto flex justify-between items-center bg-white/30 -mx-4 -mb-4 p-4 rounded-b-[10px] pointer-events-none">
+                            <span class="text-xs font-bold uppercase">Total</span>
+                            <p class="text-nb-black text-xl font-black">${total}</p>
+                        </div>
+                    `;
+    
+                    wrapper.appendChild(bg);
+                    wrapper.appendChild(card);
+                    // Insert before the static add card
+                    if (staticAddCard) {
+                        listsGrid.insertBefore(wrapper, staticAddCard);
+                    } else {
+                        listsGrid.appendChild(wrapper);
                     }
                 });
-
-                card.onclick = (e) => {
-                    if (e.pointerType === 'mouse') navigate(`lista.html?id=${list.id}`);
-                };
-
-                const iconContent = list.icon && list.icon.startsWith('http')
-                    ? `<img src="${list.icon}" class="size-8 object-contain" alt="icon">`
-                    : `<span class="material-symbols-outlined text-[28px]">${list.icon || 'shopping_cart'}</span>`;
-
-                card.innerHTML = `
-                    <div class="flex justify-between items-start pointer-events-none">
-                        <div class="flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black shadow-sm">
-                            ${iconContent}
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-1 mt-3 pointer-events-none">
-                        <h4 class="text-nb-black text-lg font-extrabold leading-tight line-clamp-2 uppercase">${list.title}</h4>
-                        <p class="text-nb-black font-semibold text-xs opacity-80">${list.item_count || 0} itens</p>
-                    </div>
-                    <div class="pt-3 border-t-2 border-nb-black mt-auto flex justify-between items-center bg-white/30 -mx-4 -mb-4 p-4 rounded-b-[10px] pointer-events-none">
-                        <span class="text-xs font-bold uppercase">Total</span>
-                        <p class="text-nb-black text-xl font-black">${total}</p>
-                    </div>
-                `;
-
-                wrapper.appendChild(bg);
-                wrapper.appendChild(card);
-                // Insert before the static add card
-                if (staticAddCard) {
-                    listsGrid.insertBefore(wrapper, staticAddCard);
-                } else {
-                    listsGrid.appendChild(wrapper);
-                }
-            });
+            }
         }
 
     } catch (err) {
         console.error('Error loading home:', err);
     } finally {
+        console.log('initHome finally block executed. Removing loading state.');
         // ALWAYS remove loading state, even if errors occur
-        if (loadingState) loadingState.classList.add('hidden');
+        if (loadingState) {
+            loadingState.classList.add('hidden');
+            loadingState.style.display = 'none'; // Force hide
+        }
         if (mainContent) {
             mainContent.classList.remove('hidden');
             mainContent.classList.add('flex');
+            mainContent.style.display = 'flex'; // Force show
         }
     }
 }
@@ -857,28 +865,37 @@ window.initSettings = async function () {
         return;
     }
 
-    // Fetch Profile
-    const { data: profile } = await window.supabaseClient
+    console.log('User metadata:', session.user.user_metadata); // DEBUG
+
+    // Initial Fallback using session data
+    const sessionName = session.user.user_metadata.full_name || session.user.email.split('@')[0];
+    const sessionEmail = session.user.email;
+    const sessionAvatar = session.user.user_metadata.avatar_url;
+
+    const nameEl = document.querySelector('h2.text-xl.font-black');
+    if (nameEl) nameEl.innerText = sessionName;
+
+    const emailEl = document.querySelector('p.text-sm.font-bold.opacity-60');
+    if (emailEl) emailEl.innerText = sessionEmail;
+
+    const avatarEl = document.querySelector('[data-alt="User profile picture"]');
+    if (avatarEl && sessionAvatar) avatarEl.style.backgroundImage = `url("${sessionAvatar}")`;
+
+
+    // Fetch Profile from DB (if exists)
+    const { data: profile, error } = await window.supabaseClient
         .from('profiles')
         .select('*')
         .eq('id', session.user.id)
         .single();
 
-    if (profile) {
-        const displayName = profile.full_name || session.user.user_metadata.full_name || session.user.email.split('@')[0];
-        const displayEmail = session.user.email;
-        const avatar = profile.avatar_url;
+    if (profile && !error) {
+        const displayName = profile.full_name || sessionName;
+        const displayEmail = sessionEmail; // Usually email comes from auth, not profile
+        const avatar = profile.avatar_url || sessionAvatar;
 
-        // Name
-        const nameEl = document.querySelector('h2.text-xl.font-black');
+        // Update UI again if DB has better data
         if (nameEl) nameEl.innerText = displayName;
-
-        // Email
-        const emailEl = document.querySelector('p.text-sm.font-bold.opacity-60');
-        if (emailEl) emailEl.innerText = displayEmail;
-
-        // Avatar
-        const avatarEl = document.querySelector('[data-alt="User profile picture"]');
         if (avatarEl && avatar) avatarEl.style.backgroundImage = `url("${avatar}")`;
     }
 
