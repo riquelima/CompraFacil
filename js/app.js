@@ -7,7 +7,7 @@ window.navigate = async function (url, skipAnimation = false) {
 
     // SPA Router Logic
     const targetUrl = new URL(url, window.location.origin);
-    
+
     // If external link, let it proceed
     if (targetUrl.origin !== window.location.origin) {
         window.location.href = url;
@@ -33,7 +33,7 @@ window.addEventListener('popstate', () => {
 function updateNavbarState(pathname) {
     // Clean pathname (remove leading slash if needed or handle root)
     const path = pathname.split('/').pop() || 'index.html';
-    
+
     // Define active states
     const navItems = {
         'listas': ['usuario.html', 'index.html', ''],
@@ -43,17 +43,21 @@ function updateNavbarState(pathname) {
 
     // Logic to highlight correct icon
     const navButtons = document.querySelectorAll('.fixed.bottom-0 button');
-    
+
     navButtons.forEach(btn => {
         const onclick = btn.getAttribute('onclick');
         if (!onclick) return;
-        
+
+        // FAB Button (always active/opaque)
+        if (onclick.includes('novalista.html')) {
+            setActive(btn, true);
+            return;
+        }
+
         if (onclick.includes('usuario.html') && navItems['listas'].some(p => path.includes(p))) {
             setActive(btn, true);
         } else if (onclick.includes('inventario.html') && navItems['estoque'].some(p => path.includes(p))) {
             setActive(btn, true);
-        } else if (onclick.includes('novalista.html') && navItems['novalista'].some(p => path.includes(p))) {
-             // Center FAB usually
         } else {
             setActive(btn, false);
         }
@@ -72,7 +76,7 @@ function setActive(btn, isActive) {
 
 async function loadPageContent(url) {
     const appContent = document.getElementById('app-content');
-    
+
     // Fallback: If current page has no app-content, reload full page
     if (!appContent) {
         console.warn('No #app-content found in current DOM, forcing reload.');
@@ -83,16 +87,16 @@ async function loadPageContent(url) {
     // Animation Out
     appContent.style.opacity = '0';
     appContent.style.transform = 'translateY(-10px)';
-    
+
     try {
         const response = await fetch(url);
         const text = await response.text();
-        
+
         // Parse HTML
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, 'text/html');
         const newContent = doc.getElementById('app-content');
-        
+
         if (!newContent) {
             console.error('No #app-content found in target page, forcing reload.');
             window.location.href = url; // Fallback to full reload
@@ -103,15 +107,15 @@ async function loadPageContent(url) {
         setTimeout(() => {
             // Swap
             appContent.innerHTML = newContent.innerHTML;
-            
+
             // Restore Styles
             appContent.style.opacity = '1';
             appContent.style.transform = 'translateY(0)';
-            
+
             // Initialize Logic based on URL
             const path = new URL(url).pathname.split('/').pop();
             initPageLogic(path, new URL(url).searchParams);
-            
+
         }, 300);
 
     } catch (err) {
@@ -229,7 +233,7 @@ const recipes = {
 // --- Page Logic Functions ---
 
 // 1. HOME (usuario.html)
-window.initHome = async function() {
+window.initHome = async function () {
     console.log('initHome called'); // DEBUG
     const loadingState = document.getElementById('loadingState');
     const mainContent = document.getElementById('mainContent');
@@ -247,10 +251,10 @@ window.initHome = async function() {
     try {
         console.log('Checking session...'); // DEBUG
         const { data: { session }, error: authError } = await window.supabaseClient.auth.getSession();
-        
+
         if (authError || !session) {
             console.log('No session, redirecting to login'); // DEBUG
-            window.location.href = 'login.html'; 
+            window.location.href = 'login.html';
             return;
         }
 
@@ -258,13 +262,13 @@ window.initHome = async function() {
 
         const userMeta = session.user.user_metadata;
         if (userNameEl) {
-             if (userMeta && userMeta.full_name) {
+            if (userMeta && userMeta.full_name) {
                 userNameEl.textContent = userMeta.full_name.split(' ')[0];
             } else {
                 userNameEl.textContent = session.user.email.split('@')[0];
             }
         }
-       
+
         if (userAvatarEl && userMeta && userMeta.avatar_url) {
             userAvatarEl.style.backgroundImage = `url("${userMeta.avatar_url}")`;
             userAvatarEl.innerHTML = '';
@@ -284,21 +288,21 @@ window.initHome = async function() {
 
             // Identify the static "Create New" card first.
             const staticAddCard = Array.from(listsGrid.children).find(c => c.innerHTML.includes('novalista.html'));
-            
+
             listsGrid.innerHTML = ''; // Clear all
             if (staticAddCard) listsGrid.appendChild(staticAddCard); // Add back static card
 
             lists.forEach(list => {
                 const wrapper = document.createElement('div');
                 wrapper.className = "relative w-full h-56 rounded-nb mb-0 select-none overflow-hidden group/wrapper";
-                
+
                 const bg = document.createElement('div');
                 bg.className = "absolute inset-0 bg-red-500 flex items-center justify-end px-8 rounded-nb z-0";
                 bg.innerHTML = `<span class="material-symbols-outlined text-white text-4xl font-bold">delete</span>`;
 
                 const card = document.createElement('div');
                 const total = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(list.total_amount || 0);
-                
+
                 const colorMap = {
                     'nb-yellow': 'bg-nb-yellow',
                     'nb-purple': 'bg-nb-purple',
@@ -348,8 +352,8 @@ window.initHome = async function() {
                     if (e.pointerType === 'mouse') navigate(`lista.html?id=${list.id}`);
                 };
 
-                const iconContent = list.icon && list.icon.startsWith('http') 
-                    ? `<img src="${list.icon}" class="size-8 object-contain" alt="icon">` 
+                const iconContent = list.icon && list.icon.startsWith('http')
+                    ? `<img src="${list.icon}" class="size-8 object-contain" alt="icon">`
                     : `<span class="material-symbols-outlined text-[28px]">${list.icon || 'shopping_cart'}</span>`;
 
                 card.innerHTML = `
@@ -393,19 +397,19 @@ window.initHome = async function() {
 
 async function deleteList(id) {
     if (!confirm("Tem certeza que deseja excluir esta lista?")) {
-        loadPageContent(window.location.href); 
+        loadPageContent(window.location.href);
         return;
     }
     const { error } = await window.supabaseClient.from('shopping_lists').delete().eq('id', id);
-    if (!error) initHome(); 
+    if (!error) initHome();
 }
 
 
 // 2. LIST DETAIL (lista.html)
-window.initListDetail = async function(listId) {
+window.initListDetail = async function (listId) {
     const listContentEl = document.getElementById('listContent');
     const loadingEl = document.getElementById('loading');
-    
+
     // IMPROVED ERROR HANDLING
     if (!listId) {
         loadingEl.classList.add('hidden');
@@ -426,7 +430,7 @@ window.initListDetail = async function(listId) {
     const itemsCountEl = document.getElementById('itemsCount');
     const addItemForm = document.getElementById('addItemForm');
     const newItemInput = document.getElementById('newItemInput');
-    
+
     let currentUserId = null;
 
     const { data: { session } } = await window.supabaseClient.auth.getSession();
@@ -493,26 +497,26 @@ window.initListDetail = async function(listId) {
         const isChecked = item.is_checked;
         const wrapper = document.createElement('div');
         wrapper.className = "relative w-full mb-4 rounded-xl overflow-hidden select-none";
-        
+
         const bg = document.createElement('div');
         bg.className = "absolute inset-y-0 right-0 w-full bg-red-500 flex items-center justify-end px-6 rounded-xl -z-0";
         bg.innerHTML = `<span class="material-symbols-outlined text-white text-3xl font-bold">delete</span>`;
 
         const div = document.createElement('div');
-        div.className = isChecked ? 
+        div.className = isChecked ?
             "relative z-10 w-full flex items-center gap-4 bg-slate-100 dark:bg-card-dark/40 p-4 rounded-xl border-2 border-slate-400 dark:border-white/10 transition-transform duration-200 ease-out" :
             "relative z-10 w-full flex items-center gap-4 bg-white dark:bg-card-dark p-4 rounded-xl shadow-neo border-2 border-black transition-transform duration-200 ease-out";
 
-        let startX=0, currentX=0;
-        div.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; currentX=startX; div.style.transition='none'; });
-        div.addEventListener('touchmove', (e) => { currentX = e.touches[0].clientX; if(currentX-startX < 0) div.style.transform=`translateX(${currentX-startX}px)`; });
+        let startX = 0, currentX = 0;
+        div.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; currentX = startX; div.style.transition = 'none'; });
+        div.addEventListener('touchmove', (e) => { currentX = e.touches[0].clientX; if (currentX - startX < 0) div.style.transform = `translateX(${currentX - startX}px)`; });
         div.addEventListener('touchend', (e) => {
-            div.style.transition='transform 0.3s ease-out';
-            if(currentX-startX < -120) {
-                div.style.transform=`translateX(-100%)`;
+            div.style.transition = 'transform 0.3s ease-out';
+            if (currentX - startX < -120) {
+                div.style.transform = `translateX(-100%)`;
                 setTimeout(() => deleteItem(item.id), 300);
             } else {
-                div.style.transform=`translateX(0)`;
+                div.style.transform = `translateX(0)`;
             }
         });
 
@@ -520,10 +524,10 @@ window.initListDetail = async function(listId) {
             <input class="neo-checkbox shrink-0 ${isChecked ? 'grayscale opacity-60' : ''}" type="checkbox" ${isChecked ? 'checked' : ''} />
             <div class="flex-1 min-w-0 flex flex-col"><p class="text-slate-900 dark:text-white text-lg font-bold truncate leading-tight ${isChecked ? 'line-through decoration-2 decoration-slate-400 text-slate-500' : ''}">${item.name}</p></div>
             <div class="shrink-0 px-3 py-1.5 rounded-lg border-2 border-transparent hover:border-black transition-all cursor-pointer ${isChecked ? 'opacity-60' : 'bg-white'}" onclick="event.stopPropagation(); window.promptPrice('${item.id}', ${item.price})">
-                <p class="text-sm font-bold ${isChecked ? 'text-slate-500 line-through decoration-2' : 'text-primary-dark'}">${item.price ? `R$ ${new Intl.NumberFormat('pt-BR', {minimumFractionDigits:2}).format(item.price)}` : 'R$ --,--'}</p>
+                <p class="text-sm font-bold ${isChecked ? 'text-slate-500 line-through decoration-2' : 'text-primary-dark'}">${item.price ? `R$ ${new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(item.price)}` : 'R$ --,--'}</p>
             </div>
         `;
-        
+
         const checkbox = div.querySelector('input[type="checkbox"]');
         checkbox.onchange = () => toggleItem(item.id, checkbox.checked);
 
@@ -535,7 +539,7 @@ window.initListDetail = async function(listId) {
     async function toggleItem(id, status) {
         const { error } = await window.supabaseClient.from('list_items').update({ is_checked: status }).eq('id', id);
         if (!error) {
-            if(status) await addToInventory(id);
+            if (status) await addToInventory(id);
             else await removeFromInventory(id);
             fetchListItems();
         }
@@ -545,41 +549,41 @@ window.initListDetail = async function(listId) {
         await window.supabaseClient.from('list_items').delete().eq('id', id);
         fetchListItems();
     }
-    
+
     async function addToInventory(itemId) {
         const { data: item } = await window.supabaseClient.from('list_items').select('*').eq('id', itemId).single();
-        if(!item) return;
+        if (!item) return;
         const { data: invItem } = await window.supabaseClient.from('inventory_items').select('*').eq('user_id', currentUserId).ilike('name', item.name).maybeSingle();
         const qty = item.quantity || 1;
-        if(invItem) {
-            await window.supabaseClient.from('inventory_items').update({ quantity: (invItem.quantity||0)+qty }).eq('id', invItem.id);
+        if (invItem) {
+            await window.supabaseClient.from('inventory_items').update({ quantity: (invItem.quantity || 0) + qty }).eq('id', invItem.id);
         } else {
-            await window.supabaseClient.from('inventory_items').insert({ user_id: currentUserId, name: item.name, category: item.category||'Outros', quantity: qty, unit: 'unid.', added_date: new Date().toISOString() });
+            await window.supabaseClient.from('inventory_items').insert({ user_id: currentUserId, name: item.name, category: item.category || 'Outros', quantity: qty, unit: 'unid.', added_date: new Date().toISOString() });
         }
     }
 
     async function removeFromInventory(itemId) {
-         const { data: item } = await window.supabaseClient.from('list_items').select('*').eq('id', itemId).single();
-         if(!item) return;
-         const { data: invItem } = await window.supabaseClient.from('inventory_items').select('*').eq('user_id', currentUserId).ilike('name', item.name).maybeSingle();
-         if(!invItem) return;
-         const newQty = (invItem.quantity||0) - (item.quantity||1);
-         if(newQty<=0) await window.supabaseClient.from('inventory_items').delete().eq('id', invItem.id);
-         else await window.supabaseClient.from('inventory_items').update({ quantity: newQty }).eq('id', invItem.id);
+        const { data: item } = await window.supabaseClient.from('list_items').select('*').eq('id', itemId).single();
+        if (!item) return;
+        const { data: invItem } = await window.supabaseClient.from('inventory_items').select('*').eq('user_id', currentUserId).ilike('name', item.name).maybeSingle();
+        if (!invItem) return;
+        const newQty = (invItem.quantity || 0) - (item.quantity || 1);
+        if (newQty <= 0) await window.supabaseClient.from('inventory_items').delete().eq('id', invItem.id);
+        else await window.supabaseClient.from('inventory_items').update({ quantity: newQty }).eq('id', invItem.id);
     }
 
     function calculateTotals(items) {
         let total = 0, count = 0, checked = 0;
-        items.forEach(i => { count++; if(i.is_checked) checked++; if(i.price) total+=Number(i.price); });
+        items.forEach(i => { count++; if (i.is_checked) checked++; if (i.price) total += Number(i.price); });
         itemsCountEl.innerText = `${checked} de ${count}`;
-        totalAmountEl.innerText = new Intl.NumberFormat('pt-BR', {minimumFractionDigits:2}).format(total);
+        totalAmountEl.innerText = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(total);
         window.supabaseClient.from('shopping_lists').update({ item_count: count, total_amount: total }).eq('id', listId);
     }
 
     addItemForm.onsubmit = async (e) => {
         e.preventDefault();
         const name = newItemInput.value.trim();
-        if(!name) return;
+        if (!name) return;
         newItemInput.disabled = true;
         await window.supabaseClient.from('list_items').insert({ list_id: listId, user_id: currentUserId, name: name, is_checked: false });
         newItemInput.disabled = false;
@@ -589,10 +593,10 @@ window.initListDetail = async function(listId) {
     };
 
     window.promptPrice = async (id, current) => {
-        const p = prompt("Editar preço:", current||"");
-        if(p!==null) {
-            const val = parseFloat(p.replace(',','.'));
-            if(!isNaN(val)) {
+        const p = prompt("Editar preço:", current || "");
+        if (p !== null) {
+            const val = parseFloat(p.replace(',', '.'));
+            if (!isNaN(val)) {
                 await window.supabaseClient.from('list_items').update({ price: val }).eq('id', id);
                 fetchListItems();
             }
@@ -602,13 +606,13 @@ window.initListDetail = async function(listId) {
 
 
 // 3. INVENTORY (inventario.html)
-window.initInventory = async function() {
+window.initInventory = async function () {
     const itemsListEl = document.getElementById('itemsList');
     const loadingEl = document.getElementById('loading');
     const totalCountEl = document.getElementById('totalCount');
     const searchInput = document.getElementById('searchInput');
     const filterContainer = document.getElementById('filterContainer');
-    
+
     let allItems = [];
     let currentFilter = 'all';
     let currentUserId = null;
@@ -620,10 +624,10 @@ window.initInventory = async function() {
     await fetchInventory();
 
     searchInput.addEventListener('input', (e) => renderItems(e.target.value));
-    
-    if(filterContainer) {
+
+    if (filterContainer) {
         filterContainer.onclick = (e) => {
-            if(e.target.classList.contains('filter-btn')) {
+            if (e.target.classList.contains('filter-btn')) {
                 currentFilter = e.target.dataset.cat;
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 e.target.classList.add('active');
@@ -637,7 +641,7 @@ window.initInventory = async function() {
         itemsListEl.innerHTML = '';
         const { data, error } = await window.supabaseClient.from('inventory_items').select('*').order('name', { ascending: true });
         loadingEl.classList.add('hidden');
-        if(!error) {
+        if (!error) {
             allItems = data || [];
             renderItems();
         }
@@ -646,12 +650,12 @@ window.initInventory = async function() {
     function renderItems(term = '') {
         itemsListEl.innerHTML = '';
         const t = term.toLowerCase();
-        const filtered = allItems.filter(i => 
+        const filtered = allItems.filter(i =>
             i.name.toLowerCase().includes(t) && (currentFilter === 'all' || i.category === currentFilter)
         );
         totalCountEl.innerText = allItems.length;
 
-        if(filtered.length === 0) {
+        if (filtered.length === 0) {
             itemsListEl.innerHTML = `<div class="p-8 text-center opacity-50"><p>Nenhum item.</p></div>`;
             return;
         }
@@ -659,23 +663,23 @@ window.initInventory = async function() {
         filtered.forEach(item => {
             const wrapper = document.createElement('div');
             wrapper.className = "relative w-full mb-4 rounded-xl overflow-hidden select-none";
-            
+
             const bg = document.createElement('div');
             bg.className = "absolute inset-y-0 right-0 w-full bg-red-500 flex items-center justify-end px-6 rounded-xl -z-0";
             bg.innerHTML = `<span class="material-symbols-outlined text-white text-3xl font-bold">delete</span>`;
 
             const div = document.createElement('div');
             div.className = "relative z-10 w-full bg-white dark:bg-card-dark p-4 rounded-xl border-2 border-black shadow-neo flex items-center justify-between transition-transform duration-200 ease-out";
-            
-            let startX=0, currentX=0;
-            div.addEventListener('touchstart', (e) => { startX=e.touches[0].clientX; currentX=startX; div.style.transition='none'; });
-            div.addEventListener('touchmove', (e) => { currentX=e.touches[0].clientX; if(currentX-startX<0) div.style.transform=`translateX(${currentX-startX}px)`; });
+
+            let startX = 0, currentX = 0;
+            div.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; currentX = startX; div.style.transition = 'none'; });
+            div.addEventListener('touchmove', (e) => { currentX = e.touches[0].clientX; if (currentX - startX < 0) div.style.transform = `translateX(${currentX - startX}px)`; });
             div.addEventListener('touchend', (e) => {
-                div.style.transition='transform 0.3s ease-out';
-                if(currentX-startX < -120) {
-                    div.style.transform=`translateX(-100%)`;
-                    setTimeout(async() => {
-                        if(confirm("Excluir item?")) {
+                div.style.transition = 'transform 0.3s ease-out';
+                if (currentX - startX < -120) {
+                    div.style.transform = `translateX(-100%)`;
+                    setTimeout(async () => {
+                        if (confirm("Excluir item?")) {
                             await window.supabaseClient.from('inventory_items').delete().eq('id', item.id);
                             fetchInventory();
                         } else {
@@ -683,15 +687,15 @@ window.initInventory = async function() {
                         }
                     }, 300);
                 } else {
-                    div.style.transform=`translateX(0)`;
+                    div.style.transform = `translateX(0)`;
                 }
             });
 
             let icon = 'inventory_2';
             let color = 'bg-gray-200';
-            if(item.category==='Comida') { icon='bakery_dining'; color='bg-yellow-300'; }
-            else if(item.category==='Limpeza') { icon='cleaning_services'; color='bg-blue-300'; }
-            else if(item.category==='Higiene') { icon='soap'; color='bg-green-300'; }
+            if (item.category === 'Comida') { icon = 'bakery_dining'; color = 'bg-yellow-300'; }
+            else if (item.category === 'Limpeza') { icon = 'cleaning_services'; color = 'bg-blue-300'; }
+            else if (item.category === 'Higiene') { icon = 'soap'; color = 'bg-green-300'; }
 
             div.innerHTML = `
                 <div class="flex items-center gap-4 z-10 relative flex-1 min-w-0">
@@ -701,17 +705,17 @@ window.initInventory = async function() {
                     <div class="flex-1 min-w-0">
                         <h3 class="font-extrabold text-lg leading-tight text-slate-900 dark:text-white truncate">${item.name}</h3>
                         <div class="flex items-center gap-2 mt-1 flex-wrap">
-                            <span class="bg-white/50 border border-black px-1.5 py-0.5 rounded text-[10px] font-bold uppercase">${item.category||'Geral'}</span>
+                            <span class="bg-white/50 border border-black px-1.5 py-0.5 rounded text-[10px] font-bold uppercase">${item.category || 'Geral'}</span>
                         </div>
                     </div>
                 </div>
                 <div class="flex flex-col items-end pl-4 border-l-2 border-dashed border-slate-200 dark:border-slate-700 ml-2" ontouchstart="event.stopPropagation()">
                     <div class="flex items-center gap-2">
-                        <button onclick="window.updateInvQty('${item.id}', ${item.quantity-1})" class="size-6 bg-slate-200 rounded border border-black flex items-center justify-center hover:bg-slate-300 font-bold">-</button>
+                        <button onclick="window.updateInvQty('${item.id}', ${item.quantity - 1})" class="size-6 bg-slate-200 rounded border border-black flex items-center justify-center hover:bg-slate-300 font-bold">-</button>
                         <span class="text-xl font-black w-6 text-center">${item.quantity}</span>
-                        <button onclick="window.updateInvQty('${item.id}', ${item.quantity+1})" class="size-6 bg-slate-200 rounded border border-black flex items-center justify-center hover:bg-slate-300 font-bold">+</button>
+                        <button onclick="window.updateInvQty('${item.id}', ${item.quantity + 1})" class="size-6 bg-slate-200 rounded border border-black flex items-center justify-center hover:bg-slate-300 font-bold">+</button>
                     </div>
-                    <span class="text-[10px] font-bold text-slate-500 uppercase mt-1">${item.unit||'unid.'}</span>
+                    <span class="text-[10px] font-bold text-slate-500 uppercase mt-1">${item.unit || 'unid.'}</span>
                 </div>
             `;
             wrapper.appendChild(bg);
@@ -721,16 +725,16 @@ window.initInventory = async function() {
     }
 
     window.updateInvQty = async (id, newQty) => {
-        if(newQty < 0) return;
-        if(newQty === 0) {
-            if(!confirm("Remover item?")) return;
+        if (newQty < 0) return;
+        if (newQty === 0) {
+            if (!confirm("Remover item?")) return;
             await window.supabaseClient.from('inventory_items').delete().eq('id', id);
         } else {
             await window.supabaseClient.from('inventory_items').update({ quantity: newQty }).eq('id', id);
         }
         fetchInventory();
     }
-    
+
     window.handleAddItem = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -748,33 +752,33 @@ window.initInventory = async function() {
     }
 }
 
-window.openAddModal = function() {
+window.openAddModal = function () {
     const m = document.getElementById('addItemModal');
-    if(m) {
+    if (m) {
         m.classList.remove('hidden');
         m.querySelector('input[name="added_date"]').value = new Date().toISOString().split('T')[0];
     }
 }
-window.closeAddModal = function() {
+window.closeAddModal = function () {
     const m = document.getElementById('addItemModal');
-    if(m) m.classList.add('hidden');
+    if (m) m.classList.add('hidden');
 }
 
 
 // 4. NEW LIST (novalista.html)
-window.initNewList = function() {
+window.initNewList = function () {
     const form = document.getElementById('createListForm');
-    if(!form) return;
+    if (!form) return;
 
     form.onsubmit = async (e) => {
         e.preventDefault();
         const btn = document.getElementById('createBtn');
         btn.querySelector('span').innerText = 'Criando...';
-        
+
         try {
             const formData = new FormData(e.target);
             const { data: { user } } = await window.supabaseClient.auth.getUser();
-            if(!user) { navigate('login.html'); return; }
+            if (!user) { navigate('login.html'); return; }
 
             const newList = {
                 title: formData.get('title'),
@@ -787,7 +791,7 @@ window.initNewList = function() {
             };
 
             const { error } = await window.supabaseClient.from('shopping_lists').insert([newList]);
-            if(error) throw error;
+            if (error) throw error;
             navigate('usuario.html');
 
         } catch (err) {
@@ -798,7 +802,7 @@ window.initNewList = function() {
 }
 
 // 5. SETTINGS (configuracoes.html)
-window.initSettings = async function() {
+window.initSettings = async function () {
     const { data: { session } } = await window.supabaseClient.auth.getSession();
     if (!session) {
         navigate('login.html');
@@ -829,40 +833,43 @@ window.initSettings = async function() {
         const avatarEl = document.querySelector('[data-alt="User profile picture"]');
         if (avatarEl && avatar) avatarEl.style.backgroundImage = `url("${avatar}")`;
     }
+
+    // Bind Logout Logic Programmatically
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.onclick = handleLogout; // Direct binding to ensure it works
+    }
 }
 
-window.handleLogout = async function() {
-    console.log('Logout initiated'); // DEBUG
+window.handleLogout = async function () {
     if (confirm("Tem certeza que deseja sair?")) {
         try {
             const { error } = await window.supabaseClient.auth.signOut();
             if (error) {
-                console.error('Supabase signOut error:', error);
-                // Even if API fails, force local logout
+                console.error('Logout error:', error);
             }
-            console.log('Signed out, redirecting...');
-            // Force full reload to clear state
-            window.location.href = 'login.html';
         } catch (err) {
             console.error('Logout exception:', err);
-            window.location.href = 'login.html';
+        } finally {
+            // Always redirect to index.html
+            window.location.href = 'index.html';
         }
     }
 }
 
 // 6. ASSISTANT (assistente.html)
-window.initAssistant = async function() {
+window.initAssistant = async function () {
     window.currentCategory = 'Tudo';
     window.showingFavorites = false;
-    
+
     // Bind search logic explicitly to ensure it works in SPA mode
     const searchInput = document.getElementById('aiSearchInput');
     if (searchInput) {
         // Remove existing listeners to be safe (though DOM replacement usually handles this)
         const newInp = searchInput.cloneNode(true);
         searchInput.parentNode.replaceChild(newInp, searchInput);
-        
-        newInp.addEventListener('keypress', function(e) {
+
+        newInp.addEventListener('keypress', function (e) {
             console.log('Key pressed:', e.key); // Debug
             if (e.key === 'Enter') {
                 const query = e.target.value;
@@ -872,7 +879,7 @@ window.initAssistant = async function() {
                 }
             }
         });
-        
+
         // Keep focus if needed, though replaceChild might lose it
         newInp.focus();
     }
@@ -882,10 +889,10 @@ window.initAssistant = async function() {
 // but we keep the logic centralized.
 // Removed window.handleSearch to rely on the explicit binding above which is more robust for SPAs.
 
-window.toggleFavoritesFilter = function() {
+window.toggleFavoritesFilter = function () {
     window.showingFavorites = !window.showingFavorites;
     const btn = document.getElementById('favoritesFilterBtn');
-    
+
     if (window.showingFavorites) {
         btn.classList.remove('bg-white', 'dark:bg-card-dark', 'text-black', 'dark:text-white');
         btn.classList.add('bg-nb-pink', 'text-black');
@@ -896,7 +903,7 @@ window.toggleFavoritesFilter = function() {
     applyFilters();
 }
 
-window.setFilter = function(category) {
+window.setFilter = function (category) {
     window.currentCategory = category;
     const buttons = document.querySelectorAll('.filter-btn');
     buttons.forEach(btn => {
@@ -934,8 +941,10 @@ const GEMINI_API_KEY = "AIzaSyDDOAkGR1y9OdVW5LK91TUz3oVYX78g-u8";
 
 async function generateRecipe(query) {
     const loading = document.getElementById('loading');
-    loading.classList.remove('hidden');
-    loading.classList.add('flex');
+    if (loading) {
+        loading.classList.remove('hidden');
+        loading.classList.add('flex');
+    }
 
     try {
         const prompt = `
@@ -965,7 +974,7 @@ async function generateRecipe(query) {
         });
 
         const data = await response.json();
-        
+
         if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
             throw new Error("Resposta inválida da API");
         }
@@ -988,20 +997,28 @@ async function generateRecipe(query) {
         console.error("AI Error:", error);
         alert("Erro ao receber resposta da IA. Tente novamente.");
     } finally {
-        loading.classList.add('hidden');
-        loading.classList.remove('flex');
+        if (loading) {
+            loading.classList.add('hidden');
+            loading.classList.remove('flex');
+        }
     }
 }
 
 function saveAndRenderRecipe(recipe) {
     const id = 'gen_' + Date.now();
+
+    // Ensure timestamp
+    if (!recipe.created_at) {
+        recipe.created_at = Date.now();
+    }
+
     const generated = JSON.parse(localStorage.getItem('generated_recipes') || '{}');
     generated[id] = recipe;
     localStorage.setItem('generated_recipes', JSON.stringify(generated));
 
     const container = document.getElementById('resultsSection');
     const safeColor = recipe.color.includes('bg-accent') ? recipe.color : 'bg-accent-yellow';
-    
+
     let hoverColor = 'hover:bg-yellow-300';
     if (safeColor.includes('blue')) hoverColor = 'hover:bg-blue-300';
     if (safeColor.includes('green')) hoverColor = 'hover:bg-green-300';
@@ -1014,9 +1031,15 @@ function saveAndRenderRecipe(recipe) {
     card.setAttribute('data-id', id);
     card.onclick = () => navigate(`receita.html?id=${id}`);
 
+    const now = Date.now();
+    const isNew = recipe.created_at && (now - recipe.created_at < 24 * 60 * 60 * 1000);
+
     card.innerHTML = `
         <div class="flex justify-between items-start mb-8">
-            <span class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">${recipe.category}</span>
+            <div class="flex gap-2">
+                <span class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">${recipe.category}</span>
+                ${isNew ? '<span class="bg-nb-pink border-3 border-black px-3 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black animate-pulse">NOVO</span>' : ''}
+            </div>
             <span class="material-symbols-outlined text-5xl text-black transition-transform group-hover:rotate-12 group-hover:scale-110">${recipe.icon}</span>
         </div>
         <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">${recipe.title}</h2>
@@ -1038,9 +1061,9 @@ function saveAndRenderRecipe(recipe) {
 
 
 // 7. RECIPE DETAIL (receita.html)
-window.initRecipe = function(recipeId) {
+window.initRecipe = function (recipeId) {
     recipeId = recipeId || 'torrada';
-    
+
     // Merge recipes
     const generatedRecipes = JSON.parse(localStorage.getItem('generated_recipes') || '{}');
     const allRecipes = { ...recipes, ...generatedRecipes };
@@ -1087,11 +1110,11 @@ window.initRecipe = function(recipeId) {
     `).join('');
 }
 
-window.updateFavUI = function(id) {
+window.updateFavUI = function (id) {
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     const isFav = favorites.includes(id);
     const btn = document.getElementById('favBtn');
-    
+
     if (isFav) {
         btn.classList.add('bg-nb-pink'); // Changed from accent-pink to match theme if needed, but accent-pink is defined in config
         btn.classList.remove('bg-white', 'dark:bg-card-dark', 'text-black', 'dark:text-white');
@@ -1101,7 +1124,7 @@ window.updateFavUI = function(id) {
     }
 }
 
-window.toggleFavorite = function() {
+window.toggleFavorite = function () {
     const id = window.currentRecipeId;
     let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     if (favorites.includes(id)) {
