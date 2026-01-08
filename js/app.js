@@ -492,6 +492,241 @@ const recipes = {
             { title: "Misturar", desc: "Misture ao iogurte." },
             { title: "Polvilhar", desc: "Polvilhe aveia por cima e sirva." }
         ]
+    },
+    "pao_manteiga": {
+        title: "Pão com<br/>Manteiga",
+        category: "Café",
+        time: "5 Min",
+        calories: "150 Kcal",
+        protein: "3g",
+        difficulty: "Fácil",
+        icon: "bakery_dining",
+        color: "bg-accent-yellow",
+        ingredients: ["Pão", "Manteiga"],
+        steps: [
+            { title: "Tostar", desc: "Toste o pão no torrador ou frigideira." },
+            { title: "Passar", desc: "Passe manteiga generosamente sobre o pão ainda quente." }
+        ]
+    },
+    "arroz_feijao": {
+        title: "Arroz e<br/>Feijão",
+        category: "Almoço",
+        time: "30 Min",
+        calories: "350 Kcal",
+        protein: "15g",
+        difficulty: "Fácil",
+        icon: "rice_bowl",
+        color: "bg-accent-blue",
+        ingredients: ["Arroz", "Feijão", "Alho", "Sal"],
+        steps: [
+            { title: "Arroz", desc: "Cozinhe o arroz com alho e sal." },
+            { title: "Feijão", desc: "Prepare o feijão com temperos." },
+            { title: "Servir", desc: "Sirva quente juntos." }
+        ]
+    },
+    "salada_verde": {
+        title: "Salada<br/>Verde",
+        category: "Almoço",
+        time: "10 Min",
+        calories: "50 Kcal",
+        protein: "2g",
+        difficulty: "Fácil",
+        icon: "eco",
+        color: "bg-accent-green",
+        ingredients: ["Alface", "Tomate", "Cenoura", "Azeite"],
+        steps: [
+            { title: "Lavar", desc: "Lave bem as folhas e legumes." },
+            { title: "Cortar", desc: "Corte em pedaços." },
+            { title: "Temperar", desc: "Tempere com azeite, sal e limão." }
+        ]
+    },
+    "bolo_chocolate": {
+        title: "Bolo de<br/>Chocolate",
+        category: "Lanche",
+        time: "45 Min",
+        calories: "300 Kcal",
+        protein: "5g",
+        difficulty: "Médio",
+        icon: "cake",
+        color: "bg-accent-pink",
+        ingredients: ["Farinha", "Chocolate", "Açúcar", "Ovos", "Leite"],
+        steps: [
+            { title: "Misturar", desc: "Misture todos os ingredientes até ficar homogêneo." },
+            { title: "Assar", desc: "Asse em forno preaquecido a 180°C por 35 minutos." }
+        ]
+    },
+    "sopa_legumes": {
+        title: "Sopa de<br/>Legumes",
+        category: "Jantar",
+        time: "30 Min",
+        calories: "150 Kcal",
+        protein: "4g",
+        difficulty: "Fácil",
+        icon: "soup_kitchen",
+        color: "bg-accent-orange",
+        ingredients: ["Batata", "Cenoura", "Cebola", "Caldo"],
+        steps: [
+            { title: "Picar", desc: "Pique todos os legumes." },
+            { title: "Cozinhar", desc: "Cozinhe no caldo até ficarem macios." },
+            { title: "Bater", desc: "Opcional: bata no liquidificador." }
+        ]
+    },
+    "suco_laranja": {
+        title: "Suco de<br/>Laranja",
+        category: "Lanche",
+        time: "5 Min",
+        calories: "80 Kcal",
+        protein: "1g",
+        difficulty: "Fácil",
+        icon: "local_bar",
+        color: "bg-accent-orange",
+        ingredients: ["Laranjas", "Açúcar"],
+        steps: [
+            { title: "Espremer", desc: "Esprema as laranjas." },
+            { title: "Adoçar", desc: "Adoce a gosto e sirva gelado." }
+        ]
+    },
+    "panqueca": {
+        title: "Panqueca<br/>Americana",
+        category: "Café",
+        time: "20 Min",
+        calories: "280 Kcal",
+        protein: "7g",
+        difficulty: "Médio",
+        icon: "bakery_dining",
+        color: "bg-accent-yellow",
+        ingredients: ["Farinha", "Leite", "Ovos", "Fermento"],
+        steps: [
+            { title: "Bater", desc: "Bata todos os ingredientes." },
+            { title: "Fritar", desc: "Frite pequenas porções em frigideira." },
+            { title: "Empilhar", desc: "Empilhe e sirva com mel ou xarope." }
+        ]
+    },
+    "pizza": {
+        title: "Pizza<br/>Caseira",
+        category: "Jantar",
+        time: "50 Min",
+        calories: "650 Kcal",
+        protein: "25g",
+        difficulty: "Médio",
+        icon: "local_pizza",
+        color: "bg-accent-yellow",
+        ingredients: ["Massa", "Molho de Tomate", "Queijo", "Ingredientes de sua preferência"],
+        steps: [
+            { title: "Massa", desc: "Prepare e abra a massa." },
+            { title: "Montar", desc: "Espalhe molho, queijo e ingredientes." },
+            { title: "Assar", desc: "Asse em forno bem quente por 15 minutos." }
+        ]
+    },
+    "pudim": {
+        title: "Pudim de<br/>Leite",
+        category: "Lanche",
+        time: "50 Min",
+        calories: "220 Kcal",
+        protein: "6g",
+        difficulty: "Médio",
+        icon: "icecream",
+        color: "bg-accent-pink",
+        ingredients: ["Leite Condensado", "Leite", "Ovos", "Açúcar para calda"],
+        steps: [
+            { title: "Caramelo", desc: "Faça a calda de caramelo." },
+            { title: "Bater", desc: "Bata tudo no liquidificador." },
+            { title: "Assar", desc: "Asse em banho-maria por 40 minutos." }
+        ]
+    },
+    "hamburguer": {
+        title: "Hambúrguer<br/>Caseiro",
+        category: "Jantar",
+        time: "25 Min",
+        calories: "500 Kcal",
+        protein: "28g",
+        difficulty: "Médio",
+        icon: "lunch_dining",
+        color: "bg-accent-orange",
+        ingredients: ["Carne Moída", "Pão", "Queijo", "Alface", "Tomate"],
+        steps: [
+            { title: "Moldar", desc: "Modele a carne em hambúrgueres." },
+            { title: "Grelhar", desc: "Grelhe até o ponto desejado." },
+            { title: "Montar", desc: "Monte com pão e acompanhamentos." }
+        ]
+    },
+    "crepioca": {
+        title: "Crepioca<br/>Fit",
+        category: "Café",
+        time: "10 Min",
+        calories: "200 Kcal",
+        protein: "8g",
+        difficulty: "Fácil",
+        icon: "breakfast_dining",
+        color: "bg-accent-yellow",
+        ingredients: ["Ovo", "Tapioca", "Queijo"],
+        steps: [
+            { title: "Misturar", desc: "Misture ovo batido com tapioca." },
+            { title: "Fritar", desc: "Despeje na frigideira e recheie com queijo." }
+        ]
+    },
+    "acai": {
+        title: "Açaí na<br/>Tigela",
+        category: "Lanche",
+        time: "10 Min",
+        calories: "250 Kcal",
+        protein: "3g",
+        difficulty: "Fácil",
+        icon: "icecream",
+        color: "bg-accent-pink",
+        ingredients: ["Açaí", "Banana", "Granola", "Mel"],
+        steps: [
+            { title: "Bater", desc: "Bata o açaí com banana congelada." },
+            { title: "Montar", desc: "Coloque na tigela e cubra com granola e mel." }
+        ]
+    },
+    "wrap_frango": {
+        title: "Wrap de<br/>Frango",
+        category: "Almoço",
+        time: "15 Min",
+        calories: "380 Kcal",
+        protein: "24g",
+        difficulty: "Fácil",
+        icon: "lunch_dining",
+        color: "bg-accent-green",
+        ingredients: ["Tortilha", "Frango Desfiado", "Alface", "Tomate", "Molho"],
+        steps: [
+            { title: "Preparar", desc: "Prepare o frango temperado." },
+            { title: "Rechear", desc: "Coloque os ingredientes na tortilha." },
+            { title: "Enrolar", desc: "Enrole bem apertado e sirva." }
+        ]
+    },
+    "estrogonofe": {
+        title: "Estrogonofe<br/>de Frango",
+        category: "Jantar",
+        time: "30 Min",
+        calories: "480 Kcal",
+        protein: "28g",
+        difficulty: "Médio",
+        icon: "restaurant",
+        color: "bg-accent-orange",
+        ingredients: ["Frango", "Creme de Leite", "Molho de Tomate", "Champignon"],
+        steps: [
+            { title: "Refogar", desc: "Refogue o frango cortado." },
+            { title: "Molho", desc: "Adicione molho, champignon e creme." },
+            { title: "Servir", desc: "Sirva com arroz e batata palha." }
+        ]
+    },
+    "pao_queijo": {
+        title: "Pão de<br/>Queijo",
+        category: "Lanche",
+        time: "30 Min",
+        calories: "180 Kcal",
+        protein: "6g",
+        difficulty: "Médio",
+        icon: "bakery_dining",
+        color: "bg-accent-yellow",
+        ingredients: ["Polvilho", "Queijo", "Leite", "Óleo", "Ovos"],
+        steps: [
+            { title: "Escald", desc: "Escaldar o polvilho com leite e óleo quentes." },
+            { title: "Misturar", desc: "Adicione queijo e ovos, misture bem." },
+            { title: "Assar", desc: "Modele bolinhas e asse até dourar." }
+        ]
     }
 };
 
