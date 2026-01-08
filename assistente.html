@@ -99,9 +99,9 @@
         <!-- Search & Filter -->
         <section class="space-y-6">
             <div class="relative group">
-                <input
+                <input id="aiSearchInput" onkeypress="handleSearch(event)"
                     class="w-full bg-white dark:bg-card-dark border-3 border-black rounded-xl py-4 pl-4 pr-12 text-lg font-bold placeholder-gray-400 focus:outline-none focus:ring-0 shadow-neo transition-all text-black dark:text-white"
-                    placeholder="O que você quer comer?" type="text" />
+                    placeholder="O que você quer comer? (Digite e enter)" type="text" />
                 <span
                     class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-3xl text-black dark:text-white pointer-events-none">search</span>
             </div>
@@ -304,6 +304,126 @@
         }
 
         window.currentCategory = 'Tudo';
+
+        // AI Generation Logic
+        const GEMINI_API_KEY = "AIzaSyCsX9l10XCu3TtSCU1BSx-qOYrwUKYw2xk";
+
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                const query = event.target.value;
+                if (query.trim()) {
+                    generateRecipe(query);
+                }
+            }
+        }
+
+        async function generateRecipe(query) {
+            const loading = document.getElementById('loading');
+            loading.classList.remove('hidden');
+            loading.classList.add('flex');
+
+            const resultsSection = document.getElementById('resultsSection');
+            // resultsSection.classList.add('hidden'); // Optional: hide others while loading? Maybe not.
+
+            try {
+                const prompt = `
+                    Crie uma receita baseada em: "${query}".
+                    Responda APENAS com um JSON estrito seguindo este formato exato, sem markdown:
+                    {
+                        "title": "Nome da Receita (curto, max 2 palavras por linha, use <br/>)",
+                        "category": "Escolha entre Café, Almoço, Jantar, Lanche",
+                        "time": "tempo estim (ex: 30 Min)",
+                        "calories": "calorias (ex: 500 Kcal)",
+                        "protein": "proteína (ex: 20g)",
+                        "difficulty": "Fácil, Médio ou Difícil",
+                        "color": "bg-accent-yellow (ou blue, green, pink, orange)",
+                        "icon": "material symbol icon name (ex: restaurant)",
+                        "ingredients": ["ingrediente 1", "ingrediente 2"],
+                        "steps": [
+                            {"title": "Passo 1", "desc": "Descrição curta"},
+                            {"title": "Passo 2", "desc": "Descrição curta"}
+                        ]
+                    }
+                `;
+
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+
+                const data = await response.json();
+                let text = data.candidates[0].content.parts[0].text;
+
+                // Cleanup Json
+                text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+                const recipe = JSON.parse(text);
+
+                saveAndRenderRecipe(recipe);
+
+            } catch (error) {
+                console.error("AI Error:", error);
+                alert("Erro ao gerar receita. Tente novamente.");
+            } finally {
+                loading.classList.add('hidden');
+                loading.classList.remove('flex');
+            }
+        }
+
+        function saveAndRenderRecipe(recipe) {
+            // Generate ID
+            const id = 'gen_' + Date.now();
+
+            // Save to localStorage
+            const generated = JSON.parse(localStorage.getItem('generated_recipes') || '{}');
+            generated[id] = recipe;
+            localStorage.setItem('generated_recipes', JSON.stringify(generated));
+
+            // Render Card
+            const container = document.getElementById('resultsSection');
+
+            // Determine Tailwind Color Class mapping (safe check)
+            // If unknown color, default to yellow
+            const safeColor = recipe.color.includes('bg-accent') ? recipe.color : 'bg-accent-yellow';
+
+            // Determine hover color approx
+            let hoverColor = 'hover:bg-yellow-300';
+            if (safeColor.includes('blue')) hoverColor = 'hover:bg-blue-300';
+            if (safeColor.includes('green')) hoverColor = 'hover:bg-green-300';
+            if (safeColor.includes('pink')) hoverColor = 'hover:bg-pink-300';
+            if (safeColor.includes('orange')) hoverColor = 'hover:bg-orange-300';
+
+            const card = document.createElement('article');
+            card.className = `recipe-card group relative ${safeColor} border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer ${hoverColor} animate-fade-in-up`;
+            card.setAttribute('data-id', id);
+            card.setAttribute('data-category', recipe.category);
+            card.onclick = () => navigate(`receita.html?id=${id}`);
+
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-8">
+                    <span class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">${recipe.category}</span>
+                    <span class="material-symbols-outlined text-5xl text-black transition-transform group-hover:rotate-12 group-hover:scale-110">${recipe.icon}</span>
+                </div>
+                <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">${recipe.title}</h2>
+                <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                        <span class="text-2xl font-black text-black">${recipe.time}</span>
+                    </div>
+                    <button class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                        <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                    </button>
+                </div>
+            `;
+
+            // Prepend or Append? Prepend to see it first.
+            container.insertBefore(card, container.firstChild);
+
+            // Clear input
+            document.getElementById('aiSearchInput').value = '';
+        }
 
         function applyFilters() {
             const cards = document.querySelectorAll('.recipe-card');

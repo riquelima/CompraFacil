@@ -262,7 +262,12 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const recipeId = urlParams.get('id') || 'torrada'; // Default
-        const data = recipes[recipeId] || recipes['torrada'];
+
+        // Merge with generated recipes
+        const generatedRecipes = JSON.parse(localStorage.getItem('generated_recipes') || '{}');
+        const allRecipes = { ...recipes, ...generatedRecipes };
+
+        const data = allRecipes[recipeId] || allRecipes['torrada'];
 
         // Favorites Logic
         function updateFavUI() {
