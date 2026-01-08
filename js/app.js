@@ -118,6 +118,15 @@ async function loadPageContent(url) {
 }
 
 function initPageLogic(path, searchParams) {
+    console.log('Initializing page logic for:', path); // DEBUG
+
+    // Wait for Supabase to be ready if needed
+    if (!window.supabaseClient && !path.includes('login.html')) {
+        console.warn('Supabase client not ready, waiting...');
+        setTimeout(() => initPageLogic(path, searchParams), 100);
+        return;
+    }
+
     // Route matching
     if (path.includes('usuario.html') || path === '' || path === 'index.html') {
         initHome();
@@ -213,6 +222,7 @@ const recipes = {
 
 // 1. HOME (usuario.html)
 window.initHome = async function() {
+    console.log('initHome called'); // DEBUG
     const loadingState = document.getElementById('loadingState');
     const mainContent = document.getElementById('mainContent');
     const listsGrid = document.getElementById('listsGrid');
@@ -220,26 +230,38 @@ window.initHome = async function() {
     const userAvatarEl = document.getElementById('userAvatar');
     const newListCard = listsGrid ? listsGrid.lastElementChild : null;
 
-    if (!listsGrid) return; 
+    if (!listsGrid) {
+        console.error('listsGrid not found'); // DEBUG
+        return; 
+    }
 
     try {
-        const { data: { session } } = await window.supabaseClient.auth.getSession();
-        if (!session) {
+        console.log('Checking session...'); // DEBUG
+        const { data: { session }, error: authError } = await window.supabaseClient.auth.getSession();
+        
+        if (authError || !session) {
+            console.log('No session, redirecting to login'); // DEBUG
             window.location.href = 'login.html'; 
             return;
         }
 
+        console.log('Session found for:', session.user.email); // DEBUG
+
         const userMeta = session.user.user_metadata;
-        if (userMeta && userMeta.full_name) {
-            userNameEl.textContent = userMeta.full_name.split(' ')[0];
-        } else {
-            userNameEl.textContent = session.user.email.split('@')[0];
+        if (userNameEl) {
+             if (userMeta && userMeta.full_name) {
+                userNameEl.textContent = userMeta.full_name.split(' ')[0];
+            } else {
+                userNameEl.textContent = session.user.email.split('@')[0];
+            }
         }
-        if (userMeta && userMeta.avatar_url) {
+       
+        if (userAvatarEl && userMeta && userMeta.avatar_url) {
             userAvatarEl.style.backgroundImage = `url("${userMeta.avatar_url}")`;
             userAvatarEl.innerHTML = '';
         }
 
+        console.log('Fetching lists...'); // DEBUG
         const { data: lists, error: listsError } = await window.supabaseClient
             .from('shopping_lists')
             .select('*')
@@ -248,12 +270,23 @@ window.initHome = async function() {
 
         if (listsError) throw listsError;
 
-        while (listsGrid.children.length > 1) {
-            listsGrid.removeChild(listsGrid.firstChild);
-        }
+        console.log('Lists fetched:', lists.length); // DEBUG
+
+        // Clear existing (except last one which is "New List" card usually, but logic here is tricky)
+        // Safer approach: Clear all except the last one IF we are sure it is the button.
+        // Actually, let's look at the HTML structure. 
+        // Assuming listsGrid contains dynamic cards + static "Add" card at the end.
+        
+        // Let's rebuild carefully.
+        // Identify the static "Create New" card first.
+        const staticAddCard = Array.from(listsGrid.children).find(c => c.innerHTML.includes('novalista.html'));
+        
+        listsGrid.innerHTML = ''; // Clear all
+        if (staticAddCard) listsGrid.appendChild(staticAddCard); // Add back static card
 
         lists.forEach(list => {
             const wrapper = document.createElement('div');
+            // ... (rest of creation logic) ...
             wrapper.className = "relative w-full h-56 rounded-nb mb-0 select-none overflow-hidden group/wrapper";
             
             const bg = document.createElement('div');
@@ -316,7 +349,6 @@ window.initHome = async function() {
                 ? `<img src="${list.icon}" class="size-8 object-contain" alt="icon">` 
                 : `<span class="material-symbols-outlined text-[28px]">${list.icon || 'shopping_cart'}</span>`;
 
-            // REMOVED "CHEIA" LABEL
             card.innerHTML = `
                 <div class="flex justify-between items-start pointer-events-none">
                     <div class="flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black shadow-sm">
@@ -335,15 +367,22 @@ window.initHome = async function() {
 
             wrapper.appendChild(bg);
             wrapper.appendChild(card);
-            listsGrid.insertBefore(wrapper, newListCard);
+            // Insert before the static add card
+            if (staticAddCard) {
+                listsGrid.insertBefore(wrapper, staticAddCard);
+            } else {
+                listsGrid.appendChild(wrapper);
+            }
         });
 
     } catch (err) {
         console.error('Error loading home:', err);
     } finally {
-        loadingState.classList.add('hidden');
-        mainContent.classList.remove('hidden');
-        mainContent.classList.add('flex');
+        if (loadingState) loadingState.classList.add('hidden');
+        if (mainContent) {
+            mainContent.classList.remove('hidden');
+            mainContent.classList.add('flex');
+        }
     }
 }
 
