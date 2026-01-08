@@ -14,33 +14,9 @@ window.navigate = async function (url, skipAnimation = false) {
         return;
     }
 
-    // SESSION PERSISTENCE CHECK (Fixed)
-    // Runs on every navigation but strictly guarded
-    if (!sessionStorage.getItem('app_session_initialized')) {
-        // Default to FALSE (do NOT keep session) if not set.
-        const keepSession = localStorage.getItem('keep_session_active') === 'true';
-        const currentPath = targetUrl.pathname;
-        const isPublicPage = currentPath.endsWith('index.html') || currentPath.endsWith('login.html') || currentPath === '/' || currentPath === '';
-
-        // Mark as initialized so we don't loop
-        sessionStorage.setItem('app_session_initialized', 'true');
-
-        if (!keepSession && window.supabaseClient) {
-            console.log('Session persistence is strict OFF. Checking session...');
-            // Check if there is an active session
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-
-            if (session) {
-                console.log('Active session found but persistence is OFF. Signing out...');
-                await window.supabaseClient.auth.signOut();
-                // If we are on internal page, go to index. Public pages are fine (we just logged out).
-                if (!isPublicPage) {
-                    window.location.href = 'index.html';
-                    return;
-                }
-            }
-        }
-    }
+    // SESSION PERSISTENCE CHECK
+    // Logic removed to prevent aggressive auto-logout. 
+    // Supabase handles session persistence automatically.
 
     // Update History
     window.history.pushState({}, '', targetUrl);
@@ -103,7 +79,7 @@ function setActive(btn, isActive) {
 }
 
 // Toast Notification Helper
-window.showToast = function(message, type = 'error') {
+window.showToast = function (message, type = 'error') {
     let toast = document.getElementById('toast-notification');
     if (!toast) {
         toast = document.createElement('div');
@@ -130,7 +106,7 @@ window.showToast = function(message, type = 'error') {
 async function loadPageContent(url) {
     const mainContent = document.getElementById('main-content');
     const appHeader = document.getElementById('app-header');
-    
+
     // Fallback: If current page has no main-content (e.g. legacy structure), reload full page
     if (!mainContent) {
         console.warn('No #main-content found in current DOM, forcing reload.');
@@ -140,7 +116,7 @@ async function loadPageContent(url) {
 
     // Ensure global loader exists and is correctly positioned
     let globalLoader = document.getElementById('global-loading');
-    
+
     // Cleanup any duplicate loaders that might have slipped in
     const allLoaders = document.querySelectorAll('#global-loading');
     if (allLoaders.length > 1) {
@@ -193,7 +169,7 @@ async function loadPageContent(url) {
         // Parse HTML
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, 'text/html');
-        
+
         // Target new content
         const newMain = doc.getElementById('main-content'); // New ID
         const newHeader = doc.getElementById('app-header'); // New ID
@@ -203,7 +179,7 @@ async function loadPageContent(url) {
 
         if (!newMain && !legacyContent) {
             console.error('No #main-content found in target page, forcing reload.');
-            window.location.href = url; 
+            window.location.href = url;
             return;
         }
 
@@ -227,7 +203,7 @@ async function loadPageContent(url) {
             // Restore Styles - Clear transform to avoid stacking context issues
             mainContent.style.opacity = '';
             mainContent.style.transform = '';
-            
+
             // Hide Loader
             globalLoader.classList.add('hidden');
 
@@ -375,7 +351,7 @@ function renderIcon(iconValue, containerClasses = "flex items-center justify-cen
                      onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'material-symbols-outlined text-[28px]\'>shopping_cart</span>'">
             </div>
         `;
-    } 
+    }
     // Fallback or specific text icon
     else {
         return `
@@ -591,7 +567,7 @@ window.initHome = async function () {
 async function deleteList(id) {
     if (!confirm("Tem certeza que deseja excluir esta lista?")) {
         if (!window.location.href.includes('lista.html')) {
-             initHome();
+            initHome();
         }
         return;
     }
@@ -779,15 +755,15 @@ window.initListDetail = async function (listId) {
     async function calculateTotals(items) {
         let total = 0, count = 0, checked = 0;
         // Sum ALL items with a price to show the estimated total of the list
-        items.forEach(i => { 
-            count++; 
-            if (i.is_checked) checked++; 
-            if (i.price) total += Number(i.price); 
+        items.forEach(i => {
+            count++;
+            if (i.is_checked) checked++;
+            if (i.price) total += Number(i.price);
         });
-        
+
         itemsCountEl.innerText = `${checked} de ${count}`;
         totalAmountEl.innerText = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(total);
-        
+
         // Update DB with the full total
         await window.supabaseClient.from('shopping_lists').update({ item_count: count, total_amount: total }).eq('id', listId);
     }
@@ -1086,13 +1062,13 @@ window.handleLogout = async function () {
     if (confirm("Tem certeza que deseja sair?")) {
         try {
             console.log('Logging out...');
-            
+
             // Race condition: If server takes > 2s, force logout locally
             const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve({ error: 'timeout' }), 2000));
             const signOutPromise = window.supabaseClient.auth.signOut();
-            
+
             const { error } = await Promise.race([signOutPromise, timeoutPromise]);
-            
+
             if (error) {
                 console.warn('Logout warning (server or timeout):', error);
             }
@@ -1100,10 +1076,10 @@ window.handleLogout = async function () {
             console.error('Logout exception:', err);
         } finally {
             console.log('Performing forceful local cleanup...');
-            
+
             // Explicitly clear checking flag
             sessionStorage.removeItem('app_session_initialized');
-            
+
             // Force clear Supabase tokens from LocalStorage
             Object.keys(localStorage).forEach(key => {
                 if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
