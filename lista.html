@@ -32,7 +32,6 @@
                         "nb-white": "#FFFFFF",
                         "nb-black": "#000000",
                         "nb-bg": "#F3F0E9",
-                        // Keeping legacy
                         "primary": "#6366F1",
                     },
                     fontFamily: {
@@ -42,7 +41,6 @@
                         "hard": "4px 4px 0px 0px #000000",
                         "hard-sm": "2px 2px 0px 0px #000000",
                         "hard-lg": "6px 6px 0px 0px #000000",
-                        // Mappings
                         "neo": "4px 4px 0px 0px #000000",
                         "neo-sm": "2px 2px 0px 0px #000000",
                     },
@@ -107,15 +105,6 @@
             background-size: 24px 24px;
         }
 
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
         body {
             min-height: max(600px, 100dvh);
         }
@@ -125,86 +114,83 @@
 <body class="bg-nb-bg font-display text-nb-black overflow-hidden h-screen w-full flex flex-col">
     <div
         class="h-full flex flex-col w-full max-w-full md:max-w-2xl mx-auto bg-nb-bg md:border-x-2 border-nb-black shadow-none md:shadow-hard-lg relative">
-        <header
-            class="flex-none px-5 pt-6 pb-4 flex items-center justify-between bg-white dark:bg-card-dark z-20 border-b-2 border-black relative">
-            <button onclick="navigate('usuario.html')"
-                class="flex size-10 items-center justify-center rounded-lg bg-white dark:bg-card-dark shadow-neo text-slate-900 dark:text-white hover:bg-slate-50 transition-all active:shadow-none active:translate-x-1 active:translate-y-1 border-2 border-black">
-                <span class="material-symbols-outlined font-bold">arrow_back</span>
-            </button>
-            <h1 id="listTitle"
-                class="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex-1 text-center uppercase">
-                Carregando...</h1>
-            <button
-                class="flex size-10 items-center justify-center rounded-lg bg-white dark:bg-card-dark shadow-neo text-slate-900 dark:text-white hover:bg-slate-50 transition-all active:shadow-none active:translate-x-1 active:translate-y-1 border-2 border-black">
-                <span class="material-symbols-outlined font-bold">more_vert</span>
-            </button>
-        </header>
-
-        <!-- Loading Spinner -->
-        <div id="loading" class="flex-1 flex items-center justify-center">
-            <div class="size-10 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
-        </div>
-
-        <main id="listContent" class="hidden flex-1 overflow-y-auto px-5 pb-52 pt-6 no-scrollbar space-y-4">
-            <!-- Dynamic Content Goes Here -->
-        </main>
-
-        <div id="addItemContainer"
-            class="fixed bottom-20 left-0 w-full z-30 bg-white/80 dark:bg-black/80 backdrop-blur-md border-t-2 border-black p-4 transition-all flex flex-col gap-4">
-            <form id="addItemForm" class="flex gap-4 max-w-2xl mx-auto w-full">
-                <input type="text" id="newItemInput" placeholder="Adicionar item..."
-                    class="flex-1 bg-white border-2 border-black rounded-lg p-3 font-bold focus:outline-none focus:shadow-neo transition-all uppercase placeholder:normal-case">
-                <button type="submit"
-                    class="size-12 bg-nb-green border-2 border-black shadow-hard rounded-lg flex items-center justify-center hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none active:bg-green-400 transition-all">
-                    <span class="material-symbols-outlined font-bold">add</span>
+        
+        <!-- SPA Content Container -->
+        <div id="app-content" class="flex-1 flex flex-col relative overflow-hidden transition-all duration-300">
+            <header
+                class="flex-none px-5 pt-6 pb-4 flex items-center justify-between bg-white dark:bg-card-dark z-20 border-b-2 border-black relative">
+                <button onclick="navigate('usuario.html')"
+                    class="flex size-10 items-center justify-center rounded-lg bg-white dark:bg-card-dark shadow-neo text-slate-900 dark:text-white hover:bg-slate-50 transition-all active:shadow-none active:translate-x-1 active:translate-y-1 border-2 border-black">
+                    <span class="material-symbols-outlined font-bold">arrow_back</span>
                 </button>
-            </form>
+                <h1 id="listTitle"
+                    class="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex-1 text-center uppercase">
+                    Carregando...</h1>
+                <button
+                    class="flex size-10 items-center justify-center rounded-lg bg-white dark:bg-card-dark shadow-neo text-slate-900 dark:text-white hover:bg-slate-50 transition-all active:shadow-none active:translate-x-1 active:translate-y-1 border-2 border-black">
+                    <span class="material-symbols-outlined font-bold">more_vert</span>
+                </button>
+            </header>
 
-            <div
-                class="flex items-center justify-between bg-success-light/30 dark:bg-card-dark p-3 rounded-2xl border-2 border-black shadow-neo relative overflow-hidden max-w-2xl mx-auto w-full">
+            <!-- Loading Spinner -->
+            <div id="loading" class="flex-1 flex items-center justify-center">
+                <div class="size-10 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+            </div>
+
+            <main id="listContent" class="hidden flex-1 overflow-y-auto px-5 pb-52 pt-6 no-scrollbar space-y-4">
+                <!-- Dynamic Content Goes Here -->
+            </main>
+
+            <div id="addItemContainer"
+                class="absolute bottom-20 left-0 w-full z-30 bg-white/80 dark:bg-black/80 backdrop-blur-md border-t-2 border-black p-4 transition-all flex flex-col gap-4">
+                <form id="addItemForm" class="flex gap-4 max-w-2xl mx-auto w-full">
+                    <input type="text" id="newItemInput" placeholder="Adicionar item..."
+                        class="flex-1 bg-white border-2 border-black rounded-lg p-3 font-bold focus:outline-none focus:shadow-neo transition-all uppercase placeholder:normal-case">
+                    <button type="submit"
+                        class="size-12 bg-nb-green border-2 border-black shadow-hard rounded-lg flex items-center justify-center hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none active:bg-green-400 transition-all">
+                        <span class="material-symbols-outlined font-bold">add</span>
+                    </button>
+                </form>
+
                 <div
-                    class="absolute -top-6 -right-6 w-24 h-24 bg-success rounded-full opacity-20 border-2 border-black">
-                </div>
-                <div class="flex flex-col relative z-10">
-                    <span
-                        class="text-[10px] font-black text-black dark:text-white uppercase tracking-wider mb-0.5">Total
-                        estimado</span>
-                    <div class="flex items-center gap-2">
-                        <span id="itemsCount"
-                            class="px-2 py-0.5 rounded border border-black bg-white dark:bg-slate-800 text-[10px] font-bold text-black dark:text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">0
-                            itens</span>
+                    class="flex items-center justify-between bg-success-light/30 dark:bg-card-dark p-3 rounded-2xl border-2 border-black shadow-neo relative overflow-hidden max-w-2xl mx-auto w-full">
+                    <div
+                        class="absolute -top-6 -right-6 w-24 h-24 bg-success rounded-full opacity-20 border-2 border-black">
                     </div>
-                </div>
-                <div class="flex items-baseline gap-1 relative z-10">
-                    <span class="text-lg font-black text-success-700">R$</span>
-                    <span id="totalAmount"
-                        class="text-2xl font-black text-success-700 tracking-tighter drop-shadow-sm">0,00</span>
+                    <div class="flex flex-col relative z-10">
+                        <span
+                            class="text-[10px] font-black text-black dark:text-white uppercase tracking-wider mb-0.5">Total
+                            estimado</span>
+                        <div class="flex items-center gap-2">
+                            <span id="itemsCount"
+                                class="px-2 py-0.5 rounded border border-black bg-white dark:bg-slate-800 text-[10px] font-bold text-black dark:text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">0
+                                itens</span>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline gap-1 relative z-10">
+                        <span class="text-lg font-black text-success-700">R$</span>
+                        <span id="totalAmount"
+                            class="text-2xl font-black text-success-700 tracking-tighter drop-shadow-sm">0,00</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Navigation Bar -->
-        <div class="fixed bottom-0 left-0 w-full z-40 pointer-events-none flex flex-col items-center">
+        <!-- Fixed Bottom Navigation Bar -->
+        <div class="fixed bottom-0 left-0 w-full z-50 pointer-events-none flex flex-col items-center">
             <div
-                class="w-full max-w-2xl bg-white dark:bg-card-dark border-t-2 border-black pointer-events-auto h-20 px-6 flex items-center justify-between shadow-[0_-4px_0_0_rgba(0,0,0,1)] relative">
+                class="w-full max-w-2xl bg-white dark:bg-card-dark border-t-2 border-black pointer-events-auto h-20 px-6 flex items-center justify-between shadow-[0_-4px_0_0_rgba(0,0,0,1)] relative transition-none">
 
                 <!-- Left: Lists (Active) -->
-                <button onclick="navigate('usuario.html', true)"
-                    class="flex flex-col items-center gap-1 opacity-100 transition-opacity w-16">
+                <button onclick="navigate('usuario.html')"
+                    class="flex flex-col items-center gap-1 opacity-100 w-16 transition-opacity duration-200">
                     <span
                         class="material-symbols-outlined text-3xl font-bold text-primary dark:text-white">list_alt</span>
                     <span
                         class="text-[10px] font-bold uppercase tracking-wide text-primary dark:text-white">Listas</span>
                 </button>
 
-                <!-- Center: FAB (Floating - Add List? Or New Item?) -->
-                <!-- Ideally this FAB creates a NEW LIST, but we are inside a list. Let's keep it consistent: Navigate to New List page?
-                     OR better: Disable it or make it trigger the "Add Item" focus?
-                     User said "persistent and fixed". Usually this FAB means "Create New List".
-                     Checking novalista.html behavior: it goes to Create List.
-                     Here, maybe we keep it as "Create List" or disable it.
-                     Let's keep it consistent: Navigate to 'novalista.html' creates a NEW list.
-                -->
+                <!-- Center: FAB (Floating) -->
                 <div class="absolute left-1/2 -top-8 -translate-x-1/2">
                     <button onclick="navigate('novalista.html')"
                         class="size-16 bg-nb-yellow rounded-full border-2 border-black shadow-neo flex items-center justify-center hover:scale-110 active:scale-95 transition-all group">
@@ -214,8 +200,8 @@
                 </div>
 
                 <!-- Right: Inventory (Inactive) -->
-                <button onclick="navigate('inventario.html', true)"
-                    class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity w-16">
+                <button onclick="navigate('inventario.html')"
+                    class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity duration-200 w-16">
                     <span
                         class="material-symbols-outlined text-3xl font-bold text-black dark:text-white">inventory_2</span>
                     <span
@@ -223,393 +209,7 @@
                 </button>
             </div>
         </div>
-
-
-        <script>
-            const urlParams = new URLSearchParams(window.location.search);
-            const listId = urlParams.get('id');
-            let currentUserId = null;
-
-            const listTitleEl = document.getElementById('listTitle');
-            const listContentEl = document.getElementById('listContent');
-            const loadingEl = document.getElementById('loading');
-            const totalAmountEl = document.getElementById('totalAmount');
-            const itemsCountEl = document.getElementById('itemsCount');
-            const addItemForm = document.getElementById('addItemForm');
-            const newItemInput = document.getElementById('newItemInput');
-
-            async function init() {
-                if (!listId) {
-                    alert('Lista não encontrada');
-                    navigate('usuario.html');
-                    return;
-                }
-
-                const { data: { session } } = await window.supabaseClient.auth.getSession();
-                if (!session) {
-                    navigate('login.html');
-                    return;
-                }
-                currentUserId = session.user.id;
-
-                await fetchListMetadata();
-                await fetchListItems();
-
-                loadingEl.classList.add('hidden');
-                listContentEl.classList.remove('hidden');
-            }
-
-            async function fetchListMetadata() {
-                const { data, error } = await window.supabaseClient
-                    .from('shopping_lists')
-                    .select('*')
-                    .eq('id', listId)
-                    .single();
-
-                if (error) {
-                    console.error(error);
-                    listTitleEl.innerText = "Erro ao carregar";
-                } else {
-                    listTitleEl.innerText = data.title;
-                }
-            }
-
-            async function fetchListItems() {
-                const { data: items, error } = await window.supabaseClient
-                    .from('list_items')
-                    .select('*')
-                    .eq('list_id', listId)
-                    .order('name', { ascending: true });
-
-                if (error) {
-                    console.error(error);
-                    return;
-                }
-
-                renderItems(items);
-                calculateTotals(items);
-            }
-
-            function renderItems(items) {
-                listContentEl.innerHTML = '';
-
-                const pendingItems = items.filter(i => !i.is_checked);
-                const completedItems = items.filter(i => i.is_checked);
-
-                if (pendingItems.length === 0 && completedItems.length === 0) {
-                    listContentEl.innerHTML = `
-                    <div class="flex flex-col items-center justify-center gap-4 mt-20 opacity-50">
-                        <span class="material-symbols-outlined text-6xl">shopping_basket</span>
-                        <p class="font-bold text-center">Sua lista está vazia.<br>Adicione itens abaixo!</p>
-                    </div>
-                 `;
-                    return;
-                }
-
-                // Unchecked Items Group
-                if (pendingItems.length > 0) {
-                    const label = document.createElement('div');
-                    label.className = "flex items-center gap-2 mb-2";
-                    label.innerHTML = `
-                    <div class="h-8 px-3 bg-yellow-300 border-2 border-black rounded-md flex items-center shadow-neo-sm">
-                        <span class="text-xs font-bold uppercase tracking-wider text-black">A fazer</span>
-                    </div>
-                 `;
-                    listContentEl.appendChild(label);
-
-                    pendingItems.forEach(item => {
-                        listContentEl.appendChild(createItemElement(item));
-                    });
-                }
-
-                // Checked Items Group
-                if (completedItems.length > 0) {
-                    const label = document.createElement('div');
-                    label.className = "flex items-center gap-2 mt-6 mb-2";
-                    label.innerHTML = `
-                    <div class="h-8 px-3 bg-green-300 border-2 border-black rounded-md flex items-center shadow-neo-sm">
-                        <span class="text-xs font-bold uppercase tracking-wider text-black">Concluídos</span>
-                    </div>
-                 `;
-                    listContentEl.appendChild(label);
-
-                    completedItems.forEach(item => {
-                        listContentEl.appendChild(createItemElement(item));
-                    });
-                }
-            }
-
-            let touchStartX = 0;
-            let touchCurrentX = 0;
-
-            function createItemElement(item) {
-                const isChecked = item.is_checked;
-
-                // Outer Wrapper (Background with Delete Button)
-                const wrapper = document.createElement('div');
-                wrapper.className = "relative w-full mb-4 rounded-xl overflow-hidden select-none";
-
-                // Background (Delete Action)
-                const bg = document.createElement('div');
-                bg.className = "absolute inset-y-0 right-0 w-full bg-red-500 flex items-center justify-end px-6 rounded-xl -z-0";
-                bg.innerHTML = `<span class="material-symbols-outlined text-white text-3xl font-bold">delete</span>`;
-
-                // Foreground (Content Card)
-                const div = document.createElement('div');
-
-                // Apply different styles based on state
-                if (isChecked) {
-                    div.className = "relative z-10 w-full flex items-center gap-4 bg-slate-100 dark:bg-card-dark/40 p-4 rounded-xl border-2 border-slate-400 dark:border-white/10 transition-transform duration-200 ease-out";
-                } else {
-                    div.className = "relative z-10 w-full flex items-center gap-4 bg-white dark:bg-card-dark p-4 rounded-xl shadow-neo border-2 border-black transition-transform duration-200 ease-out";
-                }
-
-                // Touch Events
-                div.addEventListener('touchstart', (e) => handleTouchStart(e, div, item.id));
-                div.addEventListener('touchmove', (e) => handleTouchMove(e, div));
-                div.addEventListener('touchend', (e) => handleTouchEnd(e, div, item.id));
-
-                div.innerHTML = `
-                <input class="neo-checkbox shrink-0 ${isChecked ? 'grayscale opacity-60' : ''}" type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleItem('${item.id}', ${!isChecked})" />
-                <div class="flex-1 min-w-0 flex flex-col">
-                    <p class="text-slate-900 dark:text-white text-lg font-bold truncate leading-tight ${isChecked ? 'line-through decoration-2 decoration-slate-400 text-slate-500' : ''}">${item.name}</p>
-                </div>
-                <div class="shrink-0 px-3 py-1.5 rounded-lg border-2 border-transparent hover:border-black transition-all cursor-pointer ${isChecked ? 'opacity-60' : 'bg-white'}" onclick="event.stopPropagation(); promptPrice('${item.id}', ${item.price})">
-                    <p class="text-sm font-bold ${isChecked ? 'text-slate-500 line-through decoration-2' : 'text-primary-dark'}">
-                        ${item.price ? `R$ ${formatCurrency(item.price)}` : 'R$ --,--'}
-                    </p>
-                </div>
-            `;
-
-                wrapper.appendChild(bg);
-                wrapper.appendChild(div);
-                return wrapper;
-            }
-
-            function handleTouchStart(e, el, id) {
-                touchStartX = e.touches[0].clientX;
-                touchCurrentX = touchStartX; // Initialize currentX to startX
-                el.style.transition = 'none'; // Disable transition for direct 1:1 movement
-            }
-
-            function handleTouchMove(e, el) {
-                touchCurrentX = e.touches[0].clientX;
-                const diff = touchCurrentX - touchStartX;
-
-                // Only allow swiping left
-                if (diff < 0) {
-                    el.style.transform = `translateX(${diff}px)`;
-                }
-            }
-
-            function handleTouchEnd(e, el, id) {
-                el.style.transition = 'transform 0.3s ease-out';
-                const diff = touchCurrentX - touchStartX;
-                const threshold = -120; // px to trigger delete
-
-                // Only trigger delete if we actually moved significantly
-                if (diff < threshold) {
-                    // Complete swipe
-                    el.style.transform = `translateX(-100%)`;
-                    setTimeout(() => deleteItem(id), 300);
-                } else {
-                    // Reset
-                    el.style.transform = `translateX(0)`;
-                }
-            }
-
-            async function deleteItem(id) {
-                const { error } = await window.supabaseClient
-                    .from('list_items')
-                    .delete()
-                    .eq('id', id);
-
-                if (!error) {
-                    fetchListItems();
-                } else {
-                    alert("Erro ao excluir item");
-                    fetchListItems(); // Reset state on error
-                }
-            }
-
-            async function toggleItem(itemId, newStatus) {
-                // Update item status first
-                const { error } = await window.supabaseClient
-                    .from('list_items')
-                    .update({ is_checked: newStatus })
-                    .eq('id', itemId);
-
-                if (!error) {
-                    // If checking (done) -> Add to inventory
-                    if (newStatus === true) {
-                        await addToInventory(itemId);
-                    }
-                    // If unchecking (undo) -> Remove from inventory
-                    else {
-                        await removeFromInventory(itemId);
-                    }
-
-                    fetchListItems(); // Reload UI
-                } else {
-                    alert('Erro ao atualizar item');
-                }
-            }
-
-            async function addToInventory(itemId) {
-                // 1. Get the item details from list_items
-                const { data: item, error: fetchError } = await window.supabaseClient
-                    .from('list_items')
-                    .select('*')
-                    .eq('id', itemId)
-                    .single();
-
-                if (fetchError || !item) return;
-
-                // 2. Check if item exists in inventory (by name and user_id)
-                const { data: inventoryItem, error: invError } = await window.supabaseClient
-                    .from('inventory_items')
-                    .select('*')
-                    .eq('user_id', currentUserId)
-                    .ilike('name', item.name) // Use ilike for case-insensitive match
-                    .maybeSingle();
-
-                const qtyToAdd = item.quantity || 1; // Default to 1 if not specified
-
-                if (inventoryItem) {
-                    // 3a. Update existing inventory item
-                    const newQty = (inventoryItem.quantity || 0) + qtyToAdd;
-                    await window.supabaseClient
-                        .from('inventory_items')
-                        .update({ quantity: newQty })
-                        .eq('id', inventoryItem.id);
-
-                    // Optional: Show a toast/notification? For now, silent.
-                } else {
-                    // 3b. Create new inventory item
-                    await window.supabaseClient
-                        .from('inventory_items')
-                        .insert({
-                            user_id: currentUserId,
-                            name: item.name,
-                            category: item.category || 'Outros',
-                            quantity: qtyToAdd,
-                            unit: 'unid.',
-                            added_date: new Date().toISOString()
-                        });
-                }
-            }
-
-            async function removeFromInventory(itemId) {
-                // 1. Get the item details
-                const { data: item, error: fetchError } = await window.supabaseClient
-                    .from('list_items')
-                    .select('*')
-                    .eq('id', itemId)
-                    .single();
-
-                if (fetchError || !item) return;
-
-                // 2. Check if item exists in inventory
-                const { data: inventoryItem, error: invError } = await window.supabaseClient
-                    .from('inventory_items')
-                    .select('*')
-                    .eq('user_id', currentUserId)
-                    .ilike('name', item.name)
-                    .maybeSingle();
-
-                if (!inventoryItem) return; // Nothing to remove
-
-                const qtyToRemove = item.quantity || 1;
-                const newQty = (inventoryItem.quantity || 0) - qtyToRemove;
-
-                if (newQty <= 0) {
-                    // Remove entirely
-                    await window.supabaseClient
-                        .from('inventory_items')
-                        .delete()
-                        .eq('id', inventoryItem.id);
-                } else {
-                    // Decrease quantity
-                    await window.supabaseClient
-                        .from('inventory_items')
-                        .update({ quantity: newQty })
-                        .eq('id', inventoryItem.id);
-                }
-            }
-
-            // Just a simple prompt for now. Ideally a modal.
-            async function promptPrice(itemId, currentPrice) {
-                const newPrice = prompt("Editar preço:", currentPrice || "");
-                if (newPrice !== null) {
-                    const parsed = parseFloat(newPrice.replace(',', '.'));
-                    if (!isNaN(parsed)) {
-                        await window.supabaseClient
-                            .from('list_items')
-                            .update({ price: parsed })
-                            .eq('id', itemId);
-                        fetchListItems();
-                    }
-                }
-            }
-
-            function calculateTotals(items) {
-                let total = 0;
-                let count = 0;
-                let checkedRaw = 0;
-
-                items.forEach(i => {
-                    count++;
-                    if (i.is_checked) checkedRaw++;
-                    if (i.price) total += Number(i.price);
-                });
-
-                itemsCountEl.innerText = `${checkedRaw} de ${count}`;
-                totalAmountEl.innerText = formatCurrency(total);
-
-                // Also update the list item_count and total_amount in DB for the dashboard to be fast
-                updateListSummary(count, total);
-            }
-
-            async function updateListSummary(count, total) {
-                await window.supabaseClient
-                    .from('shopping_lists')
-                    .update({ item_count: count, total_amount: total })
-                    .eq('id', listId);
-            }
-
-            function formatCurrency(value) {
-                return new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
-            }
-
-            addItemForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const name = newItemInput.value.trim();
-                if (!name) return;
-
-                newItemInput.disabled = true;
-
-                const { error } = await window.supabaseClient
-                    .from('list_items')
-                    .insert({
-                        list_id: listId,
-                        user_id: currentUserId,
-                        name: name,
-                        is_checked: false
-                    });
-
-                newItemInput.disabled = false;
-                newItemInput.value = '';
-                newItemInput.focus();
-
-                if (!error) {
-                    fetchListItems();
-                } else {
-                    alert('Erro ao adicionar item');
-                }
-            });
-
-            init();
-        </script>
+    </div>
 </body>
 
 </html>

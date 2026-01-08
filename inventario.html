@@ -32,7 +32,6 @@
                         "nb-white": "#FFFFFF",
                         "nb-black": "#000000",
                         "nb-bg": "#F3F0E9",
-                        // Keeping legacy for compatibility if needed, but mapped to new
                         "primary": "#6366F1",
                     },
                     fontFamily: {
@@ -42,7 +41,6 @@
                         "hard": "4px 4px 0px 0px #000000",
                         "hard-sm": "2px 2px 0px 0px #000000",
                         "hard-lg": "6px 6px 0px 0px #000000",
-                        // Mappings for old classes
                         "neo": "4px 4px 0px 0px #000000",
                         "neo-sm": "2px 2px 0px 0px #000000",
                     },
@@ -86,182 +84,187 @@
 <body class="bg-nb-bg font-display text-nb-black overflow-hidden h-screen w-full flex flex-col">
     <div
         class="h-full flex flex-col w-full max-w-full md:max-w-2xl mx-auto bg-nb-bg md:border-x-2 border-nb-black shadow-none md:shadow-hard-lg relative">
-        <header
-            class="flex-none px-5 pt-6 pb-4 flex items-center justify-between bg-white dark:bg-card-dark z-20 border-b-2 border-black relative">
-            <button onclick="navigate('usuario.html')"
-                class="flex size-10 items-center justify-center rounded-lg bg-white dark:bg-card-dark shadow-neo text-slate-900 dark:text-white hover:bg-slate-50 transition-all active:shadow-none active:translate-x-1 active:translate-y-1 border-2 border-black">
-                <span class="material-symbols-outlined font-bold">arrow_back</span>
-            </button>
-            <h1
-                class="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex-1 text-center uppercase">
-                Inventário</h1>
-            <div class="flex items-center gap-2">
-                <button onclick="openAddModal()"
-                    class="flex size-10 items-center justify-center rounded-lg bg-nb-yellow border-2 border-nb-black shadow-neo text-nb-black hover:bg-yellow-400 transition-all active:shadow-none active:translate-x-1 active:translate-y-1">
-                    <span class="material-symbols-outlined font-bold">add</span>
+        
+        <!-- SPA Content Container -->
+        <div id="app-content" class="flex-1 flex flex-col relative overflow-hidden transition-all duration-300">
+            <header
+                class="flex-none px-5 pt-6 pb-4 flex items-center justify-between bg-white dark:bg-card-dark z-20 border-b-2 border-black relative">
+                <button onclick="navigate('usuario.html')"
+                    class="flex size-10 items-center justify-center rounded-lg bg-white dark:bg-card-dark shadow-neo text-slate-900 dark:text-white hover:bg-slate-50 transition-all active:shadow-none active:translate-x-1 active:translate-y-1 border-2 border-black">
+                    <span class="material-symbols-outlined font-bold">arrow_back</span>
                 </button>
-                <button onclick="navigate('assistente.html')"
-                    class="flex size-10 items-center justify-center rounded-lg bg-black text-white border-2 border-black shadow-neo hover:bg-gray-800 transition-all active:shadow-none active:translate-x-1 active:translate-y-1">
-                    <span class="material-symbols-outlined font-bold">auto_awesome</span>
-                </button>
-            </div>
-        </header>
-
-        <main class="flex-1 overflow-y-auto px-5 pb-32 pt-6 no-scrollbar space-y-6">
-            <section class="space-y-4">
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-                        <span class="material-symbols-outlined text-black font-bold">search</span>
-                    </div>
-                    <input id="searchInput"
-                        class="block w-full pl-10 pr-3 py-4 border-2 border-black rounded-xl text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-black shadow-neo font-bold bg-white dark:bg-card-dark text-lg"
-                        placeholder="Buscar no estoque..." type="text" />
-                </div>
-                <div id="filterContainer" class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
-                    <button data-cat="all" onclick="filterItems('all')"
-                        class="filter-btn active flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
-                        Tudo
+                <h1
+                    class="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex-1 text-center uppercase">
+                    Inventário</h1>
+                <div class="flex items-center gap-2">
+                    <button onclick="openAddModal()"
+                        class="flex size-10 items-center justify-center rounded-lg bg-nb-yellow border-2 border-nb-black shadow-neo text-nb-black hover:bg-yellow-400 transition-all active:shadow-none active:translate-x-1 active:translate-y-1">
+                        <span class="material-symbols-outlined font-bold">add</span>
                     </button>
-                    <button data-cat="Comida" onclick="filterItems('Comida')"
-                        class="filter-btn flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
-                        Comida
-                    </button>
-                    <button data-cat="Limpeza" onclick="filterItems('Limpeza')"
-                        class="filter-btn flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
-                        Limpeza
-                    </button>
-                    <button data-cat="Higiene" onclick="filterItems('Higiene')"
-                        class="filter-btn flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
-                        Higiene
+                    <button onclick="navigate('assistente.html')"
+                        class="flex size-10 items-center justify-center rounded-lg bg-black text-white border-2 border-black shadow-neo hover:bg-gray-800 transition-all active:shadow-none active:translate-x-1 active:translate-y-1">
+                        <span class="material-symbols-outlined font-bold">auto_awesome</span>
                     </button>
                 </div>
-            </section>
+            </header>
 
-            <section id="statsSection" class="flex flex-col gap-4">
-                <div
-                    class="w-full bg-primary-light dark:bg-primary-dark/20 p-5 rounded-xl border-2 border-black shadow-neo flex items-center justify-between">
-                    <div>
-                        <p
-                            class="text-xs font-black uppercase tracking-widest text-primary-dark dark:text-primary-light mb-1">
-                            Itens em casa</p>
-                        <h2 id="totalCount" class="text-4xl font-extrabold text-black dark:text-white">--</h2>
+            <main class="flex-1 overflow-y-auto px-5 pb-32 pt-6 no-scrollbar space-y-6">
+                <section class="space-y-4">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+                            <span class="material-symbols-outlined text-black font-bold">search</span>
+                        </div>
+                        <input id="searchInput"
+                            class="block w-full pl-10 pr-3 py-4 border-2 border-black rounded-xl text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-black shadow-neo font-bold bg-white dark:bg-card-dark text-lg"
+                            placeholder="Buscar no estoque..." type="text" />
                     </div>
+                    <div id="filterContainer" class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+                        <button data-cat="all"
+                            class="filter-btn active flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
+                            Tudo
+                        </button>
+                        <button data-cat="Comida"
+                            class="filter-btn flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
+                            Comida
+                        </button>
+                        <button data-cat="Limpeza"
+                            class="filter-btn flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
+                            Limpeza
+                        </button>
+                        <button data-cat="Higiene"
+                            class="filter-btn flex-none px-5 py-2.5 bg-white dark:bg-card-dark text-slate-900 dark:text-white border-2 border-black rounded-lg shadow-neo-sm active:translate-y-0.5 active:shadow-none transition-all font-bold text-sm tracking-wide uppercase hover:bg-slate-50">
+                            Higiene
+                        </button>
+                    </div>
+                </section>
+
+                <section id="statsSection" class="flex flex-col gap-4">
                     <div
-                        class="size-14 bg-white dark:bg-card-dark rounded-full border-2 border-black flex items-center justify-center rotate-3 hover:rotate-0 transition-transform">
-                        <span class="material-symbols-outlined text-3xl font-black text-primary">inventory_2</span>
-                    </div>
-                </div>
-
-                <div id="loading" class="flex justify-center p-8">
-                    <div class="size-10 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
-                </div>
-
-                <div id="itemsList" class="flex flex-col gap-4">
-                    <!-- Items will be injected here -->
-                </div>
-            </section>
-        </main>
-
-        <!-- Add Item Modal -->
-        <div id="addItemModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeAddModal()"></div>
-            <div
-                class="bg-nb-white w-full max-w-md rounded-nb border-2 border-nb-black shadow-hard p-6 relative z-10 animate-up">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-black uppercase tracking-tight">Novo Item</h2>
-                    <button onclick="closeAddModal()"
-                        class="size-8 flex items-center justify-center rounded-full hover:bg-gray-100">
-                        <span class="material-symbols-outlined font-bold">close</span>
-                    </button>
-                </div>
-
-                <form id="addItemForm" onsubmit="handleAddItem(event)" class="flex flex-col gap-4">
-                    <div>
-                        <label class="text-xs font-bold uppercase tracking-wider mb-1 block">Nome do Item</label>
-                        <input type="text" name="name" required placeholder="Ex: Arroz"
-                            class="w-full bg-nb-bg border-2 border-nb-black rounded-lg p-3 font-bold focus:outline-none focus:shadow-neo transition-all">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
+                        class="w-full bg-primary-light dark:bg-primary-dark/20 p-5 rounded-xl border-2 border-black shadow-neo flex items-center justify-between">
                         <div>
-                            <label class="text-xs font-bold uppercase tracking-wider mb-1 block">Quantidade</label>
-                            <input type="number" name="quantity" required value="1" min="1"
+                            <p
+                                class="text-xs font-black uppercase tracking-widest text-primary-dark dark:text-primary-light mb-1">
+                                Itens em casa</p>
+                            <h2 id="totalCount" class="text-4xl font-extrabold text-black dark:text-white">--</h2>
+                        </div>
+                        <div
+                            class="size-14 bg-white dark:bg-card-dark rounded-full border-2 border-black flex items-center justify-center rotate-3 hover:rotate-0 transition-transform">
+                            <span class="material-symbols-outlined text-3xl font-black text-primary">inventory_2</span>
+                        </div>
+                    </div>
+
+                    <div id="loading" class="flex justify-center p-8">
+                        <div class="size-10 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+
+                    <div id="itemsList" class="flex flex-col gap-4">
+                        <!-- Items will be injected here -->
+                    </div>
+                </section>
+            </main>
+
+            <!-- Add Item Modal -->
+        <div id="addItemModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
+                <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeAddModal()"></div>
+                <div
+                    class="bg-nb-white w-full max-w-md rounded-nb border-2 border-nb-black shadow-hard p-6 relative z-10 animate-up">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-black uppercase tracking-tight">Novo Item</h2>
+                        <button onclick="closeAddModal()"
+                            class="size-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+                            <span class="material-symbols-outlined font-bold">close</span>
+                        </button>
+                    </div>
+
+                    <form id="addItemForm" onsubmit="handleAddItem(event)" class="flex flex-col gap-4">
+                        <div>
+                            <label class="text-xs font-bold uppercase tracking-wider mb-1 block">Nome do Item</label>
+                            <input type="text" name="name" required placeholder="Ex: Arroz"
                                 class="w-full bg-nb-bg border-2 border-nb-black rounded-lg p-3 font-bold focus:outline-none focus:shadow-neo transition-all">
                         </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider mb-1 block">Quantidade</label>
+                                <input type="number" name="quantity" required value="1" min="1"
+                                    class="w-full bg-nb-bg border-2 border-nb-black rounded-lg p-3 font-bold focus:outline-none focus:shadow-neo transition-all">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold uppercase tracking-wider mb-1 block">Unidade</label>
+                                <select name="unit"
+                                    class="w-full bg-nb-bg border-2 border-nb-black rounded-lg p-3 font-bold focus:outline-none focus:shadow-neo transition-all appearance-none">
+                                    <option value="unid.">Unid.</option>
+                                    <option value="kg">Kg</option>
+                                    <option value="g">g</option>
+                                    <option value="L">L</option>
+                                    <option value="ml">ml</option>
+                                    <option value="pct">Pct</option>
+                                    <option value="cx">Cx</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div>
-                            <label class="text-xs font-bold uppercase tracking-wider mb-1 block">Unidade</label>
-                            <select name="unit"
-                                class="w-full bg-nb-bg border-2 border-nb-black rounded-lg p-3 font-bold focus:outline-none focus:shadow-neo transition-all appearance-none">
-                                <option value="unid.">Unid.</option>
-                                <option value="kg">Kg</option>
-                                <option value="g">g</option>
-                                <option value="L">L</option>
-                                <option value="ml">ml</option>
-                                <option value="pct">Pct</option>
-                                <option value="cx">Cx</option>
-                            </select>
+                            <label class="text-xs font-bold uppercase tracking-wider mb-1 block">Categoria</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="category" value="Comida" checked class="peer hidden">
+                                    <div
+                                        class="border-2 border-nb-black rounded-lg p-2 text-center text-sm font-bold bg-white peer-checked:bg-nb-yellow peer-checked:shadow-neo-sm transition-all hover:bg-gray-50">
+                                        Comida
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="category" value="Limpeza" class="peer hidden">
+                                    <div
+                                        class="border-2 border-nb-black rounded-lg p-2 text-center text-sm font-bold bg-white peer-checked:bg-nb-blue peer-checked:shadow-neo-sm transition-all hover:bg-gray-50">
+                                        Limpeza
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="category" value="Higiene" class="peer hidden">
+                                    <div
+                                        class="border-2 border-nb-black rounded-lg p-2 text-center text-sm font-bold bg-white peer-checked:bg-nb-green peer-checked:shadow-neo-sm transition-all hover:bg-gray-50">
+                                        Higiene
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="category" value="Outros" class="peer hidden">
+                                    <div
+                                        class="border-2 border-nb-black rounded-lg p-2 text-center text-sm font-bold bg-white peer-checked:bg-nb-purple peer-checked:shadow-neo-sm transition-all hover:bg-gray-50">
+                                        Outros
+                                    </div>
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <label class="text-xs font-bold uppercase tracking-wider mb-1 block">Categoria</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <label class="cursor-pointer">
-                                <input type="radio" name="category" value="Comida" checked class="peer hidden">
-                                <div
-                                    class="border-2 border-nb-black rounded-lg p-2 text-center text-sm font-bold bg-white peer-checked:bg-nb-yellow peer-checked:shadow-neo-sm transition-all hover:bg-gray-50">
-                                    Comida
-                                </div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="category" value="Limpeza" class="peer hidden">
-                                <div
-                                    class="border-2 border-nb-black rounded-lg p-2 text-center text-sm font-bold bg-white peer-checked:bg-nb-blue peer-checked:shadow-neo-sm transition-all hover:bg-gray-50">
-                                    Limpeza
-                                </div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="category" value="Higiene" class="peer hidden">
-                                <div
-                                    class="border-2 border-nb-black rounded-lg p-2 text-center text-sm font-bold bg-white peer-checked:bg-nb-green peer-checked:shadow-neo-sm transition-all hover:bg-gray-50">
-                                    Higiene
-                                </div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="category" value="Outros" class="peer hidden">
-                                <div
-                                    class="border-2 border-nb-black rounded-lg p-2 text-center text-sm font-bold bg-white peer-checked:bg-nb-purple peer-checked:shadow-neo-sm transition-all hover:bg-gray-50">
-                                    Outros
-                                </div>
-                            </label>
+                        <div>
+                            <label class="text-xs font-bold uppercase tracking-wider mb-1 block">Data de Inclusão</label>
+                            <input type="date" name="added_date" required
+                                class="w-full bg-nb-bg border-2 border-nb-black rounded-lg p-3 font-bold focus:outline-none focus:shadow-neo transition-all">
                         </div>
-                    </div>
 
-                    <div>
-                        <label class="text-xs font-bold uppercase tracking-wider mb-1 block">Data de Inclusão</label>
-                        <input type="date" name="added_date" required
-                            class="w-full bg-nb-bg border-2 border-nb-black rounded-lg p-3 font-bold focus:outline-none focus:shadow-neo transition-all">
-                    </div>
-
-                    <button type="submit"
-                        class="mt-2 w-full bg-nb-black text-white p-4 rounded-nb font-black uppercase tracking-widest border-2 border-transparent hover:bg-gray-800 active:scale-[0.98] transition-all">
-                        Adicionar ao Estoque
-                    </button>
-                </form>
+                        <button type="submit"
+                            class="mt-2 w-full bg-nb-black text-white p-4 rounded-nb font-black uppercase tracking-widest border-2 border-transparent hover:bg-gray-800 active:scale-[0.98] transition-all">
+                            Adicionar ao Estoque
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 
-        <!-- Bottom Navigation Bar -->
-        <div class="fixed bottom-0 left-0 w-full z-40 pointer-events-none flex flex-col items-center">
+        <!-- Fixed Bottom Navigation Bar -->
+        <div class="fixed bottom-0 left-0 w-full z-50 pointer-events-none flex flex-col items-center">
             <div
-                class="w-full max-w-2xl bg-white dark:bg-card-dark border-t-2 border-black pointer-events-auto h-20 px-6 flex items-center justify-between shadow-[0_-4px_0_0_rgba(0,0,0,1)] relative">
+                class="w-full max-w-2xl bg-white dark:bg-card-dark border-t-2 border-black pointer-events-auto h-20 px-6 flex items-center justify-between shadow-[0_-4px_0_0_rgba(0,0,0,1)] relative transition-none">
 
                 <!-- Left: Lists (Inactive) -->
-                <button onclick="navigate('usuario.html', true)"
-                    class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity w-16">
+                <button onclick="navigate('usuario.html')"
+                    class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity duration-200 w-16">
                     <span
                         class="material-symbols-outlined text-3xl font-bold text-black dark:text-white">list_alt</span>
-                    <span class="text-[10px] font-bold uppercase tracking-wide text-black dark:text-white">Listas</span>
+                    <span
+                        class="text-[10px] font-bold uppercase tracking-wide text-black dark:text-white">Listas</span>
                 </button>
 
                 <!-- Center: FAB (Floating) -->
@@ -274,281 +277,14 @@
                 </div>
 
                 <!-- Right: Inventory (Active) -->
-                <button onclick="navigate('inventario.html', true)"
-                    class="flex flex-col items-center gap-1 opacity-100 w-16">
+                <button onclick="navigate('inventario.html')"
+                    class="flex flex-col items-center gap-1 opacity-100 w-16 transition-opacity duration-200">
                     <span class="material-symbols-outlined text-3xl font-black text-primary">inventory_2</span>
                     <span class="text-[10px] font-bold uppercase tracking-wide">Estoque</span>
                 </button>
             </div>
         </div>
     </div>
-
-    <script>
-        let allItems = [];
-        let currentUserId = null;
-        let currentFilter = 'all';
-        let touchStartX = 0;
-        let touchCurrentX = 0;
-
-        const itemsListEl = document.getElementById('itemsList');
-        const loadingEl = document.getElementById('loading');
-        const totalCountEl = document.getElementById('totalCount');
-        const searchInput = document.getElementById('searchInput');
-
-        async function init() {
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-            if (!session) {
-                navigate('login.html');
-                return;
-            }
-            currentUserId = session.user.id;
-
-            await fetchInventory();
-
-            // Setup Search
-            searchInput.addEventListener('input', (e) => {
-                renderItems(e.target.value);
-            });
-        }
-
-        async function fetchInventory() {
-            loadingEl.classList.remove('hidden');
-            itemsListEl.innerHTML = '';
-
-            const { data, error } = await window.supabaseClient
-                .from('inventory_items')
-                .select('*')
-                .order('name', { ascending: true });
-
-            loadingEl.classList.add('hidden');
-
-            if (error) {
-                console.error(error);
-                alert("Erro ao carregar inventário.");
-                return;
-            }
-
-            allItems = data || [];
-            renderItems();
-        }
-
-        function filterItems(category) {
-            currentFilter = category;
-
-            // Update UI buttons
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                if (btn.dataset.cat === category) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-
-            renderItems(searchInput.value);
-        }
-
-
-
-        function renderItems(searchTerm = '') {
-            itemsListEl.innerHTML = '';
-
-            const term = searchTerm.toLowerCase();
-
-            const filtered = allItems.filter(item => {
-                const matchesSearch = item.name.toLowerCase().includes(term);
-                const matchesCategory = currentFilter === 'all' || item.category === currentFilter;
-                return matchesSearch && matchesCategory;
-            });
-
-            filtered.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
-
-            totalCountEl.innerText = allItems.length;
-
-            if (filtered.length === 0) {
-                itemsListEl.innerHTML = `
-                    <div class="p-8 text-center opacity-50">
-                        <p class="font-bold">Nenhum item encontrado.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            filtered.forEach(item => {
-                // Outer Wrapper (Background with Delete Button)
-                const wrapper = document.createElement('div');
-                wrapper.className = "relative w-full mb-4 rounded-xl overflow-hidden select-none";
-
-                // Background (Delete Action)
-                const bg = document.createElement('div');
-                bg.className = "absolute inset-y-0 right-0 w-full bg-red-500 flex items-center justify-end px-6 rounded-xl -z-0";
-                bg.innerHTML = `<span class="material-symbols-outlined text-white text-3xl font-bold">delete</span>`;
-
-                // Foreground (Item Card)
-                const div = document.createElement('div');
-                div.className = "relative z-10 w-full bg-white dark:bg-card-dark p-4 rounded-xl border-2 border-black shadow-neo flex items-center justify-between transition-transform duration-200 ease-out";
-
-                // Touch Events
-                div.addEventListener('touchstart', (e) => handleTouchStart(e, div));
-                div.addEventListener('touchmove', (e) => handleTouchMove(e, div));
-                div.addEventListener('touchend', (e) => handleTouchEnd(e, div, item.id));
-
-                // Icon based on category
-                let icon = 'inventory_2';
-                let colorClass = 'bg-gray-200';
-
-                if (item.category === 'Comida') { icon = 'bakery_dining'; colorClass = 'bg-yellow-300'; }
-                else if (item.category === 'Limpeza') { icon = 'cleaning_services'; colorClass = 'bg-blue-300'; }
-                else if (item.category === 'Higiene') { icon = 'soap'; colorClass = 'bg-green-300'; }
-
-                div.innerHTML = `
-                    <div class="flex items-center gap-4 z-10 relative flex-1 min-w-0" onclick="editItem('${item.id}')">
-                        <div class="size-14 ${colorClass} rounded-lg border-2 border-black flex items-center justify-center shrink-0 shadow-sm">
-                            <span class="material-symbols-outlined text-2xl text-black">${icon}</span>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h3 class="font-extrabold text-lg leading-tight text-slate-900 dark:text-white truncate">${item.name}</h3>
-                            <div class="flex items-center gap-2 mt-1 flex-wrap">
-                                <span class="bg-white/50 border border-black px-1.5 py-0.5 rounded text-[10px] font-bold uppercase">${item.category || 'Geral'}</span>
-                                ${item.expiry_date ? `<span class="text-xs font-bold text-slate-500 uppercase">Val: ${new Date(item.expiry_date).toLocaleDateString()}</span>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col items-end pl-4 border-l-2 border-dashed border-slate-200 dark:border-slate-700 ml-2" ontouchstart="event.stopPropagation()">
-                        <div class="flex items-center gap-2">
-                             <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})" class="size-6 bg-slate-200 rounded border border-black flex items-center justify-center hover:bg-slate-300 font-bold">-</button>
-                             <span class="text-xl font-black text-slate-900 dark:text-white w-6 text-center">${item.quantity}</span>
-                             <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})" class="size-6 bg-slate-200 rounded border border-black flex items-center justify-center hover:bg-slate-300 font-bold">+</button>
-                        </div>
-                        <span class="text-[10px] font-bold text-slate-500 uppercase mt-1">${item.unit || 'unid.'}</span>
-                    </div>
-                `;
-
-                wrapper.appendChild(bg);
-                wrapper.appendChild(div);
-                itemsListEl.appendChild(wrapper);
-            });
-        }
-
-        function handleTouchStart(e, el) {
-            touchStartX = e.touches[0].clientX;
-            touchCurrentX = touchStartX;
-            el.style.transition = 'none';
-        }
-
-        function handleTouchMove(e, el) {
-            touchCurrentX = e.touches[0].clientX;
-            const diff = touchCurrentX - touchStartX;
-
-            if (diff < 0) {
-                el.style.transform = `translateX(${diff}px)`;
-            }
-        }
-
-        function handleTouchEnd(e, el, id) {
-            el.style.transition = 'transform 0.3s ease-out';
-            const diff = touchCurrentX - touchStartX;
-            const threshold = -120;
-
-            if (diff < threshold) {
-                el.style.transform = `translateX(-100%)`;
-                setTimeout(() => deleteInventoryItem(id), 300);
-            } else {
-                el.style.transform = `translateX(0)`;
-            }
-        }
-
-        async function deleteInventoryItem(id) {
-            if (!confirm("Tem certeza que deseja excluir este item?")) {
-                fetchInventory(); // Reset UI
-                return;
-            }
-
-            const { error } = await window.supabaseClient
-                .from('inventory_items')
-                .delete()
-                .eq('id', id);
-
-            if (error) {
-                alert("Erro ao excluir");
-            }
-            fetchInventory();
-        }
-
-        async function updateQuantity(id, newQty) {
-            if (newQty < 0) return;
-
-            // Optimistic update logic could go here, but for safety:
-            if (newQty === 0) {
-                if (!confirm("Remover este item do inventário?")) return;
-
-                await window.supabaseClient.from('inventory_items').delete().eq('id', id);
-            } else {
-                await window.supabaseClient.from('inventory_items').update({ quantity: newQty }).eq('id', id);
-            }
-            fetchInventory();
-        }
-
-        function openAddModal() {
-            const modal = document.getElementById('addItemModal');
-            const dateInput = modal.querySelector('input[name="added_date"]');
-
-            // Set today's date
-            const today = new Date().toISOString().split('T')[0];
-            dateInput.value = today;
-
-            modal.classList.remove('hidden');
-        }
-
-        function closeAddModal() {
-            document.getElementById('addItemModal').classList.add('hidden');
-            document.getElementById('addItemForm').reset();
-        }
-
-        async function handleAddItem(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            const originalText = btn.innerText;
-            btn.innerText = "Salvando...";
-            btn.disabled = true;
-
-            const formData = new FormData(e.target);
-            const newItem = {
-                user_id: currentUserId,
-                name: formData.get('name'),
-                quantity: formData.get('quantity'),
-                unit: formData.get('unit'),
-                category: formData.get('category'),
-                added_date: formData.get('added_date'), // Now supported
-            };
-
-            const { error } = await window.supabaseClient
-                .from('inventory_items')
-                .insert([newItem]);
-
-            btn.innerText = originalText;
-            btn.disabled = false;
-
-            if (error) {
-                console.error(error);
-                alert("Erro ao salvar item");
-            } else {
-                closeAddModal();
-                fetchInventory();
-            }
-        }
-
-        // Renamed/Removed old function to redirect to modal
-        function addNewItem() {
-            openAddModal();
-        }
-
-        async function editItem(id) {
-            // Placeholder for edit functionality
-            console.log("Editing " + id);
-        }
-
-        init();
-    </script>
 </body>
 
 </html>
