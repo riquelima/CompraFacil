@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Detalhe da Receita - Neo Brutalism Bento</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "accent-yellow": "#FFDE59",
+                        "accent-blue": "#7FBCF5",
+                        "accent-green": "#C6E875",
+                        "accent-pink": "#FFAFCC",
+                        "accent-orange": "#FFAD7A",
+                        "background-light": "#F8FAFC",
+                        "background-dark": "#101022",
+                        "card-dark": "#1E1E2E",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "2xl": "1.25rem",
+                        "3xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "neo": "5px 5px 0px 0px #000000",
+                        "neo-hover": "2px 2px 0px 0px #000000",
+                        "neo-sm": "3px 3px 0px 0px #000000",
+                        "neo-lg": "8px 8px 0px 0px #000000",
+                    },
+                    borderWidth: {
+                        '3': '3px',
+                        '4': '4px',
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white overflow-hidden h-screen w-full flex flex-col selection:bg-black selection:text-white">
+    <header
+        class="flex-none px-6 pt-8 pb-4 flex items-center justify-between bg-background-light dark:bg-background-dark z-20">
+        <!-- Back Button -->
+        <button onclick="window.location.href='assistente.html'"
+            class="size-12 flex items-center justify-center border-3 border-black bg-white dark:bg-card-dark rounded-xl shadow-neo active:translate-x-[2px] active:translate-y-[2px] active:shadow-neo-hover transition-all text-black dark:text-white hover:bg-gray-50">
+            <span class="material-symbols-outlined text-3xl font-bold">arrow_back</span>
+        </button>
+        <div class="flex gap-3">
+            <button
+                class="size-12 flex items-center justify-center border-3 border-black bg-accent-pink rounded-xl shadow-neo active:translate-x-[2px] active:translate-y-[2px] active:shadow-neo-hover transition-all text-black hover:brightness-110">
+                <span class="material-symbols-outlined text-3xl font-bold">favorite</span>
+            </button>
+            <button
+                class="size-12 flex items-center justify-center border-3 border-black bg-white dark:bg-card-dark rounded-xl shadow-neo active:translate-x-[2px] active:translate-y-[2px] active:shadow-neo-hover transition-all text-black dark:text-white hover:bg-gray-50">
+                <span class="material-symbols-outlined text-3xl font-bold">more_horiz</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto px-6 pb-32 pt-2 no-scrollbar">
+        <div class="grid grid-cols-2 gap-4 auto-rows-min">
+
+            <!-- Hero Section -->
+            <div id="heroCard"
+                class="col-span-2 bg-accent-yellow border-3 border-black rounded-3xl p-6 shadow-neo min-h-[220px] flex flex-col justify-between relative overflow-hidden group">
+                <div
+                    class="absolute -right-4 -top-4 size-40 bg-white/30 rounded-full blur-2xl group-hover:bg-white/40 transition-all">
+                </div>
+                <div
+                    class="absolute -left-4 -bottom-4 size-24 bg-white/30 rounded-full blur-xl group-hover:bg-white/40 transition-all">
+                </div>
+                <div class="relative z-10 flex justify-between items-start">
+                    <span id="recipeCategory"
+                        class="bg-black text-white px-3 py-1 rounded-lg text-xs font-black uppercase tracking-widest border-2 border-transparent">Café</span>
+                    <div class="bg-white border-3 border-black p-2 rounded-xl">
+                        <span id="recipeIcon" class="material-symbols-outlined text-4xl text-black">bakery_dining</span>
+                    </div>
+                </div>
+                <h1 id="recipeTitle"
+                    class="relative z-10 text-5xl font-black uppercase leading-[0.9] tracking-tight mt-4 text-black break-words">
+                    Torrada<br />Abacate</h1>
+                <div class="relative z-10 flex gap-2 mt-4">
+                    <div
+                        class="flex items-center gap-1 bg-white/50 backdrop-blur-sm px-2 py-1 rounded-md border-2 border-black/10">
+                        <span class="material-symbols-outlined text-sm font-bold">schedule</span>
+                        <span id="recipeTime" class="text-xs font-bold uppercase">15 Min</span>
+                    </div>
+                    <div
+                        class="flex items-center gap-1 bg-white/50 backdrop-blur-sm px-2 py-1 rounded-md border-2 border-black/10">
+                        <span class="material-symbols-outlined text-sm font-bold">local_fire_department</span>
+                        <span id="recipeCalories" class="text-xs font-bold uppercase">320 Kcal</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ingredients -->
+            <div
+                class="col-span-2 bg-white dark:bg-card-dark border-3 border-black rounded-3xl p-6 shadow-neo flex flex-col gap-4">
+                <div class="flex items-center justify-between border-b-3 border-black pb-3 mb-1">
+                    <h3 class="text-2xl font-black uppercase tracking-tighter text-black dark:text-white">Ingredientes
+                    </h3>
+                    <span id="ingredientsCount"
+                        class="bg-accent-green text-black border-2 border-black size-8 flex items-center justify-center rounded-full font-bold text-sm">4</span>
+                </div>
+                <ul id="ingredientsList" class="space-y-3">
+                    <!-- Populated by JS -->
+                </ul>
+                <button
+                    class="w-full mt-2 py-3 bg-black text-white rounded-xl border-3 border-transparent hover:border-black hover:bg-white hover:text-black font-black uppercase tracking-widest transition-all text-sm flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
+                    Add à Lista
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div
+                class="col-span-1 bg-accent-blue border-3 border-black rounded-3xl p-5 shadow-neo flex flex-col justify-between aspect-square">
+                <div class="flex justify-between items-start">
+                    <span class="material-symbols-outlined text-3xl text-black">monitoring</span>
+                </div>
+                <div>
+                    <div id="recipeProtein" class="text-4xl font-black text-black leading-none mb-1">12g</div>
+                    <div class="text-xs font-bold uppercase tracking-widest text-black/80">Proteína</div>
+                </div>
+            </div>
+            <div
+                class="col-span-1 bg-accent-orange border-3 border-black rounded-3xl p-5 shadow-neo flex flex-col justify-between aspect-square">
+                <div class="flex justify-between items-start">
+                    <span class="material-symbols-outlined text-3xl text-black">psychology</span>
+                </div>
+                <div>
+                    <div id="recipeDifficulty" class="text-3xl font-black text-black leading-none mb-1 uppercase">Fácil
+                    </div>
+                    <div class="text-xs font-bold uppercase tracking-widest text-black/80">Nível</div>
+                </div>
+            </div>
+
+            <!-- Steps -->
+            <div class="col-span-2 bg-accent-pink border-3 border-black rounded-3xl p-6 shadow-neo mb-6">
+                <h3 class="text-2xl font-black uppercase tracking-tighter text-black mb-6 border-b-3 border-black pb-3">
+                    Preparo</h3>
+                <div id="stepsList" class="space-y-6 relative">
+                    <div class="absolute left-[19px] top-4 bottom-4 w-1 bg-black/20 -z-10 rounded-full"></div>
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer CTA -->
+    <div class="fixed bottom-6 left-6 right-6 z-30">
+        <button
+            class="w-full bg-accent-green text-black rounded-2xl py-4 border-3 border-black shadow-neo active:translate-x-[2px] active:translate-y-[2px] active:shadow-neo-hover transition-all group flex items-center justify-center gap-3">
+            <span
+                class="material-symbols-outlined text-3xl font-bold group-hover:scale-110 transition-transform">check_circle</span>
+            <span class="text-xl font-black uppercase tracking-widest">Marcar como Feita</span>
+        </button>
+    </div>
+
+    <!-- Data & Script -->
+    <script>
+        const recipes = {
+            "torrada": {
+                title: "Torrada<br/>Abacate",
+                category: "Café",
+                time: "15 Min",
+                calories: "320 Kcal",
+                protein: "12g",
+                difficulty: "Fácil",
+                icon: "bakery_dining",
+                color: "bg-accent-yellow",
+                ingredients: ["2 Fatias de Pão", "1 Abacate Maduro", "1 Ovo (Opcional)", "Sal e Pimenta"],
+                steps: [
+                    { title: "Tostar", desc: "Coloque as fatias de pão na torradeira ou frigideira até dourarem." },
+                    { title: "Amassar", desc: "Em uma tigela, amasse o abacate com um garfo até obter uma pasta rústica." },
+                    { title: "Temperar", desc: "Adicione sal, pimenta e um fio de azeite. Misture bem." },
+                    { title: "Montar", desc: "Espalhe a pasta sobre as torradas e sirva imediatamente." }
+                ]
+            },
+            "salmao": {
+                title: "Salmão<br/>Grelhado",
+                category: "Almoço",
+                time: "25 Min",
+                calories: "450 Kcal",
+                protein: "35g",
+                difficulty: "Médio",
+                icon: "set_meal",
+                color: "bg-accent-blue",
+                ingredients: ["1 Filé de Salmão", "Limão Siciliano", "Alecrim Fresco", "Azeite de Oliva", "Sal Grosso"],
+                steps: [
+                    { title: "Temperar", desc: "Tempere o salmão com sal, pimenta e suco de limão." },
+                    { title: "Aquecer", desc: "Aqueça uma frigideira com um fio de azeite em fogo médio-alto." },
+                    { title: "Grelhar", desc: "Coloque o salmão com a pele para baixo e deixe por 5 minutos." },
+                    { title: "Finalizar", desc: "Vire e cozinhe por mais 3-4 minutos até dourar." }
+                ]
+            },
+            "risoto": {
+                title: "Risoto<br/>Cogumelo",
+                category: "Jantar",
+                time: "40 Min",
+                calories: "580 Kcal",
+                protein: "18g",
+                difficulty: "Difícil",
+                icon: "ramen_dining",
+                color: "bg-accent-orange",
+                ingredients: ["Arroz Arbóreo", "Mix de Cogumelos", "Caldo de Legumes", "Vinho Branco", "Queijo Parmesão"],
+                steps: [
+                    { title: "Refogar", desc: "Refogue a cebola e o alho na manteiga até ficarem translúcidos." },
+                    { title: "Tostar Arroz", desc: "Adicione o arroz e o vinho, mexendo até evaporar o álcool." },
+                    { title: "Cozinhar", desc: "Adicione o caldo quente aos poucos, mexendo sempre." },
+                    { title: "Finalizar", desc: "Desligue o fogo e misture o queijo e os cogumelos salteados." }
+                ]
+            },
+            "smoothie": {
+                title: "Smoothie<br/>Tropical",
+                category: "Lanche",
+                time: "05 Min",
+                calories: "180 Kcal",
+                protein: "5g",
+                difficulty: "Fácil",
+                icon: "blender",
+                color: "bg-accent-pink",
+                ingredients: ["1 Banana Congelada", "1 xícara de Manga", "200ml Leite de Coco", "Mel a gosto"],
+                steps: [
+                    { title: "Preparar", desc: "Descasque e corte as frutas em pedaços menores." },
+                    { title: "Bater", desc: "Coloque todos os ingredientes no liquidificador." },
+                    { title: "Servir", desc: "Bata até ficar cremoso e sirva em um copo alto." }
+                ]
+            }
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const recipeId = urlParams.get('id') || 'torrada'; // Default
+        const data = recipes[recipeId] || recipes['torrada'];
+
+        // Render Data
+        document.getElementById('recipeTitle').innerHTML = data.title;
+        document.getElementById('recipeCategory').innerText = data.category;
+        document.getElementById('recipeTime').innerText = data.time;
+        document.getElementById('recipeCalories').innerText = data.calories;
+        document.getElementById('recipeProtein').innerText = data.protein;
+        document.getElementById('recipeDifficulty').innerText = data.difficulty;
+        document.getElementById('recipeIcon').innerText = data.icon;
+
+        // Colors
+        const heroCard = document.getElementById('heroCard');
+        heroCard.classList.remove('bg-accent-yellow', 'bg-accent-blue', 'bg-accent-orange', 'bg-accent-pink');
+        heroCard.classList.add(data.color);
+
+        // Ingredients
+        const ingList = document.getElementById('ingredientsList');
+        document.getElementById('ingredientsCount').innerText = data.ingredients.length;
+        ingList.innerHTML = data.ingredients.map(ing => `
+            <li class="flex items-center gap-3 group cursor-pointer">
+                <div class="size-6 rounded border-3 border-black bg-transparent group-hover:bg-accent-green transition-colors flex items-center justify-center">
+                    <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 font-bold">check</span>
+                </div>
+                <span class="font-bold text-lg text-black dark:text-white">${ing}</span>
+            </li>
+        `).join('');
+
+        // Steps
+        const stepsList = document.getElementById('stepsList');
+        stepsList.innerHTML = `<div class="absolute left-[19px] top-4 bottom-4 w-1 bg-black/20 -z-10 rounded-full"></div>` +
+            data.steps.map((step, index) => `
+            <div class="flex gap-4">
+                <div class="size-10 flex-none bg-white text-black border-3 border-black rounded-full flex items-center justify-center font-black text-lg z-10 shadow-sm">${index + 1}</div>
+                <div class="pt-1">
+                    <h4 class="font-black text-lg text-black uppercase mb-1">${step.title}</h4>
+                    <p class="font-medium text-black leading-snug">${step.desc}</p>
+                </div>
+            </div>
+        `).join('');
+
+    </script>
+</body>
+
+</html>
