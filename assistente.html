@@ -357,15 +357,20 @@
                 const data = await response.json();
                 let text = data.candidates[0].content.parts[0].text;
 
-                // Cleanup Json
-                text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+                // Cleanup Json - Find first { and last }
+                const jsonStart = text.indexOf('{');
+                const jsonEnd = text.lastIndexOf('}');
+                if (jsonStart !== -1 && jsonEnd !== -1) {
+                    text = text.substring(jsonStart, jsonEnd + 1);
+                }
+
                 const recipe = JSON.parse(text);
 
                 saveAndRenderRecipe(recipe);
 
             } catch (error) {
                 console.error("AI Error:", error);
-                alert("Erro ao gerar receita. Tente novamente.");
+                alert("Erro ao receber resposta da IA. Tente novamente.");
             } finally {
                 loading.classList.add('hidden');
                 loading.classList.remove('flex');
@@ -396,9 +401,10 @@
             if (safeColor.includes('orange')) hoverColor = 'hover:bg-orange-300';
 
             const card = document.createElement('article');
-            card.className = `recipe-card group relative ${safeColor} border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer ${hoverColor} animate-fade-in-up`;
-            card.setAttribute('data-id', id);
+            card.className = `recipe-card group relative ${safeColor} border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer ${hoverColor}`;
+            // Optional: Add ID if needed for filtering in applyFilters
             card.setAttribute('data-category', recipe.category);
+            card.setAttribute('data-id', id);
             card.onclick = () => navigate(`receita.html?id=${id}`);
 
             card.innerHTML = `
@@ -423,6 +429,9 @@
 
             // Clear input
             document.getElementById('aiSearchInput').value = '';
+
+            // Force visibility
+            setFilter('Tudo'); // Updates UI and calls applyFilters
         }
 
         function applyFilters() {
