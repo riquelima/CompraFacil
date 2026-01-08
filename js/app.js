@@ -63,9 +63,9 @@ function updateNavbarState(pathname) {
 
     // Define active states
     const navItems = {
-        'listas': ['usuario.html', 'index.html', ''],
-        'estoque': ['inventario.html', 'assistente.html', 'receita.html'], // Assistant is part of Inventory flow
-        'novalista': ['novalista.html']
+        'listas': ['usuario.html', 'index.html', '', 'usuario', 'index'],
+        'estoque': ['inventario.html', 'assistente.html', 'receita.html', 'inventario', 'assistente', 'receita'], // Assistant is part of Inventory flow
+        'novalista': ['novalista.html', 'novalista']
     };
 
     // Logic to highlight correct icon
@@ -171,7 +171,7 @@ function initPageLogic(path, searchParams, attempt = 0) {
     console.log('Initializing page logic for:', path); // DEBUG
 
     // Wait for Supabase to be ready if needed
-    if (!window.supabaseClient && !path.includes('login.html')) {
+    if (!window.supabaseClient && !path.includes('login')) {
         if (attempt > 50) { // 5 seconds max
              console.error('Supabase initialization timeout. Force reloading...');
              window.location.reload();
@@ -182,25 +182,28 @@ function initPageLogic(path, searchParams, attempt = 0) {
         return;
     }
 
-    // Route matching
-    if (path.includes('usuario.html') || path === '' || path === 'index.html') {
+    // Route matching - Updated to handle Vercel clean URLs (no .html)
+    if (path.includes('usuario') || path === '' || path.includes('index')) {
         // Double check if we are actually on the home page structure
         if (document.getElementById('listsGrid') || document.getElementById('loadingState')) {
             initHome();
         } else {
             console.log('Path matches Home but DOM missing, possibly redirecting or wrong match');
         }
+    } else if (path.includes('lista') && !path.includes('novalista') && !path.includes('lista.html')) {
+        // Clean URL 'lista' or 'lista?id=...'
+         initListDetail(searchParams.get('id'));
     } else if (path.includes('lista.html')) {
-        initListDetail(searchParams.get('id'));
-    } else if (path.includes('inventario.html')) {
+         initListDetail(searchParams.get('id'));
+    } else if (path.includes('inventario')) {
         initInventory();
-    } else if (path.includes('novalista.html')) {
+    } else if (path.includes('novalista')) {
         initNewList();
-    } else if (path.includes('configuracoes.html')) {
+    } else if (path.includes('configuracoes')) {
         initSettings();
-    } else if (path.includes('assistente.html')) {
+    } else if (path.includes('assistente')) {
         initAssistant();
-    } else if (path.includes('receita.html')) {
+    } else if (path.includes('receita')) {
         initRecipe(searchParams.get('id'));
     }
 }
@@ -296,6 +299,20 @@ window.initHome = async function () {
         return;
     }
 
+    // Safety timeout to force UI state if Supabase hangs
+    const safetyTimeout = setTimeout(() => {
+        console.warn('initHome safety timeout reached. Forcing UI.');
+        if (loadingState) {
+            loadingState.classList.add('hidden');
+            loadingState.style.display = 'none';
+        }
+        if (mainContent) {
+            mainContent.classList.remove('hidden');
+            mainContent.classList.add('flex');
+            mainContent.style.display = 'flex';
+        }
+    }, 5000);
+
     try {
         console.log('Checking session...'); // DEBUG
         const { data: { session }, error: authError } = await window.supabaseClient.auth.getSession();
@@ -335,7 +352,22 @@ window.initHome = async function () {
             console.log('Lists fetched:', lists ? lists.length : 0); // DEBUG
 
             // Identify the static "Create New" card first.
-            const staticAddCard = Array.from(listsGrid.children).find(c => c.innerHTML.includes('novalista.html'));
+            // Use a more robust selector or fallback
+            let staticAddCard = Array.from(listsGrid.children).find(c => c.innerHTML.includes('novalista.html'));
+            
+            // Re-create static card if missing (fallback)
+            if (!staticAddCard) {
+                 const div = document.createElement('div');
+                 div.onclick = () => navigate('novalista.html');
+                 div.className = "group flex flex-col items-center justify-center h-56 rounded-nb border-2 border-dashed border-nb-black bg-white p-4 hover:bg-nb-green transition-all duration-200 cursor-pointer shadow-hard-sm hover:shadow-hard hover:border-solid";
+                 div.innerHTML = `
+                    <div class="flex items-center justify-center size-16 rounded-full bg-nb-black text-white mb-4 group-hover:scale-110 transition-transform duration-200 border-2 border-transparent group-hover:border-black group-hover:bg-white group-hover:text-black">
+                        <span class="material-symbols-outlined text-[32px]">add</span>
+                    </div>
+                    <h4 class="text-nb-black text-base font-black text-center uppercase">NOVA LISTA</h4>
+                 `;
+                 staticAddCard = div;
+            }
 
             listsGrid.innerHTML = ''; // Clear all
             if (staticAddCard) listsGrid.appendChild(staticAddCard); // Add back static card

@@ -195,35 +195,35 @@
                     </div>
                 </div>
             </main>
-        </div>
-
-        <!-- Fixed Bottom Navigation Bar -->
-        <div class="fixed bottom-0 left-0 w-full z-50 pointer-events-none flex flex-col items-center">
-            <div
-                class="w-full max-w-2xl bg-white dark:bg-card-dark border-t-2 border-black pointer-events-auto h-20 px-6 flex items-center justify-between shadow-[0_-4px_0_0_rgba(0,0,0,1)] relative transition-none">
-                <!-- Left: Lists -->
-                <button onclick="navigate('usuario.html')"
-                    class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity duration-200 w-16">
-                    <span
-                        class="material-symbols-outlined text-3xl font-bold text-black dark:text-white">list_alt</span>
-                    <span class="text-[10px] font-bold uppercase tracking-wide text-black dark:text-white">Listas</span>
-                </button>
-                <!-- Center: FAB -->
-                <div class="absolute left-1/2 -top-8 -translate-x-1/2">
-                    <button onclick="navigate('novalista.html')"
-                        class="size-16 bg-nb-yellow rounded-full border-2 border-black shadow-neo flex items-center justify-center hover:scale-110 active:scale-95 transition-all group">
+            <!-- Fixed Bottom Navigation Bar -->
+            <div class="fixed bottom-0 left-0 w-full z-50 pointer-events-none flex flex-col items-center">
+                <div
+                    class="w-full max-w-2xl bg-white dark:bg-card-dark border-t-2 border-black pointer-events-auto h-20 px-6 flex items-center justify-between shadow-[0_-4px_0_0_rgba(0,0,0,1)] relative transition-none">
+                    <!-- Left: Lists -->
+                    <button onclick="navigate('usuario.html')"
+                        class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity duration-200 w-16">
                         <span
-                            class="material-symbols-outlined text-4xl text-black font-black group-hover:rotate-90 transition-transform">add</span>
+                            class="material-symbols-outlined text-3xl font-bold text-black dark:text-white">list_alt</span>
+                        <span
+                            class="text-[10px] font-bold uppercase tracking-wide text-black dark:text-white">Listas</span>
+                    </button>
+                    <!-- Center: FAB -->
+                    <div class="absolute left-1/2 -top-8 -translate-x-1/2">
+                        <button onclick="navigate('novalista.html')"
+                            class="size-16 bg-nb-yellow rounded-full border-2 border-black shadow-neo flex items-center justify-center hover:scale-110 active:scale-95 transition-all group">
+                            <span
+                                class="material-symbols-outlined text-4xl text-black font-black group-hover:rotate-90 transition-transform">add</span>
+                        </button>
+                    </div>
+                    <!-- Right: Inventory (Active) -->
+                    <button onclick="navigate('inventario.html')"
+                        class="flex flex-col items-center gap-1 opacity-100 w-16 transition-opacity duration-200">
+                        <span
+                            class="material-symbols-outlined text-3xl font-bold text-primary dark:text-white">inventory_2</span>
+                        <span
+                            class="text-[10px] font-bold uppercase tracking-wide text-primary dark:text-white">Estoque</span>
                     </button>
                 </div>
-                <!-- Right: Inventory (Active) -->
-                <button onclick="navigate('inventario.html')"
-                    class="flex flex-col items-center gap-1 opacity-100 w-16 transition-opacity duration-200">
-                    <span
-                        class="material-symbols-outlined text-3xl font-bold text-primary dark:text-white">inventory_2</span>
-                    <span
-                        class="text-[10px] font-bold uppercase tracking-wide text-primary dark:text-white">Estoque</span>
-                </button>
             </div>
         </div>
     </div>
