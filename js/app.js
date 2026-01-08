@@ -827,9 +827,21 @@ window.initSettings = async function() {
 }
 
 window.handleLogout = async function() {
+    console.log('Logout initiated'); // DEBUG
     if (confirm("Tem certeza que deseja sair?")) {
-        await window.supabaseClient.auth.signOut();
-        navigate('login.html');
+        try {
+            const { error } = await window.supabaseClient.auth.signOut();
+            if (error) {
+                console.error('Supabase signOut error:', error);
+                // Even if API fails, force local logout
+            }
+            console.log('Signed out, redirecting...');
+            // Force full reload to clear state
+            window.location.href = 'login.html';
+        } catch (err) {
+            console.error('Logout exception:', err);
+            window.location.href = 'login.html';
+        }
     }
 }
 
