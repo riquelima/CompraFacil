@@ -88,9 +88,9 @@
             <span class="material-symbols-outlined text-3xl font-bold">arrow_back</span>
         </button>
         <h1 class="text-2xl font-black uppercase tracking-tighter text-black dark:text-white">Receitas IA</h1>
-        <button
+        <button onclick="toggleFavoritesFilter()" id="favoritesFilterBtn"
             class="size-12 flex items-center justify-center border-3 border-black bg-white dark:bg-card-dark rounded-xl shadow-neo active:translate-x-[2px] active:translate-y-[2px] active:shadow-neo-hover transition-all text-black dark:text-white hover:bg-gray-50">
-            <span class="material-symbols-outlined text-3xl font-bold">tune</span>
+            <span class="material-symbols-outlined text-3xl font-bold">favorite</span>
         </button>
     </header>
 
@@ -135,7 +135,7 @@
 
         <div id="resultsSection" class="flex flex-col gap-8">
             <!-- Static Cards with data-category -->
-            <article data-category="Café" onclick="navigate('receita.html?id=torrada')"
+            <article data-id="torrada" data-category="Café" onclick="navigate('receita.html?id=torrada')"
                 class="recipe-card group relative bg-accent-yellow border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-yellow-300">
                 <div class="flex justify-between items-start mb-8">
                     <span
@@ -157,7 +157,7 @@
                 </div>
             </article>
 
-            <article data-category="Almoço" onclick="navigate('receita.html?id=salmao')"
+            <article data-id="salmao" data-category="Almoço" onclick="navigate('receita.html?id=salmao')"
                 class="recipe-card group relative bg-accent-blue border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-blue-300">
                 <div class="flex justify-between items-start mb-8">
                     <span
@@ -179,7 +179,7 @@
                 </div>
             </article>
 
-            <article data-category="Jantar" onclick="navigate('receita.html?id=risoto')"
+            <article data-id="risoto" data-category="Jantar" onclick="navigate('receita.html?id=risoto')"
                 class="recipe-card group relative bg-accent-orange border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-orange-300">
                 <div class="flex justify-between items-start mb-8">
                     <span
@@ -201,7 +201,7 @@
                 </div>
             </article>
 
-            <article data-category="Lanche" onclick="navigate('receita.html?id=smoothie')"
+            <article data-id="smoothie" data-category="Lanche" onclick="navigate('receita.html?id=smoothie')"
                 class="recipe-card group relative bg-accent-pink border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-pink-300">
                 <div class="flex justify-between items-start mb-8">
                     <span
@@ -259,6 +259,27 @@
     <!-- Logic Script -->
     <script>
         // Filtering Logic
+        let showingFavorites = false;
+
+        function toggleFavoritesFilter() {
+            showingFavorites = !showingFavorites;
+            const btn = document.getElementById('favoritesFilterBtn');
+            const cards = document.querySelectorAll('.recipe-card');
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+            // Update Button Style
+            if (showingFavorites) {
+                btn.classList.remove('bg-white', 'dark:bg-card-dark', 'text-black', 'dark:text-white');
+                btn.classList.add('bg-accent-pink', 'text-black');
+            } else {
+                btn.classList.add('bg-white', 'dark:bg-card-dark', 'text-black', 'dark:text-white');
+                btn.classList.remove('bg-accent-pink', 'text-black');
+            }
+
+            // Filter Cards
+            applyFilters();
+        }
+
         function setFilter(category) {
             console.log("Filtering by:", category);
             // 1. Update Buttons State
@@ -275,11 +296,27 @@
                 }
             });
 
-            // 2. Filter Cards
+            // 2. Filter Cards (delegated to applyFilters to combine with favorites)
+            // Store current category filter globally or just rely on UI class? 
+            // Better to store it.
+            window.currentCategory = category;
+            applyFilters();
+        }
+
+        window.currentCategory = 'Tudo';
+
+        function applyFilters() {
             const cards = document.querySelectorAll('.recipe-card');
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
             cards.forEach(card => {
                 const cardCat = card.getAttribute('data-category');
-                if (category === 'Tudo' || cardCat === category) {
+                const cardId = card.getAttribute('data-id');
+
+                const matchesCategory = window.currentCategory === 'Tudo' || cardCat === window.currentCategory;
+                const matchesFavorite = !showingFavorites || favorites.includes(cardId);
+
+                if (matchesCategory && matchesFavorite) {
                     card.classList.remove('hidden');
                 } else {
                     card.classList.add('hidden');

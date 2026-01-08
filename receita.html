@@ -77,9 +77,9 @@
             <span class="material-symbols-outlined text-3xl font-bold">arrow_back</span>
         </button>
         <div class="flex gap-3">
-            <button
-                class="size-12 flex items-center justify-center border-3 border-black bg-accent-pink rounded-xl shadow-neo active:translate-x-[2px] active:translate-y-[2px] active:shadow-neo-hover transition-all text-black hover:brightness-110">
-                <span class="material-symbols-outlined text-3xl font-bold">favorite</span>
+            <button onclick="toggleFavorite()" id="favBtn"
+                class="size-12 flex items-center justify-center border-3 border-black bg-white dark:bg-card-dark rounded-xl shadow-neo active:translate-x-[2px] active:translate-y-[2px] active:shadow-neo-hover transition-all text-black dark:text-white hover:brightness-110">
+                <span id="favIcon" class="material-symbols-outlined text-3xl font-bold">favorite</span>
             </button>
             <button
                 class="size-12 flex items-center justify-center border-3 border-black bg-white dark:bg-card-dark rounded-xl shadow-neo active:translate-x-[2px] active:translate-y-[2px] active:shadow-neo-hover transition-all text-black dark:text-white hover:bg-gray-50">
@@ -263,6 +263,35 @@
         const urlParams = new URLSearchParams(window.location.search);
         const recipeId = urlParams.get('id') || 'torrada'; // Default
         const data = recipes[recipeId] || recipes['torrada'];
+
+        // Favorites Logic
+        function updateFavUI() {
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const isFav = favorites.includes(recipeId);
+            const btn = document.getElementById('favBtn');
+
+            if (isFav) {
+                btn.classList.add('bg-accent-pink');
+                btn.classList.remove('bg-white', 'dark:bg-card-dark', 'text-black', 'dark:text-white');
+            } else {
+                btn.classList.remove('bg-accent-pink');
+                btn.classList.add('bg-white', 'dark:bg-card-dark', 'text-black', 'dark:text-white');
+            }
+        }
+
+        function toggleFavorite() {
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            if (favorites.includes(recipeId)) {
+                favorites = favorites.filter(id => id !== recipeId);
+            } else {
+                favorites.push(recipeId);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            updateFavUI();
+        }
+
+        // Init Fav UI
+        updateFavUI();
 
         // Render Data
         document.getElementById('recipeTitle').innerHTML = data.title;
