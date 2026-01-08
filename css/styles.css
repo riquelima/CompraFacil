@@ -9,6 +9,26 @@ body {
     min-height: max(600px, 100dvh);
 }
 
+/* Ensure main wrapper hides the body dots */
+body > div {
+    background-color: #F3F0E9; /* Force opacity on the main wrapper */
+}
+
+/* App Shell Layering */
+#app-header {
+    z-index: 50; /* Fixed Header on top */
+}
+
+#main-content {
+    z-index: 10; /* Content below header/nav */
+    /* Ensure content doesn't get hidden behind fixed elements */
+    /* Padding is handled by utility classes (pt-24, pb-24) */
+}
+
+.fixed.bottom-0 {
+    z-index: 50; /* Navbar on top */
+}
+
 /* Scrollbar Utilities */
 .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -99,20 +119,28 @@ main {
 /* New List Page Styles */
 .color-radio:checked+div {
     transform: scale(1.1);
-    border-width: 3px;
+    border: 2px solid #00FF00; /* Green border request */
     box-shadow: 0 0 0 2px #F3F0E9, 0 0 0 4px #000;
+    transition: all 0.3s ease;
 }
 
 .icon-radio:checked+div {
-    background-color: #000;
-    color: #fff;
+    background-color: transparent;
+    border: 2px solid #00FF00; /* Green border request */
     box-shadow: 2px 2px 0px 0px #000000;
     transform: translate(-1px, -1px);
+    transition: all 0.3s ease;
 }
 
-/* Invert image color when selected (on black background) */
+/* Ensure image stays normal when selected */
 .icon-radio:checked+div img {
-    filter: invert(1) brightness(2);
+    filter: none;
+}
+
+/* Base styles for unselected state to ensure smooth transition */
+.icon-radio+div, .color-radio+div {
+    transition: all 0.3s ease;
+    border: 2px solid #000; /* Default border */
 }
 
 /* Settings Page Styles - Toggles */

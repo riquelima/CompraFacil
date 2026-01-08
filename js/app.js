@@ -102,58 +102,132 @@ function setActive(btn, isActive) {
     }
 }
 
-async function loadPageContent(url) {
-    const appContent = document.getElementById('app-content');
+// Toast Notification Helper
+window.showToast = function(message, type = 'error') {
+    let toast = document.getElementById('toast-notification');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast-notification';
+        toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-xl border-2 border-black shadow-neo font-bold text-sm transform transition-all duration-300 translate-y-[-150%]';
+        document.body.appendChild(toast);
+    }
 
-    // Ensure global loader exists
+    // Styles based on type
+    if (type === 'error') {
+        toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-xl border-2 border-black shadow-neo font-bold text-sm transform transition-all duration-300 translate-y-0 bg-red-400 text-black';
+        toast.innerHTML = `<div class="flex items-center gap-2"><span class="material-symbols-outlined">error</span><span>${message}</span></div>`;
+    } else {
+        toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-xl border-2 border-black shadow-neo font-bold text-sm transform transition-all duration-300 translate-y-0 bg-green-400 text-black';
+        toast.innerHTML = `<div class="flex items-center gap-2"><span class="material-symbols-outlined">check_circle</span><span>${message}</span></div>`;
+    }
+
+    // Hide after 3s
+    setTimeout(() => {
+        toast.classList.add('translate-y-[-150%]');
+    }, 3000);
+}
+
+async function loadPageContent(url) {
+    const mainContent = document.getElementById('main-content');
+    const appHeader = document.getElementById('app-header');
+    
+    // Fallback: If current page has no main-content (e.g. legacy structure), reload full page
+    if (!mainContent) {
+        console.warn('No #main-content found in current DOM, forcing reload.');
+        window.location.href = url;
+        return;
+    }
+
+    // Ensure global loader exists and is correctly positioned
     let globalLoader = document.getElementById('global-loading');
+    
+    // Cleanup any duplicate loaders that might have slipped in
+    const allLoaders = document.querySelectorAll('#global-loading');
+    if (allLoaders.length > 1) {
+        // Keep the last one or remove all and recreate
+        allLoaders.forEach(l => l.remove());
+        globalLoader = null;
+    }
+
     if (!globalLoader) {
         globalLoader = document.createElement('div');
         globalLoader.id = 'global-loading';
-        globalLoader.className = 'fixed inset-0 bg-black/50 z-[100] flex items-center justify-center hidden backdrop-blur-sm transition-opacity duration-300';
-        globalLoader.innerHTML = '<div class="size-12 rounded-full border-4 border-white border-t-transparent animate-spin"></div>';
-        document.body.appendChild(globalLoader);
+        // Use z-40 to sit above content (z-10) but below header (z-50)
+        globalLoader.className = 'absolute inset-0 bg-white/80 dark:bg-black/50 z-40 flex items-center justify-center backdrop-blur-sm transition-opacity duration-300';
+        globalLoader.innerHTML = '<div class="size-12 rounded-full border-4 border-nb-black border-t-transparent animate-spin"></div>';
     }
 
-    // Fallback: If current page has no app-content, reload full page
-    if (!appContent) {
-        console.warn('No #app-content found in current DOM, forcing reload.');
-        window.location.href = url;
-        return;
+    // Always try to put loader in main-content to respect layout boundaries
+    // If main-content is missing (legacy), fallback to body but try to avoid covering header
+    if (mainContent && mainContent.style.position !== 'relative' && mainContent.style.position !== 'absolute' && mainContent.style.position !== 'fixed') {
+        mainContent.classList.add('relative');
+    }
+
+    if (mainContent) {
+        if (globalLoader.parentElement !== mainContent) {
+            mainContent.appendChild(globalLoader);
+        }
+        globalLoader.classList.remove('fixed', 'z-[100]');
+        globalLoader.classList.add('absolute', 'z-40');
+    } else {
+        // Fallback for pages without main-content (should be rare if refactored)
+        if (globalLoader.parentElement !== document.body) {
+            document.body.appendChild(globalLoader);
+        }
+        globalLoader.classList.remove('absolute', 'z-40');
+        globalLoader.classList.add('fixed', 'z-[100]');
     }
 
     // Show Loader
     globalLoader.classList.remove('hidden');
 
-    // Animation Out
-    appContent.style.opacity = '0';
-    appContent.style.transform = 'translateY(-10px)';
+    // Animation Out (Only Main Content)
+    mainContent.style.opacity = '0';
+    mainContent.style.transform = 'translateY(-10px)';
 
     try {
         const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
         const text = await response.text();
 
         // Parse HTML
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, 'text/html');
-        const newContent = doc.getElementById('app-content');
+        
+        // Target new content
+        const newMain = doc.getElementById('main-content'); // New ID
+        const newHeader = doc.getElementById('app-header'); // New ID
 
-        if (!newContent) {
-            console.error('No #app-content found in target page, forcing reload.');
-            window.location.href = url; // Fallback to full reload
+        // Fallback for pages not yet refactored (e.g. they use #app-content)
+        const legacyContent = doc.getElementById('app-content');
+
+        if (!newMain && !legacyContent) {
+            console.error('No #main-content found in target page, forcing reload.');
+            window.location.href = url; 
             return;
         }
 
         // Wait for animation
         setTimeout(() => {
-            // Swap Content AND Classes
-            appContent.innerHTML = newContent.innerHTML;
-            appContent.className = newContent.className;
+            // Update Header (if exists in new page)
+            if (newHeader && appHeader) {
+                appHeader.innerHTML = newHeader.innerHTML;
+                appHeader.className = newHeader.className; // Update classes in case of specific styling
+            }
 
-            // Restore Styles - Clear transform to avoid stacking context issues with fixed children
-            appContent.style.opacity = '';
-            appContent.style.transform = '';
+            // Update Main Content
+            if (newMain) {
+                mainContent.innerHTML = newMain.innerHTML;
+                mainContent.className = newMain.className;
+            } else if (legacyContent) {
+                // Temporary adapter for pages not yet refactored
+                mainContent.innerHTML = legacyContent.innerHTML;
+            }
 
+            // Restore Styles - Clear transform to avoid stacking context issues
+            mainContent.style.opacity = '';
+            mainContent.style.transform = '';
+            
             // Hide Loader
             globalLoader.classList.add('hidden');
 
@@ -165,7 +239,8 @@ async function loadPageContent(url) {
 
     } catch (err) {
         console.error('Navigation error:', err);
-        window.location.href = url; // Fallback
+        showToast('Erro ao carregar página. Tente recarregar.', 'error');
+        globalLoader.classList.add('hidden');
     }
 }
 
@@ -285,6 +360,32 @@ const recipes = {
 
 // --- Page Logic Functions ---
 
+// Helper to render icon with standardized style and fallback
+function renderIcon(iconValue, containerClasses = "flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black shadow-sm") {
+    // Standardize "shopping_cart" to the specific image URL
+    if (!iconValue || iconValue === 'shopping_cart') {
+        iconValue = "https://cdn-icons-png.flaticon.com/512/2203/2203183.png";
+    }
+
+    // Check if icon is a URL (image)
+    if (iconValue && (iconValue.startsWith('http') || iconValue.startsWith('/'))) {
+        return `
+            <div class="${containerClasses}">
+                <img src="${iconValue}" class="size-8 object-contain" alt="List Icon" 
+                     onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'material-symbols-outlined text-[28px]\'>shopping_cart</span>'">
+            </div>
+        `;
+    } 
+    // Fallback or specific text icon
+    else {
+        return `
+            <div class="${containerClasses}">
+                <span class="material-symbols-outlined text-[28px]">${iconValue}</span>
+            </div>
+        `;
+    }
+}
+
 // 1. HOME (usuario.html)
 window.initHome = async function () {
     console.log('initHome called'); // DEBUG
@@ -294,6 +395,10 @@ window.initHome = async function () {
     const userNameEl = document.getElementById('userName');
     const userAvatarEl = document.getElementById('userAvatar');
     const newListCard = listsGrid ? listsGrid.lastElementChild : null;
+
+    // Show loading state initially
+    if (loadingState) loadingState.classList.remove('hidden');
+    if (mainContent) mainContent.classList.add('hidden');
 
     // Safety check but allows logic to proceed if elements are missing to clear loading
     if (!listsGrid && !loadingState) {
@@ -394,6 +499,8 @@ window.initHome = async function () {
                         'nb-blue': 'bg-nb-blue',
                         'nb-green': 'bg-nb-green',
                         'nb-orange': 'bg-nb-orange',
+                        'nb-red': 'bg-nb-red',
+                        'nb-gray': 'bg-nb-gray'
                     };
                     const bgClass = colorMap[list.color] || 'bg-white';
 
@@ -436,15 +543,11 @@ window.initHome = async function () {
                         if (e.pointerType === 'mouse') navigate(`lista.html?id=${list.id}`);
                     };
 
-                    const iconContent = list.icon && list.icon.startsWith('http')
-                        ? `<img src="${list.icon}" class="size-8 object-contain" alt="icon">`
-                        : `<span class="material-symbols-outlined text-[28px]">${list.icon || 'shopping_cart'}</span>`;
+                    const iconContent = renderIcon(list.icon);
 
                     card.innerHTML = `
                         <div class="flex justify-between items-start pointer-events-none">
-                            <div class="flex items-center justify-center size-12 rounded-lg bg-nb-white border-2 border-nb-black text-nb-black shadow-sm">
-                                ${iconContent}
-                            </div>
+                            ${iconContent}
                         </div>
                         <div class="flex flex-col gap-1 mt-3 pointer-events-none">
                             <h4 class="text-nb-black text-lg font-extrabold leading-tight line-clamp-2 uppercase">${list.title}</h4>
@@ -487,7 +590,9 @@ window.initHome = async function () {
 
 async function deleteList(id) {
     if (!confirm("Tem certeza que deseja excluir esta lista?")) {
-        loadPageContent(window.location.href);
+        if (!window.location.href.includes('lista.html')) {
+             initHome();
+        }
         return;
     }
     const { error } = await window.supabaseClient.from('shopping_lists').delete().eq('id', id);
@@ -499,6 +604,10 @@ async function deleteList(id) {
 window.initListDetail = async function (listId) {
     const listContentEl = document.getElementById('listContent');
     const loadingEl = document.getElementById('loading');
+
+    // Show loading initially
+    if (loadingEl) loadingEl.classList.remove('hidden');
+    if (listContentEl) listContentEl.classList.add('hidden');
 
     // IMPROVED ERROR HANDLING
     if (!listId) {
@@ -516,6 +625,11 @@ window.initListDetail = async function (listId) {
     }
 
     const listTitleEl = document.getElementById('listTitle');
+    const btnDelete = document.getElementById('btnDeleteList');
+    if (btnDelete) {
+        btnDelete.onclick = () => deleteList(listId);
+    }
+
     const totalAmountEl = document.getElementById('totalAmount');
     const itemsCountEl = document.getElementById('itemsCount');
     const addItemForm = document.getElementById('addItemForm');
@@ -702,6 +816,9 @@ window.initInventory = async function () {
     const totalCountEl = document.getElementById('totalCount');
     const searchInput = document.getElementById('searchInput');
     const filterContainer = document.getElementById('filterContainer');
+
+    // Show loading initially
+    if (loadingEl) loadingEl.classList.remove('hidden');
 
     let allItems = [];
     let currentFilter = 'all';
