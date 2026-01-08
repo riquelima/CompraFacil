@@ -778,9 +778,17 @@ window.initListDetail = async function (listId) {
 
     async function calculateTotals(items) {
         let total = 0, count = 0, checked = 0;
-        items.forEach(i => { count++; if (i.is_checked) checked++; if (i.price) total += Number(i.price); });
+        // Sum ALL items with a price to show the estimated total of the list
+        items.forEach(i => { 
+            count++; 
+            if (i.is_checked) checked++; 
+            if (i.price) total += Number(i.price); 
+        });
+        
         itemsCountEl.innerText = `${checked} de ${count}`;
         totalAmountEl.innerText = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(total);
+        
+        // Update DB with the full total
         await window.supabaseClient.from('shopping_lists').update({ item_count: count, total_amount: total }).eq('id', listId);
     }
 
@@ -1078,18 +1086,31 @@ window.handleLogout = async function () {
     if (confirm("Tem certeza que deseja sair?")) {
         try {
             console.log('Logging out...');
-            // Attempt to clear Supabase local storage token explicitly if known
-            // Note: The key depends on the project ID.
-
-            const { error } = await window.supabaseClient.auth.signOut();
-            // Explicitly clear checking flag
-            sessionStorage.removeItem('app_session_initialized');
+            
+            // Race condition: If server takes > 2s, force logout locally
+            const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve({ error: 'timeout' }), 2000));
+            const signOutPromise = window.supabaseClient.auth.signOut();
+            
+            const { error } = await Promise.race([signOutPromise, timeoutPromise]);
+            
             if (error) {
-                console.error('Logout error:', error);
+                console.warn('Logout warning (server or timeout):', error);
             }
         } catch (err) {
             console.error('Logout exception:', err);
         } finally {
+            console.log('Performing forceful local cleanup...');
+            
+            // Explicitly clear checking flag
+            sessionStorage.removeItem('app_session_initialized');
+            
+            // Force clear Supabase tokens from LocalStorage
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
+                    localStorage.removeItem(key);
+                }
+            });
+
             // Always redirect to index.html
             console.log('Redirecting to index.html');
             window.location.href = 'index.html';
