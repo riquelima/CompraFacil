@@ -102,139 +102,364 @@
         </header>
 
         <main id="main-content" class="flex-1 overflow-y-auto px-6 pb-32 pt-24 no-scrollbar space-y-8 relative">
-                <!-- Search & Filter -->
-                <section class="space-y-6">
-                    <div class="relative group">
-                        <input id="aiSearchInput" onkeypress="window.handleSearch(event)"
-                            class="w-full bg-white dark:bg-card-dark border-3 border-black rounded-xl py-4 pl-4 pr-12 text-lg font-bold placeholder-gray-400 focus:outline-none focus:ring-0 shadow-neo transition-all text-black dark:text-white"
-                            placeholder="O que você quer comer? (Digite e enter)" type="text" />
+            <!-- Search & Filter -->
+            <section class="space-y-6">
+                <div class="relative group">
+                    <input id="aiSearchInput" onkeypress="window.handleSearch(event)"
+                        class="w-full bg-white dark:bg-card-dark border-3 border-black rounded-xl py-4 pl-4 pr-12 text-lg font-bold placeholder-gray-400 focus:outline-none focus:ring-0 shadow-neo transition-all text-black dark:text-white"
+                        placeholder="O que você quer comer? (Digite e enter)" type="text" />
+                    <span
+                        class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-3xl text-black dark:text-white pointer-events-none">search</span>
+                </div>
+
+                <!-- Filters -->
+                <div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
+                    <button onclick="setFilter('Tudo')" id="btn-Tudo"
+                        class="filter-btn flex-none px-8 py-3 bg-black text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">
+                        Tudo
+                    </button>
+                    <button onclick="setFilter('Café')" id="btn-Café"
+                        class="filter-btn flex-none px-8 py-3 bg-white dark:bg-card-dark text-black dark:text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo hover:bg-accent-yellow hover:text-black active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">
+                        Café
+                    </button>
+                    <button onclick="setFilter('Almoço')" id="btn-Almoço"
+                        class="filter-btn flex-none px-8 py-3 bg-white dark:bg-card-dark text-black dark:text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo hover:bg-accent-blue hover:text-black active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">
+                        Almoço
+                    </button>
+                    <button onclick="setFilter('Jantar')" id="btn-Jantar"
+                        class="filter-btn flex-none px-8 py-3 bg-white dark:bg-card-dark text-black dark:text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo hover:bg-accent-orange hover:text-black active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">
+                        Jantar
+                    </button>
+                </div>
+            </section>
+
+            <!-- Logic Logic -->
+            <div id="loading" class="hidden flex-col items-center justify-center py-20">
+                <div class="size-16 border-4 border-black border-t-transparent rounded-full animate-spin mb-4">
+                </div>
+                <p class="font-bold text-lg animate-pulse">Consultando a IA...</p>
+            </div>
+
+            <div id="resultsSection" class="flex flex-col gap-8">
+                <!-- Static Cards with data-category -->
+                <article data-id="torrada" data-category="Café" onclick="navigate('receita.html?id=torrada')"
+                    class="recipe-card group relative bg-accent-yellow border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-yellow-300">
+                    <div class="flex justify-between items-start mb-8">
                         <span
-                            class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-3xl text-black dark:text-white pointer-events-none">search</span>
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Café</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:rotate-12 group-hover:scale-110">bakery_dining</span>
                     </div>
-
-                    <!-- Filters -->
-                    <div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
-                        <button onclick="setFilter('Tudo')" id="btn-Tudo"
-                            class="filter-btn flex-none px-8 py-3 bg-black text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">
-                            Tudo
-                        </button>
-                        <button onclick="setFilter('Café')" id="btn-Café"
-                            class="filter-btn flex-none px-8 py-3 bg-white dark:bg-card-dark text-black dark:text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo hover:bg-accent-yellow hover:text-black active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">
-                            Café
-                        </button>
-                        <button onclick="setFilter('Almoço')" id="btn-Almoço"
-                            class="filter-btn flex-none px-8 py-3 bg-white dark:bg-card-dark text-black dark:text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo hover:bg-accent-blue hover:text-black active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">
-                            Almoço
-                        </button>
-                        <button onclick="setFilter('Jantar')" id="btn-Jantar"
-                            class="filter-btn flex-none px-8 py-3 bg-white dark:bg-card-dark text-black dark:text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo hover:bg-accent-orange hover:text-black active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">
-                            Jantar
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Torrada<br />Abacate</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">15 min</span>
+                        </div>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
                         </button>
                     </div>
-                </section>
+                </article>
 
-                <!-- Logic Logic -->
-                <div id="loading" class="hidden flex-col items-center justify-center py-20">
-                    <div class="size-16 border-4 border-black border-t-transparent rounded-full animate-spin mb-4">
+                <article data-id="salmao" data-category="Almoço" onclick="navigate('receita.html?id=salmao')"
+                    class="recipe-card group relative bg-accent-blue border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-blue-300">
+                    <div class="flex justify-between items-start mb-8">
+                        <span
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Almoço</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:-rotate-12 group-hover:scale-110">set_meal</span>
                     </div>
-                    <p class="font-bold text-lg animate-pulse">Consultando a IA...</p>
-                </div>
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Salmão<br />Grelhado</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">25 min</span>
+                        </div>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                        </button>
+                    </div>
+                </article>
 
-                <div id="resultsSection" class="flex flex-col gap-8">
-                    <!-- Static Cards with data-category -->
-                    <article data-id="torrada" data-category="Café" onclick="navigate('receita.html?id=torrada')"
-                        class="recipe-card group relative bg-accent-yellow border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-yellow-300">
-                        <div class="flex justify-between items-start mb-8">
-                            <span
-                                class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Café</span>
-                            <span
-                                class="material-symbols-outlined text-5xl text-black transition-transform group-hover:rotate-12 group-hover:scale-110">bakery_dining</span>
+                <article data-id="risoto" data-category="Jantar" onclick="navigate('receita.html?id=risoto')"
+                    class="recipe-card group relative bg-accent-orange border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-orange-300">
+                    <div class="flex justify-between items-start mb-8">
+                        <span
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Jantar</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:rotate-12 group-hover:scale-110">ramen_dining</span>
+                    </div>
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Risoto<br />Cogumelo</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">40 min</span>
                         </div>
-                        <h2
-                            class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
-                            Torrada<br />Abacate</h2>
-                        <div class="flex items-end justify-between border-t-3 border-black pt-4">
-                            <div class="flex flex-col">
-                                <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
-                                <span class="text-2xl font-black text-black">15 min</span>
-                            </div>
-                            <button
-                                class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
-                                <span class="material-symbols-outlined text-2xl">arrow_outward</span>
-                            </button>
-                        </div>
-                    </article>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                        </button>
+                    </div>
+                </article>
 
-                    <article data-id="salmao" data-category="Almoço" onclick="navigate('receita.html?id=salmao')"
-                        class="recipe-card group relative bg-accent-blue border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-blue-300">
-                        <div class="flex justify-between items-start mb-8">
-                            <span
-                                class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Almoço</span>
-                            <span
-                                class="material-symbols-outlined text-5xl text-black transition-transform group-hover:-rotate-12 group-hover:scale-110">set_meal</span>
+                <article data-id="smoothie" data-category="Lanche" onclick="navigate('receita.html?id=smoothie')"
+                    class="recipe-card group relative bg-accent-pink border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-pink-300">
+                    <div class="flex justify-between items-start mb-8">
+                        <span
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Lanche</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:-rotate-12 group-hover:scale-110">blender</span>
+                    </div>
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Smoothie<br />Tropical</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">05 min</span>
                         </div>
-                        <h2
-                            class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
-                            Salmão<br />Grelhado</h2>
-                        <div class="flex items-end justify-between border-t-3 border-black pt-4">
-                            <div class="flex flex-col">
-                                <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
-                                <span class="text-2xl font-black text-black">25 min</span>
-                            </div>
-                            <button
-                                class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
-                                <span class="material-symbols-outlined text-2xl">arrow_outward</span>
-                            </button>
-                        </div>
-                    </article>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                        </button>
+                    </div>
+                </article>
 
-                    <article data-id="risoto" data-category="Jantar" onclick="navigate('receita.html?id=risoto')"
-                        class="recipe-card group relative bg-accent-orange border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-orange-300">
-                        <div class="flex justify-between items-start mb-8">
-                            <span
-                                class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Jantar</span>
-                            <span
-                                class="material-symbols-outlined text-5xl text-black transition-transform group-hover:rotate-12 group-hover:scale-110">ramen_dining</span>
-                        </div>
-                        <h2
-                            class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
-                            Risoto<br />Cogumelo</h2>
-                        <div class="flex items-end justify-between border-t-3 border-black pt-4">
-                            <div class="flex flex-col">
-                                <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
-                                <span class="text-2xl font-black text-black">40 min</span>
-                            </div>
-                            <button
-                                class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
-                                <span class="material-symbols-outlined text-2xl">arrow_outward</span>
-                            </button>
-                        </div>
-                    </article>
+                <!-- NEW RECIPES BASED ON INVENTORY -->
 
-                    <article data-id="smoothie" data-category="Lanche" onclick="navigate('receita.html?id=smoothie')"
-                        class="recipe-card group relative bg-accent-pink border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-pink-300">
-                        <div class="flex justify-between items-start mb-8">
-                            <span
-                                class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Lanche</span>
-                            <span
-                                class="material-symbols-outlined text-5xl text-black transition-transform group-hover:-rotate-12 group-hover:scale-110">blender</span>
+                <article data-id="frango_batata" data-category="Almoço"
+                    onclick="navigate('receita.html?id=frango_batata')"
+                    class="recipe-card group relative bg-accent-green border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-green-300">
+                    <div class="flex justify-between items-start mb-8">
+                        <span
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Almoço</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:rotate-12 group-hover:scale-110">skillet</span>
+                    </div>
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Frango<br />com Batatas</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">30 min</span>
                         </div>
-                        <h2
-                            class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
-                            Smoothie<br />Tropical</h2>
-                        <div class="flex items-end justify-between border-t-3 border-black pt-4">
-                            <div class="flex flex-col">
-                                <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
-                                <span class="text-2xl font-black text-black">05 min</span>
-                            </div>
-                            <button
-                                class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
-                                <span class="material-symbols-outlined text-2xl">arrow_outward</span>
-                            </button>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                        </button>
+                    </div>
+                </article>
+
+                <article data-id="cuscuz_ovo" data-category="Café" onclick="navigate('receita.html?id=cuscuz_ovo')"
+                    class="recipe-card group relative bg-accent-yellow border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-yellow-300">
+                    <div class="flex justify-between items-start mb-8">
+                        <span
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Café</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:-rotate-12 group-hover:scale-110">breakfast_dining</span>
+                    </div>
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Cuscuz<br />Nordestino</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">15 min</span>
                         </div>
-                    </article>
-                </div>
-            </main>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                        </button>
+                    </div>
+                </article>
+
+                <article data-id="vitamina_banana" data-category="Lanche"
+                    onclick="navigate('receita.html?id=vitamina_banana')"
+                    class="recipe-card group relative bg-accent-pink border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-pink-300">
+                    <div class="flex justify-between items-start mb-8">
+                        <span
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Lanche</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:rotate-12 group-hover:scale-110">blender</span>
+                    </div>
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Vitamina<br />de Banana</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">5 min</span>
+                        </div>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                        </button>
+                    </div>
+                </article>
+
+                <article data-id="linguica_cebola" data-category="Jantar"
+                    onclick="navigate('receita.html?id=linguica_cebola')"
+                    class="recipe-card group relative bg-accent-orange border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-orange-300">
+                    <div class="flex justify-between items-start mb-8">
+                        <span
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Jantar</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:-rotate-12 group:scale-110">skillet</span>
+                    </div>
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Linguiça<br />Acebolada</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">15 min</span>
+                        </div>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                        </button>
+                    </div>
+                </article>
+
+                <article data-id="brigadeiro" data-category="Lanche" onclick="navigate('receita.html?id=brigadeiro')"
+                    class="recipe-card group relative bg-accent-pink border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-pink-300">
+                    <div class="flex justify-between items-start mb-8">
+                        <span
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Lanche</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:rotate-12 group-hover:scale-110">cookie</span>
+                    </div>
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Brigadeiro<br />Clássico</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">15 min</span>
+                        </div>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                        </button>
+                    </div>
+                </article>
+
+                <article data-id="miojo_turbinado" data-category="Jantar"
+                    onclick="navigate('receita.html?id=miojo_turbinado')"
+                    class="recipe-card group relative bg-accent-yellow border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-yellow-300">
+                    <div class="flex justify-between items-start mb-8">
+                        <span
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Jantar</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:rotate-12 group-hover:scale-110">ramen_dining</span>
+                    </div>
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Miojo<br />Turbinado</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">10 min</span>
+                        </div>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                        </button>
+                    </div>
+                </article>
+
+                <article data-id="sanduiche_queijo" data-category="Café"
+                    onclick="navigate('receita.html?id=sanduiche_queijo')"
+                    class="recipe-card group relative bg-accent-yellow border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-yellow-300">
+                    <div class="flex justify-between items-start mb-8">
+                        <span
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Café</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:-rotate-12 group-hover:scale-110">bakery_dining</span>
+                    </div>
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Queijo<br />Quente</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">8 min</span>
+                        </div>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                        </button>
+                    </div>
+                </article>
+
+                <article data-id="batata_frita" data-category="Lanche"
+                    onclick="navigate('receita.html?id=batata_frita')"
+                    class="recipe-card group relative bg-accent-yellow border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-yellow-300">
+                    <div class="flex justify-between items-start mb-8">
+                        <span
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Lanche</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:rotate-12 group-hover:scale-110">fastfood</span>
+                    </div>
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Batata<br />Frita</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">20 min</span>
+                        </div>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                        </button>
+                    </div>
+                </article>
+
+                <article data-id="mingau_aveia" data-category="Café" onclick="navigate('receita.html?id=mingau_aveia')"
+                    class="recipe-card group relative bg-accent-pink border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-pink-300">
+                    <div class="flex justify-between items-start mb-8">
+                        <span
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Café</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:-rotate-12 group-hover:scale-110">soup_kitchen</span>
+                    </div>
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Mingau<br />de Aveia</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">10 min</span>
+                        </div>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                        </button>
+                    </div>
+                </article>
+
+                <article data-id="iogurte_banana" data-category="Lanche"
+                    onclick="navigate('receita.html?id=iogurte_banana')"
+                    class="recipe-card group relative bg-accent-blue border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-blue-300">
+                    <div class="flex justify-between items-start mb-8">
+                        <span
+                            class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Lanche</span>
+                        <span
+                            class="material-symbols-outlined text-5xl text-black transition-transform group-hover:rotate-12 group-hover:scale-110">icecream</span>
+                    </div>
+                    <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                        Iogurte<br />com Banana</h2>
+                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                            <span class="text-2xl font-black text-black">3 min</span>
+                        </div>
+                        <button
+                            class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                        </button>
+                    </div>
+                </article>
+            </div>
+        </main>
         <!-- Fixed Bottom Navigation Bar -->
         <div class="fixed bottom-0 left-0 w-full z-50 pointer-events-none flex flex-col items-center">
             <div
@@ -244,8 +469,7 @@
                     class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity duration-200 w-16">
                     <span
                         class="material-symbols-outlined text-3xl font-bold text-black dark:text-white">list_alt</span>
-                    <span
-                        class="text-[10px] font-bold uppercase tracking-wide text-black dark:text-white">Listas</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wide text-black dark:text-white">Listas</span>
                 </button>
                 <!-- Center: FAB -->
                 <div class="absolute left-1/2 -top-8 -translate-x-1/2">

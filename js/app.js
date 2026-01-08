@@ -330,6 +330,168 @@ const recipes = {
             { title: "Bater", desc: "Coloque todos os ingredientes no liquidificador." },
             { title: "Servir", desc: "Bata até ficar cremoso e sirva em um copo alto." }
         ]
+    },
+    "frango_batata": {
+        title: "Frango<br/>com Batatas",
+        category: "Almoço",
+        time: "30 Min",
+        calories: "400 Kcal",
+        protein: "32g",
+        difficulty: "Fácil",
+        icon: "skillet",
+        color: "bg-accent-green",
+        ingredients: ["Filé de Frango", "Batata", "Cebola", "Azeite", "Temperos"],
+        steps: [
+            { title: "Temperar", desc: "Tempere o frango com sal, alho e pimenta." },
+            { title: "Fritar", desc: "Frite o frango em cubos até dourar." },
+            { title: "Batatas", desc: "Adicione as batatas cortadas e cebola." },
+            { title: "Cozinhar", desc: "Cozinhe até as batatas ficarem macias." }
+        ]
+    },
+    "cuscuz_ovo": {
+        title: "Cuscuz<br/>Nordestino",
+        category: "Café",
+        time: "15 Min",
+        calories: "300 Kcal",
+        protein: "10g",
+        difficulty: "Fácil",
+        icon: "breakfast_dining",
+        color: "bg-accent-yellow",
+        ingredients: ["Cuscuz", "Manteiga", "Sal", "Água"],
+        steps: [
+            { title: "Hidratar", desc: "Hidrate o flocão de cuscuz com água e sal." },
+            { title: "Cozinhar", desc: "Coloque na cuscuzeira e cozinhe no vapor por 10 minutos." },
+            { title: "Servir", desc: "Desenforme e sirva com manteiga derretida." }
+        ]
+    },
+    "vitamina_banana": {
+        title: "Vitamina<br/>de Banana",
+        category: "Lanche",
+        time: "5 Min",
+        calories: "200 Kcal",
+        protein: "5g",
+        difficulty: "Fácil",
+        icon: "blender",
+        color: "bg-accent-pink",
+        ingredients: ["Banana", "Leite", "Aveia", "Mel"],
+        steps: [
+            { title: "Cortar", desc: "Corte a banana em rodelas." },
+            { title: "Bater", desc: "Bata tudo no liquidificador até ficar cremoso." },
+            { title: "Servir", desc: "Sirva gelado em um copo alto." }
+        ]
+    },
+    "linguica_cebola": {
+        title: "Linguiça<br/>Acebolada",
+        category: "Jantar",
+        time: "15 Min",
+        calories: "450 Kcal",
+        protein: "18g",
+        difficulty: "Fácil",
+        icon: "skillet",
+        color: "bg-accent-orange",
+        ingredients: ["Linguiça Fininha", "Cebola", "Azeite"],
+        steps: [
+            { title: "Cortar", desc: "Corte a linguiça em pedaços." },
+            { title: "Fritar", desc: "Frite a linguiça em fogo médio." },
+            { title: "Acebolar", desc: "Adicione a cebola em pétalas e refogue." }
+        ]
+    },
+    "brigadeiro": {
+        title: "Brigadeiro<br/>Clássico",
+        category: "Lanche",
+        time: "15 Min",
+        calories: "100 Kcal",
+        protein: "2g",
+        difficulty: "Fácil",
+        icon: "cookie",
+        color: "bg-accent-pink",
+        ingredients: ["Leite Condensado", "Chocolate em Pó", "Manteiga"],
+        steps: [
+            { title: "Misturar", desc: "Misture todos os ingredientes na panela." },
+            { title: "Cozinhar", desc: "Mexa sem parar até desgrudar do fundo." },
+            { title: "Enrolar", desc: "Deixe esfriar e enrole em bolinhas." }
+        ]
+    },
+    "miojo_turbinado": {
+        title: "Miojo<br/>Turbinado",
+        category: "Jantar",
+        time: "10 Min",
+        calories: "400 Kcal",
+        protein: "12g",
+        difficulty: "Fácil",
+        icon: "ramen_dining",
+        color: "bg-accent-yellow",
+        ingredients: ["Miojo", "Queijo", "Cebola", "Batata Palha"],
+        steps: [
+            { title: "Cozinhar", desc: "Cozinhe o miojo com menos água." },
+            { title: "Incrementar", desc: "Adicione queijo ralado e cebola picada." },
+            { title: "Finalizar", desc: "Cubra com batata palha e sirva." }
+        ]
+    },
+    "sanduiche_queijo": {
+        title: "Queijo<br/>Quente",
+        category: "Café",
+        time: "8 Min",
+        calories: "280 Kcal",
+        protein: "10g",
+        difficulty: "Fácil",
+        icon: "bakery_dining",
+        color: "bg-accent-yellow",
+        ingredients: ["Pão de Forma", "Queijo Mussarela", "Manteiga"],
+        steps: [
+            { title: "Montar", desc: "Coloque o queijo entre as fatias de pão." },
+            { title: "Passar Manteiga", desc: "Passe manteiga por fora do pão." },
+            { title: "Tostar", desc: "Doure dos dois lados na frigideira." }
+        ]
+    },
+    "batata_frita": {
+        title: "Batata<br/>Frita",
+        category: "Lanche",
+        time: "20 Min",
+        calories: "300 Kcal",
+        protein: "3g",
+        difficulty: "Fácil",
+        icon: "fastfood",
+        color: "bg-accent-yellow",
+        ingredients: ["Batata", "Azeite", "Sal"],
+        steps: [
+            { title: "Cortar", desc: "Corte as batatas em palitos." },
+            { title: "Secar", desc: "Seque bem com papel toalha." },
+            { title: "Fritar", desc: "Frite em óleo quente até dourar." },
+            { title: "Salgar", desc: "Escorra e tempere com sal." }
+        ]
+    },
+    "mingau_aveia": {
+        title: "Mingau<br/>de Aveia",
+        category: "Café",
+        time: "10 Min",
+        calories: "200 Kcal",
+        protein: "8g",
+        difficulty: "Fácil",
+        icon: "soup_kitchen",
+        color: "bg-accent-pink",
+        ingredients: ["Aveia", "Leite", "Manteiga", "Açúcar"],
+        steps: [
+            { title: "Misturar", desc: "Misture a aveia com leite em uma panela." },
+            { title: "Cozinhar", desc: "Leve ao fogo mexendo até engrossar." },
+            { title: "Adoçar", desc: "Adicione açúcar a gosto e sirva quente." }
+        ]
+    },
+    "iogurte_banana": {
+        title: "Iogurte<br/>com Banana",
+        category: "Lanche",
+        time: "3 Min",
+        calories: "180 Kcal",
+        protein: "8g",
+        difficulty: "Fácil",
+        icon: "icecream",
+        color: "bg-accent-blue",
+        ingredients: ["Iogurte", "Banana", "Aveia"],
+        steps: [
+            { title: "Picar", desc: "Pique a banana em rodelas." },
+            { title: "Misturar", desc: "Misture ao iogurte." },
+            { title: "Polvilhar", desc: "Polvilhe aveia por cima e sirva." }
+        ]
     }
 };
 
