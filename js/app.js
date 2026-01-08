@@ -132,7 +132,12 @@ function initPageLogic(path, searchParams) {
 
     // Route matching
     if (path.includes('usuario.html') || path === '' || path === 'index.html') {
-        initHome();
+        // Double check if we are actually on the home page structure
+        if (document.getElementById('listsGrid') || document.getElementById('loadingState')) {
+            initHome();
+        } else {
+            console.log('Path matches Home but DOM missing, possibly redirecting or wrong match');
+        }
     } else if (path.includes('lista.html')) {
         initListDetail(searchParams.get('id'));
     } else if (path.includes('inventario.html')) {
@@ -235,7 +240,7 @@ window.initHome = async function() {
 
     // Safety check but allows logic to proceed if elements are missing to clear loading
     if (!listsGrid && !loadingState) {
-        console.error('Critical elements missing for Home');
+        console.warn('Elements missing for Home, likely redirected.');
         return;
     }
 
