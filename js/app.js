@@ -173,8 +173,8 @@ function initPageLogic(path, searchParams, attempt = 0) {
     // Wait for Supabase to be ready if needed
     if (!window.supabaseClient && !path.includes('login.html')) {
         if (attempt > 50) { // 5 seconds max
-             console.error('Supabase initialization timeout.');
-             // Optional: Force reload or show error
+             console.error('Supabase initialization timeout. Force reloading...');
+             window.location.reload();
              return;
         }
         console.warn(`Supabase client not ready, waiting... (${attempt})`);
