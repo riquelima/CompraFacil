@@ -14,6 +14,18 @@ window.navigate = async function (url, skipAnimation = false) {
         return;
     }
 
+    // SESSION PERSISTENCE CHECK
+    // If "Keep Session Active" is OFF (default), and this is a fresh browser session (tab opened), log out.
+    // We use sessionStorage to track if we've already checked this session.
+    if (!sessionStorage.getItem('app_session_initialized')) {
+        const keepSession = localStorage.getItem('keep_session_active') === 'true';
+        if (!keepSession && window.supabaseClient) {
+            console.log('Session persistence is OFF. Clearing session on startup...');
+            await window.supabaseClient.auth.signOut();
+        }
+        sessionStorage.setItem('app_session_initialized', 'true');
+    }
+
     // Update History
     window.history.pushState({}, '', targetUrl);
 
@@ -838,6 +850,19 @@ window.initSettings = async function () {
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.onclick = handleLogout; // Direct binding to ensure it works
+    }
+
+    // Bind "Keep Session" Toggle
+    const sessionToggle = document.getElementById('keep-session-toggle');
+    if (sessionToggle) {
+        // Init state
+        sessionToggle.checked = localStorage.getItem('keep_session_active') === 'true';
+
+        // Change listener
+        sessionToggle.addEventListener('change', (e) => {
+            localStorage.setItem('keep_session_active', e.target.checked);
+            console.log('Keep Session Active set to:', e.target.checked);
+        });
     }
 }
 
