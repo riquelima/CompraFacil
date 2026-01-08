@@ -627,6 +627,8 @@ const moreRecipes = [
     },
     {
         title: "Mousse de<br/>Limão",
+    {
+        title: "Mousse de<br/>Limão",
         category: "Lanche",
         time: "10 Min",
         calories: "250 Kcal",
@@ -638,6 +640,327 @@ const moreRecipes = [
         steps: [
             { title: "Bater", desc: "Bata tudo no liquidificador até engrossar." },
             { title: "Gelar", desc: "Leve à geladeira." }
+        ],
+        created_at: Date.now()
+    }
+];
+
+const evenMoreRecipes = [
+    {
+        title: "Café com<br/>Leite",
+        category: "Café",
+        time: "5 Min",
+        calories: "80 Kcal",
+        protein: "4g",
+        difficulty: "Fácil",
+        color: "bg-accent-yellow",
+        icon: "coffee",
+        ingredients: ["Café", "Leite", "Açúcar"],
+        steps: [
+            { title: "Misturar", desc: "Misture café quente com leite." },
+            { title: "Adoçar", desc: "Adoce a gosto." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Suco de<br/>Laranja",
+        category: "Lanche",
+        time: "5 Min",
+        calories: "120 Kcal",
+        protein: "1g",
+        difficulty: "Fácil",
+        color: "bg-accent-orange",
+        icon: "local_bar",
+        ingredients: ["Laranja", "Gelo", "Açúcar"],
+        steps: [
+            { title: "Espremer", desc: "Esprema as laranjas." },
+            { title: "Servir", desc: "Sirva com gelo." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Coxinha de<br/>Pão",
+        category: "Lanche",
+        time: "20 Min",
+        calories: "300 Kcal",
+        protein: "10g",
+        difficulty: "Médio",
+        color: "bg-accent-yellow",
+        icon: "fastfood",
+        ingredients: ["Pão de Forma", "Frango Desfiado", "Leite", "Farinha de Rosca"],
+        steps: [
+            { title: "Moldar", desc: "Molhe o pão no leite e recheie." },
+            { title: "Empanar", desc: "Passe na farinha de rosca e frite." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Salada de<br/>Alface",
+        category: "Almoço",
+        time: "5 Min",
+        calories: "50 Kcal",
+        protein: "1g",
+        difficulty: "Fácil",
+        color: "bg-accent-green",
+        icon: "eco",
+        ingredients: ["Alface", "Tomate", "Azeite", "Vinagre"],
+        steps: [
+            { title: "Lavar", desc: "Lave bem as folhas." },
+            { title: "Temperar", desc: "Misture com tomate e tempere." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Beijinho<br/>De Coco",
+        category: "Lanche",
+        time: "15 Min",
+        calories: "150 Kcal",
+        protein: "2g",
+        difficulty: "Fácil",
+        color: "bg-accent-pink",
+        icon: "cookie",
+        ingredients: ["Leite Condensado", "Coco Ralado", "Manteiga"],
+        steps: [
+            { title: "Cozinhar", desc: "Mexa tudo na panela até desgrudar." },
+            { title: "Enrolar", desc: "Espere esfriar e enrole." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Omelete de<br/>Forno",
+        category: "Jantar",
+        time: "25 Min",
+        calories: "280 Kcal",
+        protein: "15g",
+        difficulty: "Médio",
+        color: "bg-accent-yellow",
+        icon: "egg_alt",
+        ingredients: ["Ovos", "Legumes Picados", "Queijo", "Fermento"],
+        steps: [
+            { title: "Misturar", desc: "Bata os ovos com legumes e fermento." },
+            { title: "Assar", desc: "Coloque em forma untada e asse." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Pão com<br/>Mortadela",
+        category: "Café",
+        time: "2 Min",
+        calories: "250 Kcal",
+        protein: "8g",
+        difficulty: "Fácil",
+        color: "bg-accent-orange",
+        icon: "bakery_dining",
+        ingredients: ["Pão Francês", "Mortadela"],
+        steps: [
+            { title: "Montar", desc: "Corte o pão e capriche na mortadela." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Macarrão<br/>Carbonara",
+        category: "Jantar",
+        time: "20 Min",
+        calories: "550 Kcal",
+        protein: "18g",
+        difficulty: "Médio",
+        color: "bg-accent-yellow",
+        icon: "restaurant",
+        ingredients: ["Macarrão", "Ovo", "Queijo", "Bacon/Linguiça"],
+        steps: [
+            { title: "Molho", desc: "Misture ovo e queijo fora do fogo." },
+            { title: "Finalizar", desc: "Junte ao macarrão quente e bacon frito." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Abobrinha<br/>Refogada",
+        category: "Almoço",
+        time: "15 Min",
+        calories: "80 Kcal",
+        protein: "2g",
+        difficulty: "Fácil",
+        color: "bg-accent-green",
+        icon: "nutrition",
+        ingredients: ["Abobrinha", "Alho", "Azeite"],
+        steps: [
+            { title: "Picar", desc: "Pique em cubos." },
+            { title: "Refogar", desc: "Refogue no alho e azeite até amaciar." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Sopa de<br/>Legumes",
+        category: "Jantar",
+        time: "30 Min",
+        calories: "150 Kcal",
+        protein: "4g",
+        difficulty: "Fácil",
+        color: "bg-accent-orange",
+        icon: "soup_kitchen",
+        ingredients: ["Batata", "Cenoura", "Chuchu", "Macarrão"],
+        steps: [
+            { title: "Cozinhar", desc: "Cozinhe os legumes em água temperada." },
+            { title: "Massa", desc: "Adicione o macarrão no final." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Torrada<br/>Simples",
+        category: "Café",
+        time: "10 Min",
+        calories: "100 Kcal",
+        protein: "3g",
+        difficulty: "Fácil",
+        color: "bg-accent-yellow",
+        icon: "bakery_dining",
+        ingredients: ["Pão Amanhecido", "Manteiga", "Orégano"],
+        steps: [
+            { title: "Cortar", desc: "Fatie o pão e passe manteiga." },
+            { title: "Assar", desc: "Leve ao forno até dourar." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Bife a<br/>Milanesa",
+        category: "Almoço",
+        time: "30 Min",
+        calories: "400 Kcal",
+        protein: "25g",
+        difficulty: "Médio",
+        color: "bg-accent-orange",
+        icon: "cut",
+        ingredients: ["Bife", "Ovo", "Farinha de Rosca", "Óleo"],
+        steps: [
+            { title: "Empanar", desc: "Passe o bife no ovo e na farinha." },
+            { title: "Fritar", desc: "Frite em óleo quente." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Molho<br/>Branco",
+        category: "Jantar",
+        time: "15 Min",
+        calories: "200 Kcal",
+        protein: "6g",
+        difficulty: "Médio",
+        color: "bg-accent-white",
+        icon: "soup_kitchen",
+        ingredients: ["Leite", "Manteiga", "Farinha de Trigo", "Noz Moscada"],
+        steps: [
+            { title: "Roux", desc: "Derreta manteiga e farinha." },
+            { title: "Leite", desc: "Adicione leite aos poucos mexendo sempre." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Salada de<br/>Frutas",
+        category: "Lanche",
+        time: "10 Min",
+        calories: "120 Kcal",
+        protein: "2g",
+        difficulty: "Fácil",
+        color: "bg-accent-purple",
+        icon: "nutrition",
+        ingredients: ["Banana", "Maçã", "Laranja", "Mamão"],
+        steps: [
+            { title: "Picar", desc: "Pique todas as frutas." },
+            { title: "Misturar", desc: "Misture com suco de laranja." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Feijoada<br/>Simples",
+        category: "Almoço",
+        time: "40 Min",
+        calories: "600 Kcal",
+        protein: "30g",
+        difficulty: "Médio",
+        color: "bg-accent-blue",
+        icon: "soup_kitchen",
+        ingredients: ["Feijão Preto", "Linguiça", "Bacon", "Carne Seca"],
+        steps: [
+            { title: "Refogar", desc: "Frite as carnes." },
+            { title: "Cozinhar", desc: "Cozinhe junto com o feijão na pressão." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Pavê<br/>Rápido",
+        category: "Lanche",
+        time: "20 Min",
+        calories: "350 Kcal",
+        protein: "5g",
+        difficulty: "Médio",
+        color: "bg-accent-pink",
+        icon: "cake",
+        ingredients: ["Biscoito Maizena", "Creme de Leite", "Leite Condensado"],
+        steps: [
+            { title: "Creme", desc: "Misture os leites com limão ou chocolate." },
+            { title: "Montar", desc: "Intercale camadas de biscoito e creme." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Empadão<br/>de Frango",
+        category: "Jantar",
+        time: "50 Min",
+        calories: "450 Kcal",
+        protein: "20g",
+        difficulty: "Difícil",
+        color: "bg-accent-yellow",
+        icon: "pie_chart",
+        ingredients: ["Farinha", "Manteiga", "Frango Desfiado"],
+        steps: [
+            { title: "Massa", desc: "Faça a massa podre com farinha e manteiga." },
+            { title: "Rechear", desc: "Recheie e asse até dourar." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Chá<br/>Mate",
+        category: "Lanche",
+        time: "10 Min",
+        calories: "50 Kcal",
+        protein: "0g",
+        difficulty: "Fácil",
+        color: "bg-accent-orange",
+        icon: "local_cafe",
+        ingredients: ["Erva Mate", "Água", "Limão"],
+        steps: [
+            { title: "Ferver", desc: "Ferva a água e faça a infusão." },
+            { title: "Gelar", desc: "Sirva gelado com limão." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Pizza de<br/>Pão",
+        category: "Jantar",
+        time: "15 Min",
+        calories: "300 Kcal",
+        protein: "12g",
+        difficulty: "Fácil",
+        color: "bg-accent-red",
+        icon: "local_pizza",
+        ingredients: ["Pão de Forma", "Molho de Tomate", "Queijo", "Orégano"],
+        steps: [
+            { title: "Montar", desc: "Cubra o pão com molho e queijo." },
+            { title: "Assar", desc: "Leve ao forno para derreter." }
+        ],
+        created_at: Date.now()
+    },
+    {
+        title: "Mandioca<br/>Frita",
+        category: "Almoço",
+        time: "25 Min",
+        calories: "320 Kcal",
+        protein: "2g",
+        difficulty: "Médio",
+        color: "bg-accent-yellow",
+        icon: "fastfood",
+        ingredients: ["Mandioca Cozida", "Óleo", "Sal"],
+        steps: [
+            { title: "Fritar", desc: "Frite a mandioca cozida em óleo quente." }
         ],
         created_at: Date.now()
     }
@@ -674,6 +997,20 @@ window.SmartRecipes = {
                 }
             });
             localStorage.setItem('seed_v2_done', 'true');
+        }
+
+        // V3 Seeding (Even More Recipes)
+        if (!localStorage.getItem('seed_v3_done')) {
+            console.log('Seeding even more recipes (V3)...');
+            evenMoreRecipes.forEach((recipe, index) => {
+                const id = 'seed_v3_' + index;
+                if (!generated[id]) {
+                    recipe.created_at = Date.now();
+                    generated[id] = recipe;
+                    updated = true;
+                }
+            });
+            localStorage.setItem('seed_v3_done', 'true');
         }
 
         if (updated) {

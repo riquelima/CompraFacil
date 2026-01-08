@@ -13,9 +13,9 @@
     }
 }
 
-main {
+/* main {
     animation: fadeIn 0.4s ease-out;
-}
+} */
 
 /* Responsive Container Utilities via class modifications in HTML, 
    but we can add some global overrides if needed here */

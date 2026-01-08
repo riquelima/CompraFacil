@@ -14,18 +14,30 @@ window.navigate = async function (url, skipAnimation = false) {
         return;
     }
 
-    // SESSION PERSISTENCE CHECK
-    // If "Keep Session Active" is OFF (default), and this is a fresh browser session (tab opened), log out.
-    // We use sessionStorage to track if we've already checked this session.
+    // SESSION PERSISTENCE CHECK (Fixed)
+    // Runs on every navigation but strictly guarded
     if (!sessionStorage.getItem('app_session_initialized')) {
         const keepSession = localStorage.getItem('keep_session_active') === 'true';
-        if (!keepSession && window.supabaseClient) {
-            console.log('Session persistence is OFF. Clearing session on startup...');
-            await window.supabaseClient.auth.signOut();
-            window.location.href = 'index.html'; // Force redirect to login
-            return; // Stop navigation
-        }
+        const currentPath = targetUrl.pathname;
+        const isPublicPage = currentPath.endsWith('index.html') || currentPath.endsWith('login.html') || currentPath === '/';
+
+        // Mark as initialized so we don't loop
         sessionStorage.setItem('app_session_initialized', 'true');
+
+        if (!keepSession && window.supabaseClient) {
+            console.log('Session persistence is OFF. Checking session...');
+            // Check if there is an active session
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+
+            if (session) {
+                console.log('Active session found but persistence is OFF. Signing out...');
+                await window.supabaseClient.auth.signOut();
+                if (!isPublicPage) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+            }
+        }
     }
 
     // Update History
