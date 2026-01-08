@@ -144,7 +144,7 @@
             <div class="flex-grow border-t-3 border-dark-border dark:border-white"></div>
         </div>
         <div class="grid grid-cols-2 gap-4">
-            <button onclick="alert('Social login not configured for this demo')"
+            <button onclick="signInWithGoogle()"
                 class="flex items-center justify-center gap-2 bg-white dark:bg-surface-dark h-14 rounded-brutal border-3 border-dark-border dark:border-white shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-neo-sm transition-all group">
                 <span class="font-black text-2xl text-black dark:text-white">G</span>
                 <span class="font-bold text-black dark:text-white text-sm">Google</span>
@@ -164,7 +164,6 @@
             </p>
         </div>
     </div>
-
     <script>
             // Check for existing session
             (async () => {
@@ -211,6 +210,23 @@
                 btnText.innerText = originalText;
             }
         });
+    </script>
+    <script>
+        // Make available globally
+        window.signInWithGoogle = async function () {
+            try {
+                const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin + '/usuario.html'
+                    }
+                });
+                if (error) throw error;
+            } catch (err) {
+                console.error('Google Login Error:', err);
+                alert('Erro ao conectar com Google: ' + err.message);
+            }
+        }
     </script>
 </body>
 

@@ -1376,23 +1376,27 @@ window.toggleFavorite = function () {
 // Initial Load
 document.addEventListener('DOMContentLoaded', async () => {
     // Strict Session Check on Load
-    const keepSession = localStorage.getItem('keep_session_active') === 'true';
-    const sessionInitialized = sessionStorage.getItem('app_session_initialized');
-
-    if (!keepSession && !sessionInitialized && window.supabaseClient) {
-        const { data: { session } } = await window.supabaseClient.auth.getSession();
-        if (session) {
-            console.log('Startup: Persistence OFF, clearing session.');
-            await window.supabaseClient.auth.signOut();
-            if (!window.location.pathname.includes('index.html') && !window.location.pathname.includes('login.html') && window.location.pathname !== '/' && window.location.pathname !== '') {
-                window.location.href = 'index.html';
-                return;
-            }
-        }
-    }
+    // Logic removed to prevent aggressive auto-logout.
+    // Supabase handles session persistence automatically.
 
     // Determine current page and init
     const path = window.location.pathname.split('/').pop();
     const params = new URLSearchParams(window.location.search);
     initPageLogic(path, params);
 });
+
+// Google Login Helper
+window.signInWithGoogle = async function () {
+    try {
+        const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin + '/usuario.html'
+            }
+        });
+        if (error) throw error;
+    } catch (err) {
+        console.error('Google Login Error:', err);
+        alert('Erro ao conectar com Google: ' + err.message);
+    }
+}
