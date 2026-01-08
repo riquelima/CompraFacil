@@ -72,8 +72,11 @@ function setActive(btn, isActive) {
 
 async function loadPageContent(url) {
     const appContent = document.getElementById('app-content');
+    
+    // Fallback: If current page has no app-content, reload full page
     if (!appContent) {
-        window.location.reload();
+        console.warn('No #app-content found in current DOM, forcing reload.');
+        window.location.href = url;
         return;
     }
 
@@ -91,8 +94,8 @@ async function loadPageContent(url) {
         const newContent = doc.getElementById('app-content');
         
         if (!newContent) {
-            console.error('No #app-content found in target page');
-            window.location.reload();
+            console.error('No #app-content found in target page, forcing reload.');
+            window.location.href = url; // Fallback to full reload
             return;
         }
 
