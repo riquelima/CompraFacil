@@ -666,7 +666,7 @@ window.initListDetail = async function (listId) {
         const { data: items, error } = await window.supabaseClient.from('list_items').select('*').eq('list_id', listId).order('name', { ascending: true });
         if (!error) {
             renderItems(items);
-            calculateTotals(items);
+            await calculateTotals(items);
         }
     }
 
@@ -745,13 +745,13 @@ window.initListDetail = async function (listId) {
         if (!error) {
             if (status) await addToInventory(id);
             else await removeFromInventory(id);
-            fetchListItems();
+            await fetchListItems();
         }
     }
 
     async function deleteItem(id) {
         await window.supabaseClient.from('list_items').delete().eq('id', id);
-        fetchListItems();
+        await fetchListItems();
     }
 
     async function addToInventory(itemId) {
@@ -776,12 +776,12 @@ window.initListDetail = async function (listId) {
         else await window.supabaseClient.from('inventory_items').update({ quantity: newQty }).eq('id', invItem.id);
     }
 
-    function calculateTotals(items) {
+    async function calculateTotals(items) {
         let total = 0, count = 0, checked = 0;
         items.forEach(i => { count++; if (i.is_checked) checked++; if (i.price) total += Number(i.price); });
         itemsCountEl.innerText = `${checked} de ${count}`;
         totalAmountEl.innerText = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(total);
-        window.supabaseClient.from('shopping_lists').update({ item_count: count, total_amount: total }).eq('id', listId);
+        await window.supabaseClient.from('shopping_lists').update({ item_count: count, total_amount: total }).eq('id', listId);
     }
 
     addItemForm.onsubmit = async (e) => {
@@ -793,7 +793,7 @@ window.initListDetail = async function (listId) {
         newItemInput.disabled = false;
         newItemInput.value = '';
         newItemInput.focus();
-        fetchListItems();
+        await fetchListItems();
     };
 
     window.promptPrice = async (id, current) => {
@@ -802,7 +802,7 @@ window.initListDetail = async function (listId) {
             const val = parseFloat(p.replace(',', '.'));
             if (!isNaN(val)) {
                 await window.supabaseClient.from('list_items').update({ price: val }).eq('id', id);
-                fetchListItems();
+                await fetchListItems();
             }
         }
     }
