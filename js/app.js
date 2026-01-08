@@ -146,8 +146,9 @@ async function loadPageContent(url) {
 
         // Wait for animation
         setTimeout(() => {
-            // Swap
+            // Swap Content AND Classes
             appContent.innerHTML = newContent.innerHTML;
+            appContent.className = newContent.className;
 
             // Restore Styles - Clear transform to avoid stacking context issues with fixed children
             appContent.style.opacity = '';
