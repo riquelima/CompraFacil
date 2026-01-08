@@ -35,6 +35,7 @@
                         "nb-yellow": "#FFDE59",
                         "nb-black": "#000000",
                         "nb-bg": "#F8FAFC",
+                        "nb-white": "#FFFFFF",
                     },
                     fontFamily: {
                         "display": ["Plus Jakarta Sans", "sans-serif"]
@@ -44,12 +45,14 @@
                         "lg": "0.75rem",
                         "xl": "1rem",
                         "2xl": "1.25rem",
-                        "full": "9999px"
+                        "full": "9999px",
+                        "nb": "1rem"
                     },
                     boxShadow: {
                         "neo": "5px 5px 0px 0px #000000",
                         "neo-hover": "2px 2px 0px 0px #000000",
                         "neo-sm": "3px 3px 0px 0px #000000",
+                        "hard": "8px 8px 0px 0px #000000",
                     },
                     borderWidth: {
                         '3': '3px',
@@ -76,6 +79,8 @@
 
 <body
     class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white overflow-hidden h-screen w-full flex flex-col selection:bg-black selection:text-white">
+
+    <!-- Header -->
     <header
         class="flex-none px-6 pt-8 pb-4 flex items-center justify-between bg-background-light dark:bg-background-dark z-20">
         <button onclick="navigate('inventario.html')"
@@ -89,6 +94,7 @@
         </button>
     </header>
 
+    <!-- Main Content -->
     <main class="flex-1 overflow-y-auto px-6 pb-32 pt-2 no-scrollbar space-y-8">
         <!-- Search & Filter -->
         <section class="space-y-6">
@@ -99,35 +105,38 @@
                 <span
                     class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-3xl text-black dark:text-white pointer-events-none">search</span>
             </div>
+
+            <!-- Filters -->
             <div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
-                <button
-                    class="flex-none px-8 py-3 bg-black text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">Tudo</button>
-                <button
-                    class="flex-none px-8 py-3 bg-white dark:bg-card-dark text-black dark:text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo hover:bg-accent-yellow hover:text-black active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">Café</button>
-                <button
-                    class="flex-none px-8 py-3 bg-white dark:bg-card-dark text-black dark:text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo hover:bg-accent-blue hover:text-black active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">Almoço</button>
-                <button
-                    class="flex-none px-8 py-3 bg-white dark:bg-card-dark text-black dark:text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo hover:bg-accent-orange hover:text-black active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">Jantar</button>
+                <button onclick="setFilter('Tudo')" id="btn-Tudo"
+                    class="filter-btn flex-none px-8 py-3 bg-black text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">
+                    Tudo
+                </button>
+                <button onclick="setFilter('Café')" id="btn-Café"
+                    class="filter-btn flex-none px-8 py-3 bg-white dark:bg-card-dark text-black dark:text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo hover:bg-accent-yellow hover:text-black active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">
+                    Café
+                </button>
+                <button onclick="setFilter('Almoço')" id="btn-Almoço"
+                    class="filter-btn flex-none px-8 py-3 bg-white dark:bg-card-dark text-black dark:text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo hover:bg-accent-blue hover:text-black active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">
+                    Almoço
+                </button>
+                <button onclick="setFilter('Jantar')" id="btn-Jantar"
+                    class="filter-btn flex-none px-8 py-3 bg-white dark:bg-card-dark text-black dark:text-white border-3 border-black rounded-xl font-black text-sm uppercase tracking-widest shadow-neo hover:bg-accent-orange hover:text-black active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all">
+                    Jantar
+                </button>
             </div>
         </section>
 
-        <!-- Loading & Empty States (Hidden by default, used by logic) -->
+        <!-- Logic Logic -->
         <div id="loading" class="hidden flex-col items-center justify-center py-20">
             <div class="size-16 border-4 border-black border-t-transparent rounded-full animate-spin mb-4"></div>
             <p class="font-bold text-lg animate-pulse">Consultando a IA...</p>
         </div>
 
-        <div id="emptyState" class="hidden flex-col items-center justify-center py-20 px-8 text-center">
-            <span class="material-symbols-outlined text-6xl mb-4 opacity-50">kitchen</span>
-            <h3 class="text-xl font-black uppercase mb-2">Estoque Vazio</h3>
-            <p class="font-bold opacity-60">Adicione itens ao seu estoque.</p>
-        </div>
-
-        <!-- Recipe Cards Container -->
-        <section id="resultsSection" class="flex flex-col gap-8">
-            <!-- Examples provided by user (Static) -->
-            <article
-                class="group relative bg-accent-yellow border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-yellow-300">
+        <div id="resultsSection" class="flex flex-col gap-8">
+            <!-- Static Cards with data-category -->
+            <article data-category="Café"
+                class="recipe-card group relative bg-accent-yellow border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-yellow-300">
                 <div class="flex justify-between items-start mb-8">
                     <span
                         class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Café</span>
@@ -148,8 +157,8 @@
                 </div>
             </article>
 
-            <article
-                class="group relative bg-accent-blue border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-blue-300">
+            <article data-category="Almoço"
+                class="recipe-card group relative bg-accent-blue border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-blue-300">
                 <div class="flex justify-between items-start mb-8">
                     <span
                         class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Almoço</span>
@@ -170,9 +179,8 @@
                 </div>
             </article>
 
-            <!-- More static cards... -->
-            <article
-                class="group relative bg-accent-orange border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-orange-300">
+            <article data-category="Jantar"
+                class="recipe-card group relative bg-accent-orange border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-orange-300">
                 <div class="flex justify-between items-start mb-8">
                     <span
                         class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Jantar</span>
@@ -192,159 +200,99 @@
                     </button>
                 </div>
             </article>
-        </section>
+
+            <article data-category="Lanche"
+                class="recipe-card group relative bg-accent-pink border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:bg-pink-300">
+                <div class="flex justify-between items-start mb-8">
+                    <span
+                        class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">Lanche</span>
+                    <span
+                        class="material-symbols-outlined text-5xl text-black transition-transform group-hover:-rotate-12 group-hover:scale-110">blender</span>
+                </div>
+                <h2 class="text-5xl font-black uppercase leading-[0.85] tracking-tight mb-8 text-black break-words">
+                    Smoothie<br />Tropical</h2>
+                <div class="flex items-end justify-between border-t-3 border-black pt-4">
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
+                        <span class="text-2xl font-black text-black">05 min</span>
+                    </div>
+                    <button
+                        class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
+                        <span class="material-symbols-outlined text-2xl">arrow_outward</span>
+                    </button>
+                </div>
+            </article>
+        </div>
     </main>
 
-    <!-- FAB Trigger (Wired to generate logic if user wants) -->
-    <div class="fixed bottom-24 right-6 z-30">
-        <button onclick="generateRecipes()"
-            class="size-20 bg-black text-white rounded-full flex items-center justify-center border-4 border-white dark:border-card-dark shadow-[0px_0px_0px_3px_rgba(0,0,0,1)] active:scale-95 transition-all group hover:bg-gray-900">
-            <span
-                class="material-symbols-outlined text-4xl group-hover:rotate-180 transition-transform duration-500">auto_awesome</span>
-        </button>
-    </div>
+    <!-- Fixed Bottom Navbar (Consistent) -->
+    <div class="fixed bottom-0 left-0 w-full z-40 pointer-events-none flex flex-col items-center">
+        <div
+            class="w-full max-w-2xl bg-white dark:bg-card-dark border-t-2 border-black pointer-events-auto h-20 px-6 flex items-center justify-between shadow-[0_-4px_0_0_rgba(0,0,0,1)] relative">
 
-    <!-- Bottom Navigation Bar -->
-    <nav
-        class="flex-none bg-white dark:bg-card-dark border-t-2 border-black pb-6 pt-2 px-6 flex justify-between items-center z-50 shadow-[0_-4px_0_0_rgba(0,0,0,1)]">
-        <button onclick="navigate('usuario.html')" class="flex flex-col items-center gap-1 p-2 group">
-            <span
-                class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform text-slate-400 group-hover:text-black dark:text-slate-500 dark:group-hover:text-white">home</span>
-            <span
-                class="text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-black dark:text-slate-500 dark:group-hover:text-white">Início</span>
-        </button>
-        <button onclick="navigate('novalista.html')" class="flex flex-col items-center gap-1 p-2 group">
-            <div
-                class="bg-black text-white rounded-full p-2 mb-[-12px] border-2 border-transparent group-hover:border-black group-hover:bg-nb-yellow group-hover:text-black transition-all shadow-neo flex items-center justify-center">
-                <span class="material-symbols-outlined text-2xl">add</span>
+            <!-- Left: Lists (Inactive) -->
+            <button onclick="navigate('usuario.html', true)"
+                class="flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity w-16">
+                <span class="material-symbols-outlined text-3xl font-bold text-black dark:text-white">list_alt</span>
+                <span class="text-[10px] font-bold uppercase tracking-wide text-black dark:text-white">Listas</span>
+            </button>
+
+            <!-- Center: FAB (Navigates to Inventory/Add) -->
+            <div class="absolute left-1/2 -top-8 -translate-x-1/2">
+                <button onclick="navigate('inventario.html')"
+                    class="size-16 bg-nb-yellow rounded-full border-2 border-black shadow-neo flex items-center justify-center hover:scale-110 active:scale-95 transition-all group">
+                    <span
+                        class="material-symbols-outlined text-4xl text-black font-black group-hover:rotate-90 transition-transform">add</span>
+                </button>
             </div>
-        </button>
-        <button onclick="navigate('inventario.html')" class="flex flex-col items-center gap-1 p-2 group">
-            <span
-                class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform text-black dark:text-white">inventory_2</span>
-            <span class="text-[10px] font-bold uppercase tracking-widest text-black dark:text-white">Estoque</span>
-        </button>
-    </nav>
+
+            <!-- Right: Inventory (Active/Mock) -->
+            <button onclick="navigate('inventario.html', true)"
+                class="flex flex-col items-center gap-1 opacity-100 w-16">
+                <span
+                    class="material-symbols-outlined text-3xl font-black text-primary text-black dark:text-white">inventory_2</span>
+                <span class="text-[10px] font-bold uppercase tracking-wide text-black dark:text-white">Estoque</span>
+            </button>
+        </div>
+    </div>
 
     <!-- Logic Script -->
     <script>
-        let inventoryItems = [];
-        const DEFAULT_API_KEY = 'AIzaSyDDOAkGR1y9OdVW5LK91TUz3oVYX78g-u8';
-        let GEMINI_API_KEY = localStorage.getItem('gemini_api_key') || DEFAULT_API_KEY;
+        // Filtering Logic
+        function setFilter(category) {
+            console.log("Filtering by:", category);
+            // 1. Update Buttons State
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                if (btn.id === `btn-${category}`) {
+                    // Active State (Black)
+                    btn.classList.remove('bg-white', 'dark:bg-card-dark', 'text-black', 'dark:text-white');
+                    btn.classList.add('bg-black', 'text-white');
+                } else {
+                    // Inactive State (White)
+                    btn.classList.add('bg-white', 'dark:bg-card-dark', 'text-black', 'dark:text-white');
+                    btn.classList.remove('bg-black', 'text-white');
+                }
+            });
 
-        async function init() {
-            console.log("Init started...");
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-            if (!session) {
-                navigate('login.html');
-                return;
-            }
-            console.log("Session active. Fetching inventory for:", session.user.id);
-            await fetchInventory(session.user.id);
-        }
-
-        async function fetchInventory(userId) {
-            console.log("Fetching inventory items...");
-            const { data, error } = await window.supabaseClient
-                .from('inventory_items')
-                .select('name, quantity, unit')
-                .eq('user_id', userId);
-
-            if (error) {
-                console.error("Supabase Error:", error);
-                return;
-            }
-            console.log("Inventory items fetched:", data);
-
-            if (data && data.length > 0) {
-                inventoryItems = data;
-            }
-            // Logic exists but auto-generation is DISABLED.
-            // User sees static cards by default.
-        }
-
-        async function generateRecipes() {
-            if (!inventoryItems || !inventoryItems.length) {
-                alert("Seu estoque está vazio! Adicione itens para que a IA possa sugerir receitas.");
-                return;
-            }
-
-            if (!GEMINI_API_KEY) {
-                GEMINI_API_KEY = window.prompt("Por favor, insira sua chave API do Google Gemini:", DEFAULT_API_KEY);
-                if (!GEMINI_API_KEY) return;
-                localStorage.setItem('gemini_api_key', GEMINI_API_KEY);
-            }
-
-            const ingredientsList = inventoryItems.map(i => `${i.quantity}${i.unit} ${i.name}`).join(', ');
-            const userPrompt = `
-            Você é um chef criativo. Tenho estes ingredientes: ${ingredientsList}.
-            Sugira 3 receitas criativas.
-            Retorne APENAS um JSON válido.
-            `;
-
-            document.getElementById('loading').classList.remove('hidden');
-            // We only clear results if we are actually generating
-            // If user wants to keep static examples until generation, we clear now.
-            document.getElementById('resultsSection').innerHTML = '';
-
-            try {
-                // Falling back to gemini-pro if 1.5-flash is unavailable
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: userPrompt }] }]
-                    })
-                });
-
-                // ... (Parsing logic similar to previous steps) ...
-                // Simplified for this write check - ensuring robustness
-                const data = await response.json();
-                if (data.error) throw new Error(data.error.message);
-
-                const text = data.candidates[0].content.parts[0].text;
-                const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
-                let recipes = JSON.parse(cleanJson);
-                renderRecipes(recipes);
-
-            } catch (error) {
-                console.error(error);
-                alert("Erro ao gerar receitas: " + error.message);
-            } finally {
-                document.getElementById('loading').classList.add('hidden');
-            }
-        }
-
-        function renderRecipes(recipes) {
-            const container = document.getElementById('resultsSection');
-            container.innerHTML = '';
-            recipes.forEach(recipe => {
-                // Using the same static card template for consistency
-                const html = `
-                <article class="group relative ${recipe.color || 'bg-accent-yellow'} border-3 border-black rounded-2xl p-6 shadow-neo active:shadow-neo-hover active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer hover:brightness-95">
-                    <div class="flex justify-between items-start mb-8">
-                        <span class="bg-white border-3 border-black px-4 py-1.5 rounded-lg font-black text-xs uppercase tracking-widest text-black">${recipe.type || 'Geral'}</span>
-                        <span class="material-symbols-outlined text-5xl text-black transition-transform group-hover:rotate-12 group-hover:scale-110">${recipe.icon || 'restaurant'}</span>
-                    </div>
-                    <h2 class="text-4xl font-black uppercase leading-[0.85] tracking-tight mb-4 text-black break-words">${recipe.name}</h2>
-                    <div class="mb-6 opacity-80 text-sm font-bold border-l-2 border-black pl-3">
-                        ${recipe.ingredients ? recipe.ingredients.slice(0, 3).join(', ') : 'Ingredientes variados'}...
-                    </div>
-                    <div class="flex items-end justify-between border-t-3 border-black pt-4">
-                        <div class="flex flex-col">
-                            <span class="text-xs font-bold uppercase mb-0.5 text-black/80">Tempo</span>
-                            <span class="text-2xl font-black text-black">${recipe.time || 'N/A'}</span>
-                        </div>
-                        <button class="size-12 bg-black text-white rounded-lg flex items-center justify-center border-2 border-transparent hover:scale-105 transition-transform">
-                            <span class="material-symbols-outlined text-2xl">arrow_outward</span>
-                        </button>
-                    </div>
-                </article>
-                `;
-                container.innerHTML += html;
+            // 2. Filter Cards
+            const cards = document.querySelectorAll('.recipe-card');
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-category');
+                if (category === 'Tudo' || cardCat === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
             });
         }
 
+        // Init (Background Fetch)
+        async function init() {
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (!session) navigate('login.html');
+            // Supabase fetch logic could be here but not displaying dynamic content yet
+        }
         init();
     </script>
 </body>
