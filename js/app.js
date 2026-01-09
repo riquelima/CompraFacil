@@ -1288,7 +1288,7 @@ window.initInventory = async function () {
             div.innerHTML = `
                 <div class="flex items-center gap-4 z-10 relative flex-1 min-w-0">
                     <div class="size-14 ${color} rounded-lg border-2 border-black flex items-center justify-center shrink-0 shadow-sm">
-                        <span class="material-symbols-outlined text-2xl text-black">${icon}</span>
+                        <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="${item.category}" class="w-8 h-8 object-contain">
                     </div>
                     <div class="flex-1 min-w-0">
                         <h3 class="font-extrabold text-lg leading-tight text-slate-900 dark:text-white truncate">${item.name}</h3>
