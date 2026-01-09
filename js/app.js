@@ -1528,11 +1528,11 @@ window.toggleFavoritesFilter = function () {
     const btn = document.getElementById('favoritesFilterBtn');
 
     if (window.showingFavorites) {
-        btn.classList.remove('bg-white', 'dark:bg-card-dark', 'text-black', 'dark:text-white');
-        btn.classList.add('bg-nb-pink', 'text-black');
+        btn.classList.remove('bg-white', 'dark:bg-card-dark', 'hover:bg-gray-50');
+        btn.classList.add('bg-accent-pink', 'text-black');
     } else {
-        btn.classList.add('bg-white', 'dark:bg-card-dark', 'text-black', 'dark:text-white');
-        btn.classList.remove('bg-nb-pink', 'text-black');
+        btn.classList.remove('bg-accent-pink');
+        btn.classList.add('bg-white', 'dark:bg-card-dark', 'hover:bg-gray-50');
     }
     applyFilters();
 }
